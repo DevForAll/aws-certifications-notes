@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner - Evaluación Lección 6 & Acumulativa</title>
+    <style>
+        :root {
+            --aws-navy: #232F3E;
+            --aws-orange: #FF9900;
+            --aws-light-gray: #f2f3f3;
+            --aws-white: #ffffff;
+            --aws-text: #16191f;
+            --success-bg: #e7f4e4;
+            --error-bg: #fdf1f1;
+            --explanation-bg: #FFF9C4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--aws-light-gray);
+            color: var(--aws-text);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--aws-white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            background: #444;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            background: var(--aws-orange);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .score-box {
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            color: var(--aws-navy);
+        }
+
+        .options-container {
+            margin-top: 1.5rem;
+        }
+
+        .option-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: var(--aws-white);
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option-btn.selected {
+            border-color: var(--aws-orange);
+            border-width: 2px;
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-bg);
+            border-color: #2e7d32;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--error-bg);
+            border-color: #d32f2f;
+        }
+
+        .explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--explanation-bg);
+            border-left: 4px solid var(--aws-orange);
+            border-radius: 4px;
+            display: none;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-next {
+            background-color: var(--aws-orange);
+            color: white;
+        }
+
+        .btn-next:hover {
+            background-color: #e68a00;
+        }
+
+        .btn-next:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #dashboard {
+            text-align: center;
+            background: var(--aws-white);
+            padding: 3rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .final-score {
+            font-size: 3rem;
+            color: var(--aws-navy);
+            margin: 1rem 0;
+        }
+
+        .dashboard-btns {
+            margin-top: 2rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .btn-retry {
+            background-color: var(--aws-navy);
+            color: white;
+        }
+
+        .btn-restart {
+            background-color: var(--aws-orange);
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-direction: column;
+                padding: 0.5rem;
+            }
+            .progress-container {
+                margin: 0.5rem 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-sim">AWS <span>Cloud Master</span></div>
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div class="score-box">Puntos: <span id="current-score">0</span></div>
+    </header>
+
+    <main>
+        <div id="quiz-container">
+            <!-- Questions will be injected here -->
+        </div>
+
+        <div id="dashboard">
+            <h2>¡Evaluación Completada!</h2>
+            <div class="final-score" id="final-result">0%</div>
+            <p id="final-message"></p>
+            <div class="dashboard-btns">
+                <button class="btn btn-retry" onclick="retryFailed()">Reintentar Fallidas</button>
+                <button class="btn btn-restart" onclick="restartQuiz()">Reiniciar Todo (Shuffle)</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const questionsData = [
+            // LECCIÓN 6: ESCENARIOS REALES
+            {
+                id: 1,
+                question: "¿Cuál es el beneficio principal de que una startup utilice AWS para lanzar su aplicación globalmente sin inversión inicial?",
+                options: [
+                    "Reducción de latencia mediante Edge Locations solamente.",
+                    "Nivela el campo de juego al permitir acceso a la misma infraestructura que grandes empresas.",
+                    "AWS asume la responsabilidad compartida de la configuración de las aplicaciones.",
+                    "Permite el uso gratuito de servicios por tiempo ilimitado."
+                ],
+                correct: 1,
+                explanation: "AWS permite que equipos pequeños compitan globalmente al eliminar la barrera del CAPEX (inversión inicial), dándoles acceso a los mismos bloques de construcción que usan las grandes corporaciones."
+            },
+            {
+                id: 2,
+                question: "Una empresa de e-commerce quiere expandirse a Asia y Europa. ¿Qué factor de la infraestructura global de AWS es CRÍTICO para reducir la latencia de sus clientes?",
+                options: [
+                    "Seleccionar Regiones cercanas a la ubicación física de los clientes.",
+                    "Implementar aplicaciones en una única Zona de Disponibilidad con alta capacidad.",
+                    "Usar solo servicios serverless para evitar el mantenimiento.",
+                    "Utilizar AWS Artifact para asegurar el cumplimiento legal."
+                ],
+                correct: 0,
+                explanation: "La latencia está determinada por la distancia física. Elegir Regiones cercanas a los usuarios finales (como Singapur para Asia o Irlanda para Europa) es la mejor estrategia."
+            },
+            {
+                id: 3,
+                question: "Para garantizar la resiliencia en un escenario real, ¿cuál es el requisito mínimo de diseño recomendado por AWS?",
+                options: [
+                    "Desplegar en una sola Región con una sola Zona de Disponibilidad.",
+                    "Desplegar la misma configuración en al menos 2 Zonas de Disponibilidad.",
+                    "Contratar un equipo de seguridad física para los centros de datos de AWS.",
+                    "Migrar todos los datos a una ubicación de borde (Edge Location)."
+                ],
+                correct: 1,
+                explanation: "Diseñar para alta disponibilidad y tolerancia a fallos implica usar al menos 2 Zonas de Disponibilidad (AZs) para permitir el failover automático si una falla."
+            },
+            {
+                id: 4,
+                question: "En el Modelo de Responsabilidad Compartida, ¿de qué es responsable el cliente en una aplicación de comercio electrónico que maneja tarjetas de crédito?",
+                options: [
+                    "Cerrar con llave las puertas físicas de los centros de datos.",
+                    "Configurar sus aplicaciones de forma segura para cumplir con regulaciones como PCI DSS.",
+                    "Asegurarse de que el hardware del servidor no falle.",
+                    "Gestionar la seguridad de la red física y el cableado."
+                ],
+                correct: 1,
+                explanation: "El cliente es responsable de la 'Seguridad EN la nube', lo que incluye la configuración de aplicaciones y el cumplimiento de normativas de datos."
+            },
+            {
+                id: 5,
+                question: "¿Qué término describe las tareas repetitivas de mantenimiento de hardware que AWS asume, permitiendo a las empresas enfocarse en la innovación?",
+                options: [
+                    "Elasticidad automática.",
+                    "Economías de escala masiva.",
+                    "Trabajo pesado indiferenciado (Undifferentiated Heavy Lifting).",
+                    "Aprovisionamiento adivinado."
+                ],
+                correct: 2,
+                explanation: "El 'Undifferentiated Heavy Lifting' se refiere a las tareas de bajo valor estratégico como mantenimiento de servidores, energía y refrigeración que AWS gestiona por ti."
+            },
+
+            // ACUMULATIVO: BENEFICIOS (L3)
+            {
+                id: 6,
+                question: "¿Cuál de los siguientes describe mejor el concepto de 'Cambiar gastos fijos por gastos variables'?",
+                options: [
+                    "Pagar una tarifa fija anual sin importar el uso.",
+                    "Invertir en hardware antes de conocer la demanda real.",
+                    "Pagar solo por los recursos que realmente utilizas (Pay-as-you-go).",
+                    "Recibir un descuento fijo por usar servicios básicos."
+                ],
+                correct: 2,
+                explanation: "AWS permite eliminar el CAPEX (gastos fijos iniciales) y convertirlos en OPEX (gastos variables basados en el consumo real)."
+            },
+            {
+                id: 7,
+                question: "¿Cómo benefician las 'Economías de Escala Masiva' de AWS a los clientes finales?",
+                options: [
+                    "Permiten a los clientes comprar su propio hardware más barato.",
+                    "AWS traslada los ahorros obtenidos por compras de gran volumen a los clientes en forma de precios más bajos.",
+                    "Obligan a los clientes a usar más servicios de los necesarios.",
+                    "Garantizan que no haya latencia en ninguna parte del mundo."
+                ],
+                correct: 1,
+                explanation: "Debido a su tamaño masivo, AWS adquiere recursos a menor costo y traslada esos ahorros a los clientes mediante reducciones de precios frecuentes."
+            },
+            {
+                id: 8,
+                question: "¿Qué beneficio de la nube resuelve el problema de tener que adivinar cuánta capacidad de servidor necesitarás antes de lanzar una aplicación?",
+                options: [
+                    "Seguridad de la nube.",
+                    "Dejar de adivinar la capacidad (Stop guessing capacity).",
+                    "Cumplimiento normativo.",
+                    "Soberanía de datos."
+                ],
+                correct: 1,
+                explanation: "En lugar de comprar hardware basado en estimaciones (que pueden ser excesivas o insuficientes), en la nube escalas según la demanda actual."
+            },
+            {
+                id: 9,
+                question: "¿Cuál es el beneficio de 'Aumentar velocidad y agilidad' en la nube de AWS?",
+                options: [
+                    "La capacidad de aprovisionar recursos en minutos en lugar de semanas.",
+                    "La garantía de que el código no tendrá errores.",
+                    "Que AWS escriba el código de la aplicación por el cliente.",
+                    "Que el soporte técnico responda en milisegundos."
+                ],
+                correct: 0,
+                explanation: "La agilidad se refiere a la rapidez con la que los equipos pueden experimentar y lanzar productos al mercado al no tener que esperar por hardware físico."
+            },
+
+            // ACUMULATIVO: INFRAESTRUCTURA (L4)
+            {
+                id: 10,
+                question: "¿Qué componente de la infraestructura global de AWS consiste en uno o más centros de datos discretos con energía y red redundantes?",
+                options: [
+                    "Región de AWS.",
+                    "Ubicación de borde (Edge Location).",
+                    "Zona de Disponibilidad (AZ).",
+                    "Centro de Operaciones de Red."
+                ],
+                correct: 2,
+                explanation: "Una Zona de Disponibilidad (AZ) es una unidad de aislamiento de fallos que contiene uno o más centros de datos físicos."
+            },
+            {
+                id: 11,
+                question: "¿Cuál es el número mínimo de Zonas de Disponibilidad que AWS suele incluir en cada Región?",
+                options: [
+                    "1",
+                    "2",
+                    "3",
+                    "5"
+                ],
+                correct: 2,
+                explanation: "Para garantizar alta disponibilidad, casi todas las regiones de AWS tienen un mínimo de 3 Zonas de Disponibilidad."
+            },
+            {
+                id: 12,
+                question: "Si una empresa necesita que sus datos permanezcan dentro de un país específico por razones legales, ¿qué debe elegir cuidadosamente?",
+                options: [
+                    "La Zona de Disponibilidad.",
+                    "La Región de AWS.",
+                    "La Ubicación de Borde.",
+                    "El Grupo de Seguridad."
+                ],
+                correct: 1,
+                explanation: "La soberanía de datos se gestiona a nivel de Región. Los datos no salen de la región elegida a menos que el cliente lo configure."
+            },
+            {
+                id: 13,
+                question: "¿Cuál es el propósito principal de las Ubicaciones de Borde (Edge Locations)?",
+                options: [
+                    "Alojar bases de datos principales.",
+                    "Ejecutar instancias de computación pesadas.",
+                    "Cachear contenido cerca de los usuarios finales para reducir latencia.",
+                    "Servir como centros de datos de respaldo en caso de desastre regional."
+                ],
+                correct: 2,
+                explanation: "Las Edge Locations se usan con servicios como CloudFront para entregar contenido (imágenes, videos) más rápido al estar físicamente más cerca del usuario."
+            },
+
+            // ACUMULATIVO: RESPONSABILIDAD COMPARTIDA (L5)
+            {
+                id: 14,
+                question: "¿Quién es responsable de la 'Seguridad DE la nube' (Security OF the Cloud)?",
+                options: [
+                    "El Cliente.",
+                    "AWS.",
+                    "Tanto el Cliente como AWS por igual.",
+                    "El proveedor de internet del cliente."
+                ],
+                correct: 1,
+                explanation: "AWS es responsable de la infraestructura global (física, hardware, redes, hipervisor) que soporta los servicios de la nube."
+            },
+            {
+                id: 15,
+                question: "En el Modelo de Responsabilidad Compartida, ¿cuál es una tarea de la que el CLIENTE es responsable al usar Amazon EC2?",
+                options: [
+                    "Mantenimiento físico del servidor.",
+                    "Actualización del software del hipervisor.",
+                    "Parchear el sistema operativo invitado (Guest OS).",
+                    "Eliminación física de discos duros viejos."
+                ],
+                correct: 2,
+                explanation: "En servicios IaaS como EC2, el cliente tiene mayor control y es responsable de parchear el Sistema Operativo que ha instalado."
+            },
+            {
+                id: 16,
+                question: "¿Qué herramienta puede usar un cliente para obtener informes de cumplimiento de AWS (como certificaciones ISO o PCI) para una auditoría?",
+                options: [
+                    "AWS Trusted Advisor.",
+                    "AWS Artifact.",
+                    "AWS CloudTrail.",
+                    "AWS Inspector."
+                ],
+                correct: 1,
+                explanation: "AWS Artifact es el portal gratuito donde los clientes pueden descargar los informes de cumplimiento de la infraestructura de AWS."
+            },
+            {
+                id: 17,
+                question: "Si un cliente olvida configurar las reglas de su firewall (Security Groups) y su servidor es atacado, ¿bajo quién recae la responsabilidad?",
+                options: [
+                    "AWS, por no cerrar el puerto automáticamente.",
+                    "El Cliente, por su responsabilidad de seguridad EN la nube.",
+                    "AWS, porque el firewall es un servicio de AWS.",
+                    "Ambos comparten la responsabilidad de la configuración de reglas específica."
+                ],
+                correct: 1,
+                explanation: "AWS proporciona la herramienta (Security Group), pero es responsabilidad del cliente configurar las reglas de acceso correctamente."
+            },
+
+            // PREGUNTAS MEZCLADAS Y ESCENARIOS ADICIONALES
+            {
+                id: 18,
+                question: "¿Qué analogía describe mejor la 'Seguridad EN la nube'?",
+                options: [
+                    "El constructor que pone puertas sólidas en una casa.",
+                    "El dueño de la casa que decide echar la llave a la puerta al salir.",
+                    "La compañía eléctrica que garantiza que haya luz en la casa.",
+                    "El ayuntamiento que gestiona el alcantarillado de la calle."
+                ],
+                correct: 1,
+                explanation: "La seguridad EN la nube es responsabilidad del cliente, como decidir cerrar las puertas o proteger sus propias llaves."
+            },
+            {
+                id: 19,
+                question: "¿Cuál es una ventaja de utilizar múltiples Zonas de Disponibilidad (AZs) en lugar de una sola?",
+                options: [
+                    "Es más barato que usar una sola AZ.",
+                    "Aumenta la tolerancia a fallos al evitar un punto único de fallo.",
+                    "Permite que la aplicación sea global instantáneamente.",
+                    "Reduce la responsabilidad del cliente sobre los parches de seguridad."
+                ],
+                correct: 1,
+                explanation: "Al usar múltiples AZs, si una falla por un desastre natural o corte eléctrico local, la aplicación puede seguir funcionando desde la otra zona (Alta Disponibilidad)."
+            },
+            {
+                id: 20,
+                question: "Una empresa quiere probar un nuevo concepto de negocio durante una semana. ¿Qué característica de AWS le permite hacer esto de forma económica?",
+                options: [
+                    "La capacidad de globalizarse en minutos.",
+                    "La experimentación sin compromiso a largo plazo gracias al modelo de pago por uso.",
+                    "Las economías de escala masiva.",
+                    "El modelo de responsabilidad compartida."
+                ],
+                correct: 1,
+                explanation: "La agilidad y el pago por uso permiten crear entornos, probarlos y borrarlos pagando solo por las horas de uso, sin contratos de permanencia."
+            },
+            {
+                id: 21,
+                question: "¿Qué sucede con los costos cuando AWS reduce sus precios gracias a las economías de escala?",
+                options: [
+                    "Los clientes deben pagar una tarifa de actualización.",
+                    "AWS traslada automáticamente los ahorros a los clientes.",
+                    "El cliente debe comprar más capacidad para mantener el precio.",
+                    "Solo las nuevas empresas se benefician de la reducción."
+                ],
+                correct: 1,
+                explanation: "Una de las promesas de AWS es reducir precios periódicamente a medida que su escala crece."
+            },
+            {
+                id: 22,
+                question: "¿Qué servicio se asocia directamente con las Ubicaciones de Borde para la entrega de contenido?",
+                options: [
+                    "Amazon EC2",
+                    "Amazon RDS",
+                    "Amazon CloudFront",
+                    "AWS Lambda"
+                ],
+                correct: 2,
+                explanation: "CloudFront es el servicio de Red de Entrega de Contenido (CDN) de AWS que utiliza las Edge Locations."
+            },
+            {
+                id: 23,
+                question: "¿Cuál de estos es un ejemplo de 'Seguridad DE la nube' gestionada por AWS?",
+                options: [
+                    "Cifrado de datos en una base de datos.",
+                    "Manejo de identidades de usuario (IAM).",
+                    "Destrucción física de dispositivos de almacenamiento al final de su vida útil.",
+                    "Configuración de contraseñas de aplicaciones."
+                ],
+                correct: 2,
+                explanation: "AWS se encarga de la eliminación segura y física del hardware para evitar fugas de datos de clientes anteriores."
+            },
+            {
+                id: 24,
+                question: "¿Cómo ayuda AWS a una empresa a 'Globalizarse en minutos'?",
+                options: [
+                    "Ofreciendo traducción automática de todas las aplicaciones.",
+                    "Proporcionando infraestructura lista para usar en múltiples regiones geográficas del mundo.",
+                    "Eliminando la necesidad de pagar por transferencia de datos.",
+                    "Enviando ingenieros de AWS a las oficinas del cliente en todo el mundo."
+                ],
+                correct: 1,
+                explanation: "Puedes desplegar servidores y servicios en cualquier parte del mundo con unos pocos clics usando la red global de AWS."
+            },
+            {
+                id: 25,
+                question: "¿Qué concepto describe mejor la capacidad de un sistema para seguir funcionando incluso si un componente mayor (como un centro de datos entero) falla?",
+                options: [
+                    "Escalabilidad vertical.",
+                    "Tolerancia a fallos (Fault Tolerance).",
+                    "Agilidad empresarial.",
+                    "Economía de escala."
+                ],
+                correct: 1,
+                explanation: "La tolerancia a fallos es la capacidad de mantener el servicio sin interrupciones ante fallos de componentes."
+            },
+            {
+                id: 26,
+                question: "¿Qué factor influye en el PRECIO de los servicios de AWS?",
+                options: [
+                    "La cantidad de Zonas de Disponibilidad en el mundo.",
+                    "La Región elegida por el cliente.",
+                    "El número de empleados de la startup.",
+                    "La distancia física entre el cliente y el centro de datos de AWS."
+                ],
+                correct: 1,
+                explanation: "Los costos varían entre regiones debido a impuestos locales, costos de energía y logística en diferentes países."
+            },
+            {
+                id: 27,
+                question: "En el escenario de una tienda de comercio electrónico, ¿quién es responsable de asegurar que el software de la base de datos esté parchado en un servicio gestionado como Amazon RDS?",
+                options: [
+                    "El Cliente.",
+                    "AWS.",
+                    "El fabricante del software (ej. Oracle o Microsoft).",
+                    "Nadie, las bases de datos en la nube no necesitan parches."
+                ],
+                correct: 1,
+                explanation: "En servicios gestionados (PaaS), AWS asume la responsabilidad de parchar el Sistema Operativo y el motor de la base de datos."
+            },
+            {
+                id: 28,
+                question: "¿Por qué AWS utiliza Zonas de Disponibilidad separadas por decenas de kilómetros?",
+                options: [
+                    "Para cobrar más por la transferencia de datos.",
+                    "Para evitar que un único desastre (como una inundación local) afecte a todas las zonas a la vez.",
+                    "Porque es el límite físico de los cables de fibra óptica.",
+                    "Para cumplir con las leyes de zonificación urbana."
+                ],
+                correct: 1,
+                explanation: "La separación física es clave para el aislamiento de fallos ante desastres naturales."
+            },
+            {
+                id: 29,
+                question: "¿Qué sucede con los recursos de AWS cuando una empresa de e-commerce tiene un pico de ventas masivo (como en Black Friday)?",
+                options: [
+                    "La empresa debe comprar servidores nuevos meses antes.",
+                    "AWS permite escalar los recursos para manejar la demanda y luego reducirlos.",
+                    "El sistema colapsará inevitablemente porque no hay capacidad adivinada.",
+                    "El cliente debe llamar a AWS para pedir permiso para escalar."
+                ],
+                correct: 1,
+                explanation: "La elasticidad y la capacidad de no tener que adivinar la capacidad permiten manejar picos de demanda de forma eficiente."
+            },
+            {
+                id: 30,
+                question: "¿Cuál es el 'Trabajo Pesado Indiferenciado' en una cafetería física según la analogía de la lección?",
+                options: [
+                    "Hacer el café perfecto para el cliente.",
+                    "Limpiar el suelo y mantener la electricidad del local.",
+                    "Inventar nuevas recetas de lattes.",
+                    "Saludar a los clientes habituales."
+                ],
+                correct: 1,
+                explanation: "Limpiar y mantener el local son tareas necesarias pero que no diferencian tu café del de la competencia; es el trabajo pesado que AWS (como dueño del local) podría gestionar."
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedQuestions = [];
+        let userAnswers = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            selectedQuestions = shuffle([...questionsData]);
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = new Array(selectedQuestions.length).fill(null);
+            document.getElementById('current-score').innerText = '0';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const container = document.getElementById('quiz-container');
+            const q = selectedQuestions[currentQuestionIndex];
+            
+            let html = `
+                <div class="question-card active">
+                    <p style="color: #666; font-size: 0.9rem;">Pregunta ${currentQuestionIndex + 1} de ${selectedQuestions.length}</p>
+                    <h2>${q.question}</h2>
+                    <div class="options-container">
+            `;
+
+            q.options.forEach((opt, index) => {
+                html += `
+                    <button class="option-btn" onclick="checkAnswer(${index}, this)">
+                        ${opt}
+                    </button>
+                `;
+            });
+
+            html += `
+                    </div>
+                    <div id="explanation-${q.id}" class="explanation">
+                        <strong>Explicación Técnica:</strong> ${q.explanation}
+                    </div>
+                    <div class="nav-buttons">
+                        <button class="btn" onclick="prevQuestion()" ${currentQuestionIndex === 0 ? 'disabled' : ''}>Anterior</button>
+                        <button id="next-btn" class="btn btn-next" onclick="nextQuestion()" disabled>Siguiente</button>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            updateProgressBar();
+        }
+
+        function checkAnswer(selectedIndex, btn) {
+            const q = selectedQuestions[currentQuestionIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            if (userAnswers[currentQuestionIndex] !== null) return; // Prevent multiple answers
+
+            userAnswers[currentQuestionIndex] = selectedIndex;
+            
+            buttons.forEach((b, index) => {
+                b.disabled = true;
+                if (index === q.correct) {
+                    b.classList.add('correct');
+                } else if (index === selectedIndex) {
+                    b.classList.add('incorrect');
+                }
+            });
+
+            if (selectedIndex === q.correct) {
+                score++;
+                document.getElementById('current-score').innerText = score;
+            }
+
+            document.getElementById(`explanation-${q.id}`).style.display = 'block';
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < selectedQuestions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showDashboard();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                renderQuestion();
+                // If already answered, show correctness and explanation
+                setTimeout(() => {
+                    const answeredIdx = userAnswers[currentQuestionIndex];
+                    if (answeredIdx !== null) {
+                        const q = selectedQuestions[currentQuestionIndex];
+                        const buttons = document.querySelectorAll('.option-btn');
+                        buttons.forEach((b, index) => {
+                            b.disabled = true;
+                            if (index === q.correct) b.classList.add('correct');
+                            else if (index === answeredIdx) b.classList.add('incorrect');
+                        });
+                        document.getElementById(`explanation-${q.id}`).style.display = 'block';
+                        document.getElementById('next-btn').disabled = false;
+                    }
+                }, 10);
+            }
+        }
+
+        function updateProgressBar() {
+            const progress = ((currentQuestionIndex) / selectedQuestions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progress}%`;
+        }
+
+        function showDashboard() {
+            document.getElementById('quiz-container').style.display = 'none';
+            const dashboard = document.getElementById('dashboard');
+            dashboard.style.display = 'block';
+            
+            const percentage = Math.round((score / selectedQuestions.length) * 100);
+            document.getElementById('final-result').innerText = `${percentage}%`;
+            document.getElementById('progress-bar').style.width = `100%`;
+
+            let msg = "";
+            if (percentage >= 80) msg = "¡Excelente! Estás listo para dominar la arquitectura de AWS.";
+            else if (percentage >= 60) msg = "Buen trabajo. Repasa los puntos clave para asegurar el éxito.";
+            else msg = "Sigue practicando. La constancia es clave para el Cloud Practitioner.";
+            
+            document.getElementById('final-message').innerText = msg;
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function retryFailed() {
+            const failedQuestions = selectedQuestions.filter((q, index) => userAnswers[index] !== q.correct);
+            if (failedQuestions.length === 0) {
+                alert("¡No tienes preguntas fallidas! Iniciando todo de nuevo.");
+                restartQuiz();
+                return;
+            }
+            selectedQuestions = shuffle([...failedQuestions]);
+            currentQuestionIndex = 0;
+            score = 0;
+            userAnswers = new Array(selectedQuestions.length).fill(null);
+            document.getElementById('current-score').innerText = '0';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            renderQuestion();
+        }
+
+        // Start the quiz
+        initQuiz();
+    </script>
+</body>
+</html>

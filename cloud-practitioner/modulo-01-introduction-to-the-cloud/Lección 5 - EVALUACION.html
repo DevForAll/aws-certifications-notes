@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CLF-C02 - Evaluación Módulo 1 (L1-L5)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amazon+Ember&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-light-gray: #f2f3f3;
+            --aws-white: #ffffff;
+            --success-green: #e6f4ea;
+            --error-red: #fce8e6;
+            --explanation-yellow: #fff9c4;
+            --text-dark: #16191f;
+        }
+
+        body {
+            font-family: 'Amazon Ember', 'Roboto', sans-serif;
+            background-color: var(--aws-light-gray);
+            margin: 0;
+            color: var(--text-dark);
+            padding-bottom: 50px;
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+            margin-left: 5px;
+        }
+
+        .progress-container {
+            width: 50%;
+            background: rgba(255,255,255,0.2);
+            height: 10px;
+            border-radius: 5px;
+            margin: 0 15px;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: var(--aws-orange);
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        .score-box {
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .question-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: grid;
+            gap: 12px;
+            margin: 20px 0;
+        }
+
+        .option-btn {
+            background: white;
+            border: 1px solid #d5dbdb;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .option-btn:hover {
+            border-color: var(--aws-orange);
+            background-color: #f8f9f9;
+        }
+
+        .option-btn.selected {
+            border-color: var(--aws-orange);
+            background-color: rgba(255, 153, 0, 0.05);
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-green);
+            border-color: #34a853;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--error-red);
+            border-color: #ea4335;
+        }
+
+        .explanation {
+            background-color: var(--explanation-yellow);
+            padding: 15px;
+            border-left: 5px solid #fbc02d;
+            border-radius: 4px;
+            margin-top: 20px;
+            display: none;
+            font-size: 0.95rem;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+
+        button.primary-btn {
+            background-color: var(--aws-orange);
+            border: none;
+            color: var(--aws-navy);
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button.primary-btn:hover {
+            background-color: #ec7211;
+        }
+
+        button.secondary-btn {
+            background: transparent;
+            border: 1px solid var(--aws-navy);
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        #final-screen {
+            display: none;
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .result-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-item {
+            background: var(--aws-light-gray);
+            padding: 15px;
+            border-radius: 4px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .tag-l5 { background: #e3f2fd; color: #1565c0; }
+        .tag-accum { background: #f3e5f5; color: #7b1fa2; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim">AWS <span>Certified Cloud Practitioner</span></div>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    <div class="score-box">Puntos: <span id="current-score">0</span> / <span id="total-questions-header">35</span></div>
+</header>
+
+<div class="container">
+    <div id="quiz-container">
+        <!-- Preguntas se insertan aquí -->
+    </div>
+
+    <div id="final-screen">
+        <h1>¡Evaluación Completada!</h1>
+        <div class="result-circle" id="final-percentage">0%</div>
+        <p id="result-message"></p>
+        <div class="stat-grid">
+            <div class="stat-item">
+                <strong>Correctas</strong>
+                <div id="stat-correct">0</div>
+            </div>
+            <div class="stat-item">
+                <strong>Incorrectas</strong>
+                <div id="stat-incorrect">0</div>
+            </div>
+        </div>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button class="primary-btn" onclick="restartQuiz()">Reiniciar todo (Shuffle)</button>
+            <button class="secondary-btn" id="retry-failed-btn" onclick="retryFailed()">Reintentar fallidas</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // LECCIÓN 5: MODELO DE RESPONSABILIDAD COMPARTIDA
+        {
+            tag: "L5 - Modelo",
+            question: "¿Cuál de las siguientes es una responsabilidad de AWS según el modelo de responsabilidad compartida?",
+            options: [
+                "Configuración de grupos de seguridad (Security Groups).",
+                "Mantenimiento del hardware de red global.",
+                "Parches del sistema operativo invitado en instancias EC2.",
+                "Gestión de identidades y accesos (IAM)."
+            ],
+            answer: 1,
+            explanation: "AWS es responsable de la infraestructura global (Hardware, red física, centros de datos). Las configuraciones de software, parches de OS invitado e IAM son responsabilidad del cliente (Security IN the Cloud)."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "Un cliente desea utilizar Amazon S3 para almacenar archivos sensibles. ¿De qué es responsable el cliente según el modelo de responsabilidad compartida?",
+            options: [
+                "Gestionar la seguridad física del edificio donde residen los datos.",
+                "Actualizar el software del servidor S3.",
+                "Configurar los permisos de acceso y el cifrado de los objetos.",
+                "Garantizar la durabilidad de los datos en el hardware físico."
+            ],
+            answer: 2,
+            explanation: "En servicios administrados como S3, AWS gestiona la infraestructura y la durabilidad, pero el cliente es 100% responsable de quién tiene acceso (Políticas de bucket/IAM) y de habilitar el cifrado."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿Qué frase resume mejor la división de responsabilidades entre AWS y el cliente?",
+            options: [
+                "AWS es responsable de la seguridad EN la nube; el cliente DE la nube.",
+                "Ambos son responsables exclusivos de sus propios centros de datos.",
+                "AWS es responsable de la seguridad DE la nube; el cliente EN la nube.",
+                "AWS gestiona la seguridad solo si el cliente paga el soporte Business o Enterprise."
+            ],
+            answer: 2,
+            explanation: "Security OF the Cloud (AWS) vs Security IN the Cloud (Cliente). Esta frase es literal en el examen."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿De qué es responsable el cliente cuando utiliza instancias de Amazon EC2?",
+            options: [
+                "Gestión de la capa del hipervisor.",
+                "Mantenimiento de los racks físicos del servidor.",
+                "Parches del sistema operativo invitado.",
+                "Sustitución de unidades de almacenamiento defectuosas."
+            ],
+            answer: 2,
+            explanation: "EC2 es un servicio IaaS. El cliente gestiona todo desde el Sistema Operativo hacia arriba. AWS gestiona el hardware y el hipervisor (virtualización)."
+        },
+        {
+            tag: "L5 - AWS Artifact",
+            question: "Una empresa necesita obtener informes de cumplimiento de auditoría (como ISO o PCI) para verificar la infraestructura de AWS. ¿Qué servicio debe utilizar?",
+            options: [
+                "AWS Trusted Advisor",
+                "AWS Artifact",
+                "AWS CloudTrail",
+                "AWS Config"
+            ],
+            answer: 1,
+            explanation: "AWS Artifact es el portal de autoservicio para descargar informes de cumplimiento y acuerdos legales de AWS. Es la prueba de que AWS cumple su parte de la responsabilidad."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿Cuál de los siguientes es un control compartido en el modelo de responsabilidad compartida?",
+            options: [
+                "Seguridad física de los centros de datos.",
+                "Gestión de parches.",
+                "Configuración de contraseñas de usuarios IAM.",
+                "Mantenimiento de cables de red de fibra óptica."
+            ],
+            answer: 1,
+            explanation: "La gestión de parches es compartida: AWS parcha la infraestructura y servicios administrados (RDS), el cliente parcha el OS en EC2."
+        },
+        {
+            tag: "L5 - Cifrado",
+            question: "En el modelo de responsabilidad compartida, ¿quién es responsable de decidir qué datos deben cifrarse?",
+            options: [
+                "AWS (basado en el tipo de servicio).",
+                "El cliente.",
+                "AWS y el cliente mediante un acuerdo firmado.",
+                "El equipo de AWS Support."
+            ],
+            answer: 1,
+            explanation: "El cliente es el propietario de los datos y, por lo tanto, es responsable de clasificarlos y decidir si se requiere cifrado. AWS solo proporciona las herramientas (KMS)."
+        },
+        {
+            tag: "L5 - IaaS/PaaS/SaaS",
+            question: "Al comparar Amazon EC2 (IaaS) con AWS Lambda (Serverless), ¿cuál de las siguientes afirmaciones es correcta sobre la responsabilidad?",
+            options: [
+                "El cliente tiene más responsabilidad en Lambda que en EC2.",
+                "En Lambda, AWS gestiona el sistema operativo y el runtime.",
+                "En EC2, AWS gestiona las aplicaciones del cliente.",
+                "En ambos servicios, el cliente gestiona la infraestructura física."
+            ],
+            answer: 1,
+            explanation: "En servicios Serverless (Lambda), el cliente solo se preocupa por el código. AWS gestiona el servidor, el OS y el runtime. En EC2 (IaaS), el cliente gestiona el OS."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿Quién es responsable de la eliminación física de los dispositivos de almacenamiento en AWS?",
+            options: [
+                "El cliente.",
+                "AWS.",
+                "Ambos comparten la responsabilidad.",
+                "El proveedor del hardware."
+            ],
+            answer: 1,
+            explanation: "La seguridad física y el desecho seguro de hardware es responsabilidad exclusiva de AWS (Security OF the Cloud)."
+        },
+        {
+            tag: "L5 - Redes",
+            question: "¿Quién es responsable de configurar las reglas de tráfico en un Security Group?",
+            options: [
+                "AWS Security Team.",
+                "El cliente.",
+                "El proveedor de servicios de internet (ISP).",
+                "AWS automáticamente bloquea todo por defecto y no se puede cambiar."
+            ],
+            answer: 1,
+            explanation: "AWS proporciona el mecanismo (Security Group), pero el cliente es responsable de definir qué tráfico se permite o bloquea."
+        },
+
+        // ACUMULATIVAS (L1-L4)
+        {
+            tag: "ACUMULATIVA - Infraestructura",
+            question: "¿Qué es una Zona de Disponibilidad (AZ)?",
+            options: [
+                "Un centro de datos único.",
+                "Una ubicación geográfica con múltiples Regiones.",
+                "Uno o más centros de datos discretos con energía, red y conectividad redundantes.",
+                "Una red de servidores caché para entregar contenido rápidamente."
+            ],
+            answer: 2,
+            explanation: "Una AZ consiste en uno o más centros de datos dentro de una Región, diseñados para aislamiento de fallos."
+        },
+        {
+            tag: "ACUMULATIVA - Beneficios",
+            question: "¿Cuál de los siguientes es un beneficio de la 'Economía de escala' en AWS?",
+            options: [
+                "El cliente puede aprovisionar miles de servidores en minutos.",
+                "AWS puede lograr menores costos variables debido a la gran cantidad de clientes.",
+                "El cliente deja de adivinar la capacidad necesaria.",
+                "AWS ofrece soporte técnico gratuito 24/7 para todos."
+            ],
+            answer: 1,
+            explanation: "La economía de escala permite a AWS comprar hardware masivamente y pasar esos ahorros a los clientes en forma de precios más bajos."
+        },
+        {
+            tag: "ACUMULATIVA - Conceptos",
+            question: "¿Cuál es el modelo de despliegue donde una empresa utiliza tanto su centro de datos local (on-premises) como la nube de AWS?",
+            options: [
+                "Nube pública.",
+                "Nube híbrida.",
+                "Nube privada.",
+                "Nube comunitaria."
+            ],
+            answer: 1,
+            explanation: "El modelo híbrido conecta la infraestructura local con la nube pública."
+        },
+        {
+            tag: "ACUMULATIVA - Beneficios",
+            question: "¿Qué beneficio de la nube permite aumentar o disminuir los recursos automáticamente según la demanda?",
+            options: [
+                "Elasticidad.",
+                "Agilidad.",
+                "Alta disponibilidad.",
+                "Tolerancia a fallos."
+            ],
+            answer: 0,
+            explanation: "La elasticidad es la capacidad de ajustar los recursos automáticamente para que coincidan con la demanda actual."
+        },
+        {
+            tag: "ACUMULATIVA - Global Infra",
+            question: "¿Cuál es el propósito principal de una Edge Location (Ubicación de borde)?",
+            options: [
+                "Ejecutar bases de datos pesadas.",
+                "Reducir la latencia entregando contenido más cerca de los usuarios finales.",
+                "Proporcionar almacenamiento de respaldo a largo plazo.",
+                "Servir como una Región de repuesto en caso de desastre."
+            ],
+            answer: 1,
+            explanation: "Las Edge Locations se usan con Amazon CloudFront para cachear contenido y reducir la latencia global."
+        },
+
+        // MÁS L5 Y CONEXIONES
+        {
+            tag: "L5 - Modelo",
+            question: "¿Quién es responsable de la protección de los datos de un cliente en caso de que un empleado de AWS intente acceder a ellos?",
+            options: [
+                "El cliente mediante el uso de cifrado.",
+                "AWS mediante controles de acceso lógicos y físicos.",
+                "Ambos; AWS restringe el acceso y el cliente debe cifrar sus datos.",
+                "El gobierno local mediante regulaciones."
+            ],
+            answer: 2,
+            explanation: "Es una responsabilidad compartida: AWS aplica controles internos estrictos, pero la última línea de defensa del cliente es cifrar sus propios datos."
+        },
+        {
+            tag: "L5 - IAM",
+            question: "¿Cuál es la mejor práctica recomendada para gestionar el acceso a la cuenta de AWS de un cliente?",
+            options: [
+                "Compartir las credenciales de la cuenta raíz (Root) con los administradores.",
+                "Aplicar el principio de menor privilegio (Least Privilege).",
+                "Desactivar el MFA para facilitar el acceso rápido.",
+                "Utilizar la misma contraseña para todos los usuarios."
+            ],
+            answer: 1,
+            explanation: "El principio de menor privilegio dicta otorgar solo los permisos necesarios para realizar una tarea. Esto es responsabilidad del cliente EN la nube."
+        },
+        {
+            tag: "L5/L4 - Residencia de Datos",
+            question: "Si una regulación gubernamental exige que los datos permanezcan dentro de un país específico, ¿quién es responsable de asegurar esto?",
+            options: [
+                "AWS, ya que conocen las leyes de cada país.",
+                "El cliente, al seleccionar la Región de AWS adecuada.",
+                "AWS automáticamente bloquea la salida de datos de cada país.",
+                "Nadie; la nube es global y no cumple con leyes locales."
+            ],
+            answer: 1,
+            explanation: "El cliente es responsable de la 'Residencia de Datos' (Data Residency) al elegir en qué Región despliega sus recursos."
+        },
+        {
+            tag: "L5 - RDS",
+            question: "Cuando un cliente utiliza Amazon RDS (Servicio de Base de Datos Relacional), ¿quién es responsable de realizar las copias de seguridad (backups)?",
+            options: [
+                "El cliente exclusivamente.",
+                "AWS es responsable de la infraestructura de backup; el cliente de programarlas/habilitarlas.",
+                "Amazon RDS no admite backups automáticos.",
+                "El proveedor del motor de la base de datos (ej: Oracle)."
+            ],
+            answer: 1,
+            explanation: "En servicios gestionados, AWS proporciona la capacidad de backup automatizado, pero el cliente debe configurarlo y decidir la retención."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿Qué control es responsabilidad exclusiva del cliente en TODOS los modelos de servicio de AWS (IaaS, PaaS, SaaS)?",
+            options: [
+                "Parches de seguridad del sistema operativo.",
+                "Configuración física de la red.",
+                "Gestión de los datos del cliente.",
+                "Mantenimiento del hardware."
+            ],
+            answer: 2,
+            explanation: "Sin importar el servicio, los datos siempre pertenecen y son responsabilidad del cliente."
+        },
+        {
+            tag: "ACUMULATIVA - Beneficios",
+            question: "¿Qué significa 'Dejar de adivinar la capacidad' en AWS?",
+            options: [
+                "AWS adivina por ti cuánto usarás.",
+                "Puedes escalar los recursos según la demanda real en lugar de comprar hardware por adelantado.",
+                "El soporte técnico te dice cuánto comprar.",
+                "No importa cuánto uses, el precio es fijo."
+            ],
+            answer: 1,
+            explanation: "Evita el gasto excesivo o la falta de recursos al permitir un escalado flexible."
+        },
+        {
+            tag: "ACUMULATIVA - Global Infra",
+            question: "Una Región de AWS consta de al menos:",
+            options: [
+                "1 Zona de Disponibilidad.",
+                "2 Zonas de Disponibilidad.",
+                "3 Zonas de Disponibilidad.",
+                "5 Edge Locations."
+            ],
+            answer: 1,
+            explanation: "Cada región tiene un mínimo de 3 (antes 2, pero el estándar actual de examen pide al menos 2 o 3, siendo 3 la recomendación de diseño)."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿Quién es responsable de la formación de los empleados del cliente sobre el uso seguro de los servicios de AWS?",
+            options: [
+                "AWS Training and Certification.",
+                "El cliente.",
+                "AWS Support.",
+                "AWS no se preocupa por la formación del cliente."
+            ],
+            answer: 1,
+            explanation: "La formación y concienciación de los usuarios finales del cliente es responsabilidad del cliente."
+        },
+        {
+            tag: "L5 - Managed Services",
+            question: "En AWS Lambda, ¿quién es responsable de asegurar que el código de la función no tenga vulnerabilidades?",
+            options: [
+                "AWS.",
+                "El cliente.",
+                "El desarrollador del lenguaje (ej: Python Software Foundation).",
+                "AWS Shield."
+            ],
+            answer: 1,
+            explanation: "Aunque AWS gestione el servidor y el OS en Lambda, el código que sube el cliente es su total responsabilidad."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿De quién es la responsabilidad de proteger la capa de virtualización (Hipervisor)?",
+            options: [
+                "Del cliente.",
+                "De AWS.",
+                "Es compartida al 50%.",
+                "Del fabricante del procesador (Intel/AMD)."
+            ],
+            answer: 1,
+            explanation: "AWS gestiona el software de virtualización que permite el multi-tenancy (aislamiento de clientes)."
+        },
+        {
+            tag: "L5 - Trusted Advisor",
+            question: "Un cliente quiere saber si tiene buckets de S3 abiertos públicamente por error. ¿Qué herramienta le daría esta recomendación de seguridad?",
+            options: [
+                "AWS CloudTrail",
+                "AWS Artifact",
+                "AWS Trusted Advisor",
+                "AWS Shield"
+            ],
+            answer: 2,
+            explanation: "Trusted Advisor inspecciona tu cuenta y da recomendaciones en tiempo real sobre seguridad, incluyendo buckets S3 públicos."
+        },
+        {
+            tag: "ACUMULATIVA - L1",
+            question: "¿Cuál es el objetivo principal del examen AWS Certified Cloud Practitioner?",
+            options: [
+                "Demostrar habilidades de programación profunda.",
+                "Validar un conocimiento general de la plataforma de nube de AWS.",
+                "Certificar que puedes diseñar redes complejas de fibra óptica.",
+                "Garantizar que eres un experto en bases de datos Oracle."
+            ],
+            answer: 1,
+            explanation: "Es una certificación de nivel fundacional que cubre una visión global de AWS."
+        },
+        {
+            tag: "L5 - Shared Controls",
+            question: "¿Cuál de los siguientes es un ejemplo de 'Configuración de red' bajo la responsabilidad del cliente?",
+            options: [
+                "Enrutamiento entre centros de datos de AWS.",
+                "Configuración de tablas de enrutamiento en una VPC.",
+                "Gestión de cables submarinos de AWS.",
+                "Protección de los routers físicos de AWS."
+            ],
+            answer: 1,
+            explanation: "La VPC y su enrutamiento lógico son responsabilidad del cliente 'IN the Cloud'."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "En el modelo de responsabilidad compartida, ¿quién es responsable de configurar el MFA (Autenticación de múltiples factores) para el usuario raíz?",
+            options: [
+                "AWS lo activa automáticamente para todos.",
+                "El cliente.",
+                "AWS Support debe hacerlo tras una llamada telefónica.",
+                "Solo es obligatorio si usas servicios gubernamentales."
+            ],
+            answer: 1,
+            explanation: "La seguridad de las credenciales de acceso (MFA) es responsabilidad exclusiva del cliente."
+        },
+        {
+            tag: "ACUMULATIVA - Conceptos",
+            question: "¿Qué beneficio de la nube de AWS se refiere a 'Cambiar gastos de capital por gastos variables'?",
+            options: [
+                "Economía de escala.",
+                "Pago por uso (Pay-as-you-go).",
+                "Agilidad global.",
+                "Elasticidad masiva."
+            ],
+            answer: 1,
+            explanation: "En lugar de invertir en hardware (CapEx), pagas solo por lo que consumes (OpEx)."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿Quién es responsable de parchear el software de la base de datos en Amazon RDS?",
+            options: [
+                "El cliente.",
+                "AWS.",
+                "El proveedor del motor (MySQL/PostgreSQL).",
+                "Nadie; las bases de datos no se parchan en la nube."
+            ],
+            answer: 1,
+            explanation: "RDS es un servicio gestionado; AWS se encarga de los parches del motor de DB."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "¿Cuál es una responsabilidad de AWS respecto a la infraestructura física?",
+            options: [
+                "Clasificar los datos del cliente en los discos.",
+                "Control de temperatura y humedad en los centros de datos.",
+                "Instalar antivirus en las laptops de los clientes.",
+                "Configurar los firewalls de las aplicaciones del cliente."
+            ],
+            answer: 1,
+            explanation: "El control ambiental de las instalaciones es parte de la seguridad 'OF the Cloud'."
+        },
+        {
+            tag: "ACUMULATIVA - L3",
+            question: "¿Qué permite a un cliente 'Volverse global en minutos'?",
+            options: [
+                "La red global de Regiones y Zonas de Disponibilidad de AWS.",
+                "El servicio de AWS Direct Connect únicamente.",
+                "La contratación de consultores locales.",
+                "AWS solo está disponible en EE.UU."
+            ],
+            answer: 0,
+            explanation: "La infraestructura global permite desplegar aplicaciones en múltiples regiones del mundo rápidamente."
+        },
+        {
+            tag: "L5 - Modelo",
+            question: "Un cliente usa Amazon EC2 y olvida actualizar el antivirus del sistema operativo. Si hay una infección, ¿quién es responsable?",
+            options: [
+                "AWS, por no detectar el virus en su red.",
+                "El cliente.",
+                "Ambos comparten la culpa.",
+                "Microsoft o el proveedor de Linux."
+            ],
+            answer: 1,
+            explanation: "El cliente es responsable de la seguridad del sistema operativo invitado en EC2."
+        },
+        {
+            tag: "L5 - Concepto Final",
+            question: "¿Por qué el modelo de responsabilidad compartida es beneficioso para el cliente?",
+            options: [
+                "Porque AWS hace todo el trabajo y el cliente no hace nada.",
+                "Porque reduce la carga operativa del cliente al transferir la gestión de la infraestructura física a AWS.",
+                "Porque permite al cliente culpar a AWS de cualquier fallo de seguridad.",
+                "Porque hace que la nube sea gratuita."
+            ],
+            answer: 1,
+            explanation: "El cliente puede enfocarse en su negocio mientras AWS se encarga de las tareas pesadas de mantenimiento de infraestructura física y seguridad base."
+        }
+    ];
+
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let userAnswers = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz() {
+        currentQuestions = shuffle([...questions]);
+        currentQuestionIndex = 0;
+        score = 0;
+        userAnswers = [];
+        document.getElementById('total-questions-header').innerText = currentQuestions.length;
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const quizContainer = document.getElementById('quiz-container');
+        quizContainer.innerHTML = '';
+        
+        const q = currentQuestions[currentQuestionIndex];
+        const card = document.createElement('div');
+        card.className = 'question-card';
+        card.style.display = 'block';
+
+        const tagClass = q.tag.includes('ACUMULATIVA') ? 'tag-accum' : 'tag-l5';
+        
+        card.innerHTML = `
+            <div class="tag ${tagClass}">${q.tag}</div>
+            <h2>${currentQuestionIndex + 1}. ${q.question}</h2>
+            <div class="options" id="options-container">
+                ${q.options.map((opt, i) => `
+                    <div class="option-btn" onclick="checkAnswer(${i})">${opt}</div>
+                `).join('')}
+            </div>
+            <div class="explanation" id="explanation">
+                <strong>Respuesta correcta:</strong> ${q.options[q.answer]}<br><br>
+                ${q.explanation}
+            </div>
+            <div class="controls" id="controls" style="display:none">
+                <div></div>
+                <button class="primary-btn" onclick="nextQuestion()">Siguiente Pregunta</button>
+            </div>
+        `;
+        quizContainer.appendChild(card);
+        updateProgress();
+    }
+
+    function checkAnswer(selectedIdx) {
+        if (userAnswers[currentQuestionIndex] !== undefined) return;
+
+        const q = currentQuestions[currentQuestionIndex];
+        userAnswers[currentQuestionIndex] = selectedIdx;
+        
+        const options = document.querySelectorAll('.option-btn');
+        const explanation = document.getElementById('explanation');
+        const controls = document.getElementById('controls');
+
+        if (selectedIdx === q.answer) {
+            options[selectedIdx].classList.add('correct');
+            score++;
+            document.getElementById('current-score').innerText = score;
+        } else {
+            options[selectedIdx].classList.add('incorrect');
+            options[q.answer].classList.add('correct');
+        }
+
+        explanation.style.display = 'block';
+        controls.style.display = 'flex';
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < currentQuestions.length) {
+            renderQuestion();
+        } else {
+            showFinalResults();
+        }
+    }
+
+    function updateProgress() {
+        const progress = ((currentQuestionIndex) / currentQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+    }
+
+    function showFinalResults() {
+        document.getElementById('quiz-container').innerHTML = '';
+        document.getElementById('progress-bar').style.width = '100%';
+        const finalScreen = document.getElementById('final-screen');
+        finalScreen.style.display = 'block';
+
+        const percentage = Math.round((score / currentQuestions.length) * 100);
+        document.getElementById('final-percentage').innerText = `${percentage}%`;
+        document.getElementById('stat-correct').innerText = score;
+        document.getElementById('stat-incorrect').innerText = currentQuestions.length - score;
+
+        let msg = "";
+        if (percentage >= 80) msg = "¡Excelente! Estás dominando los fundamentos de AWS.";
+        else if (percentage >= 60) msg = "Buen trabajo, pero te recomiendo repasar los conceptos fallidos.";
+        else msg = "Necesitas repasar más el Modelo de Responsabilidad Compartida.";
+        
+        document.getElementById('result-message').innerText = msg;
+
+        // Mostrar u ocultar botón de reintentar fallidas
+        const failedCount = currentQuestions.length - score;
+        document.getElementById('retry-failed-btn').style.display = failedCount > 0 ? 'inline-block' : 'none';
+    }
+
+    function restartQuiz() {
+        document.getElementById('final-screen').style.display = 'none';
+        document.getElementById('current-score').innerText = '0';
+        initQuiz();
+    }
+
+    function retryFailed() {
+        const failedQuestions = [];
+        currentQuestions.forEach((q, i) => {
+            if (userAnswers[i] !== q.answer) {
+                failedQuestions.push(q);
+            }
+        });
+
+        currentQuestions = shuffle([...failedQuestions]);
+        currentQuestionIndex = 0;
+        score = 0;
+        userAnswers = [];
+        document.getElementById('final-screen').style.display = 'none';
+        document.getElementById('current-score').innerText = '0';
+        document.getElementById('total-questions-header').innerText = currentQuestions.length;
+        renderQuestion();
+    }
+
+    // Iniciar al cargar
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

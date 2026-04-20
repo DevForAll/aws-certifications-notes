@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner - Evaluación Módulo 2 Lección 3</title>
+    <style>
+        :root {
+            --aws-navy: #232F3E;
+            --aws-orange: #FF9900;
+            --aws-squid-ink: #161E2D;
+            --aws-light-gray: #F2F3F3;
+            --white: #ffffff;
+            --success: #28a745;
+            --error: #dc3545;
+            --warning-bg: #FFF9C4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-light-gray);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-navy);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+            margin-left: 5px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            background: rgba(255,255,255,0.1);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background-color: var(--aws-orange);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .score-counter {
+            font-weight: bold;
+            background: var(--aws-squid-ink);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            line-height: 1.4;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .option {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: var(--aws-orange);
+            background-color: rgba(255, 153, 0, 0.05);
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: rgba(255, 153, 0, 0.1);
+        }
+
+        .option.correct {
+            border-color: var(--success);
+            background-color: rgba(40, 167, 69, 0.1);
+        }
+
+        .option.incorrect {
+            border-color: var(--error);
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 6px;
+            display: none;
+            background-color: var(--warning-bg);
+            border-left: 5px solid var(--aws-orange);
+        }
+
+        .feedback h3 {
+            margin-top: 0;
+            color: var(--aws-navy);
+            font-size: 1.1rem;
+        }
+
+        .btn {
+            background-color: var(--aws-orange);
+            color: var(--white);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+            display: block;
+            margin: 2rem auto;
+        }
+
+        .btn:hover {
+            background-color: #e68a00;
+        }
+
+        #results-card {
+            display: none;
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--aws-navy);
+            margin: 1rem 0;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim">AWS <span>CLF-C02 Training</span></div>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+    <div class="score-counter">Puntos: <span id="current-score">0</span></div>
+</header>
+
+<main>
+    <div id="quiz-container">
+        <div class="card" id="question-card">
+            <div id="question-meta" style="color: #666; margin-bottom: 0.5rem; font-size: 0.9rem;">Pregunta <span id="q-number">1</span> de 30</div>
+            <h2 id="question-text">Cargando pregunta...</h2>
+            <div class="options" id="options-container">
+                <!-- Opciones se cargan aquí -->
+            </div>
+            <div class="feedback" id="feedback-container">
+                <h3 id="feedback-title">Explicación Técnica:</h3>
+                <p id="feedback-text"></p>
+                <button class="btn" id="next-btn">Siguiente Pregunta</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" id="results-card">
+        <h1>Evaluación Finalizada</h1>
+        <div class="result-score" id="final-score-pct">0%</div>
+        <div id="final-stats">
+            <div class="summary-item"><span>Preguntas Totales:</span> <span>30</span></div>
+            <div class="summary-item"><span>Aciertos:</span> <span id="correct-count">0</span></div>
+            <div class="summary-item"><span>Errores:</span> <span id="incorrect-count">0</span></div>
+        </div>
+        <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+            <button class="btn" onclick="resetQuiz(true)" style="margin: 0;">Reintentar Fallidas</button>
+            <button class="btn" onclick="resetQuiz(false)" style="margin: 0; background-color: var(--aws-navy);">Reiniciar (Shuffle)</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    const questions = [
+        // LECCIÓN 3 - APROVISIONAMIENTO
+        {
+            q: "¿Cuál de las siguientes es la forma principal de interactuar con los servicios de AWS de manera visual y fácil para principiantes?",
+            options: [
+                "AWS CLI",
+                "SDK de AWS",
+                "Consola de Administración de AWS",
+                "APIs de AWS directas"
+            ],
+            correct: 2,
+            explanation: "La Consola de Administración de AWS es una interfaz gráfica basada en navegador, ideal para principiantes, tareas no técnicas y configuración de entornos de prueba."
+        },
+        {
+            q: "¿Qué sucede 'detrás del escenario' cada vez que realizas una acción en la Consola de Administración de AWS?",
+            options: [
+                "Se envía un correo al soporte de AWS",
+                "Se invoca una llamada a una API de AWS",
+                "Se reinicia el servidor físico",
+                "Se actualiza el hardware automáticamente"
+            ],
+            correct: 1,
+            explanation: "Sin importar el método (Consola, CLI o SDK), todas las interacciones con AWS son llamadas a APIs (Interfaces de Programación de Aplicaciones)."
+        },
+        {
+            q: "Un administrador de sistemas desea automatizar la creación de 50 instancias EC2 mediante un script. ¿Qué herramienta debería utilizar?",
+            options: [
+                "Consola de Administración de AWS",
+                "AWS Trusted Advisor",
+                "AWS CLI (Interfaz de Línea de Comandos)",
+                "AWS Artifact"
+            ],
+            correct: 2,
+            explanation: "La AWS CLI permite la automatización mediante scripts a través de comandos de texto, lo que reduce errores humanos en tareas repetitivas."
+        },
+        {
+            q: "¿Qué ventaja principal ofrece el uso de la AWS CLI o el SDK frente a la Consola de Administración?",
+            options: [
+                "Son más coloridos y visuales",
+                "Permiten la automatización y reducen errores manuales",
+                "Son gratuitos, mientras que la consola tiene costo",
+                "No requieren conexión a Internet"
+            ],
+            correct: 1,
+            explanation: "La automatización es clave para implementaciones predecibles y exitosas, eliminando la posibilidad de errores por clics manuales u olvidos de configuración."
+        },
+        {
+            q: "Un desarrollador necesita integrar la capacidad de subir archivos a Amazon S3 directamente desde su aplicación escrita en Python. ¿Qué debería usar?",
+            options: [
+                "Consola de Administración de AWS",
+                "AWS CLI",
+                "SDK de AWS",
+                "AWS CloudShell"
+            ],
+            correct: 2,
+            explanation: "Los SDK de AWS (Software Development Kits) permiten interactuar con los recursos de AWS a través de lenguajes de programación específicos."
+        },
+        {
+            q: "¿Qué es AWS CloudShell?",
+            options: [
+                "Un servicio de almacenamiento para archivos de terminal",
+                "Una terminal basada en navegador con la AWS CLI preinstalada",
+                "Un entorno de escritorio remoto para Windows",
+                "Un firewall para proteger la línea de comandos"
+            ],
+            correct: 1,
+            explanation: "AWS CloudShell es una terminal basada en la nube que permite ejecutar comandos de la AWS CLI sin necesidad de instalar nada localmente."
+        },
+        {
+            q: "¿Cuál de las siguientes es una desventaja de realizar aprovisionamiento manual a través de la Consola en entornos de producción?",
+            options: [
+                "Es demasiado rápido",
+                "Es propenso a errores humanos por configuraciones manuales",
+                "No permite ver la factura de AWS",
+                "Solo funciona en sistemas operativos Linux"
+            ],
+            correct: 1,
+            explanation: "El trabajo manual en la consola puede llevar a errores de escritura o selección de opciones, lo cual es crítico en entornos de producción."
+        },
+        {
+            q: "Para utilizar la AWS CLI desde una computadora local, ¿qué tipo de credenciales se requieren comúnmente?",
+            options: [
+                "Nombre de usuario y contraseña de la consola",
+                "Una tarjeta de crédito válida",
+                "Access Key ID y Secret Access Key",
+                "Un certificado digital de la empresa"
+            ],
+            correct: 2,
+            explanation: "Las interacciones programáticas (CLI/SDK) requieren Access Keys generadas en IAM para autenticar las llamadas a la API."
+        },
+        {
+            q: "¿En qué lenguaje de programación NO está disponible el SDK de AWS?",
+            options: [
+                "Python",
+                "Java",
+                "JavaScript",
+                "Todos los anteriores están disponibles"
+            ],
+            correct: 3,
+            explanation: "AWS ofrece SDKs para una amplia gama de lenguajes populares incluyendo Python, Java, JavaScript, .NET, Ruby, PHP, Go y C++."
+        },
+        {
+            q: "Si necesitas ver rápidamente cuánto dinero has gastado este mes en AWS, ¿cuál es el lugar más recomendado?",
+            options: [
+                "AWS CLI",
+                "Consola de Administración de AWS",
+                "SDK de AWS",
+                "AWS CloudShell"
+            ],
+            correct: 1,
+            explanation: "La Consola es ideal para tareas no técnicas como el monitoreo de facturación y el uso de recursos visuales."
+        },
+        // EC2 CONCEPTOS
+        {
+            q: "¿Qué servicio de AWS proporciona servidores virtuales seguros y redimensionables en la nube?",
+            options: [
+                "Amazon S3",
+                "Amazon RDS",
+                "Amazon EC2",
+                "AWS Lambda"
+            ],
+            correct: 2,
+            explanation: "Amazon EC2 (Elastic Compute Cloud) es el servicio que permite lanzar instancias (servidores virtuales) en la infraestructura de AWS."
+        },
+        {
+            q: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable de parchar el sistema operativo de una instancia de Amazon EC2?",
+            options: [
+                "AWS",
+                "El Cliente",
+                "Ambos",
+                "Nadie, se hace solo"
+            ],
+            correct: 1,
+            explanation: "En EC2 (IaaS), el cliente tiene control total sobre el sistema operativo y, por tanto, es responsable de sus parches y seguridad."
+        },
+        {
+            q: "Deseas aumentar la CPU y la RAM de una instancia EC2 existente para manejar una carga de trabajo más pesada. ¿Cómo se llama este proceso?",
+            options: [
+                "Escalamiento Horizontal",
+                "Escalamiento Vertical",
+                "Auto Scaling",
+                "Elastic Load Balancing"
+            ],
+            correct: 1,
+            explanation: "El escalamiento vertical consiste en cambiar el tipo o tamaño de la instancia para añadir más potencia a un recurso individual."
+        },
+        {
+            q: "¿Cuál familia de instancias EC2 es el punto de partida ideal para cargas de trabajo con tráfico incierto o equilibrado?",
+            options: [
+                "Optimizadas para Cómputo",
+                "Optimizadas para Memoria",
+                "Uso General",
+                "Computación Acelerada"
+            ],
+            correct: 2,
+            explanation: "Las instancias de Uso General (familias T y M) ofrecen un equilibrio entre cómputo, memoria y red."
+        },
+        {
+            q: "Si tu aplicación requiere procesar grandes conjuntos de datos directamente en la memoria RAM (como bases de datos SAP HANA), ¿qué familia de instancia elegirías?",
+            options: [
+                "Optimizadas para Cómputo",
+                "Optimizadas para Memoria",
+                "Uso General",
+                "Optimizadas para Almacenamiento"
+            ],
+            correct: 1,
+            explanation: "Las instancias Memory Optimized están diseñadas para entregar un rendimiento rápido para cargas que procesan grandes volúmenes de datos en RAM."
+        },
+        {
+            q: "¿Cuál es el beneficio de la 'Multitenencia' en Amazon EC2?",
+            options: [
+                "Permite que varios clientes vean los datos de otros",
+                "Permite compartir el mismo hardware físico entre varios clientes de forma aislada",
+                "Significa que AWS paga tu factura",
+                "Obliga a usar el mismo sistema operativo que otros vecinos"
+            ],
+            correct: 1,
+            explanation: "La multitenencia permite a AWS optimizar el hardware físico compartiéndolo entre clientes, usando el Hipervisor para garantizar aislamiento total."
+        },
+        {
+            q: "¿Por qué concepto de EC2 dejas de pagar por el CÓMPUTO pero sigues pagando por el ALMACENAMIENTO?",
+            options: [
+                "Al terminar la instancia",
+                "Al reiniciar la instancia",
+                "Al detener la instancia (Stopped)",
+                "Al lanzar la instancia"
+            ],
+            correct: 2,
+            explanation: "Cuando detienes una instancia (Stop), AWS libera los recursos de CPU/RAM (dejas de pagar cómputo), pero el disco duro virtual (EBS) sigue ocupando espacio y tiene costo."
+        },
+        {
+            q: "Tu empresa necesita realizar renderizado de video 3D y machine learning profundo. ¿Qué familia de instancia EC2 ofrece coprocesadores de hardware para esto?",
+            options: [
+                "Optimizadas para Cómputo",
+                "Uso General",
+                "Computación Acelerada",
+                "Storage Optimized"
+            ],
+            correct: 2,
+            explanation: "La Computación Acelerada utiliza aceleradores de hardware (GPUs) para tareas de gráficos y cálculos matemáticos intensos."
+        },
+        {
+            q: "¿Qué significa la 'Elasticidad' en el contexto de Amazon EC2?",
+            options: [
+                "Que los servidores son de plástico",
+                "La capacidad de ajustar los recursos según la demanda (más o menos potencia)",
+                "Que puedes mover servidores entre países físicamente",
+                "Que el precio nunca cambia"
+            ],
+            correct: 1,
+            explanation: "La elasticidad permite que los recursos crezcan o disminuyan automáticamente (o manualmente) para coincidir con la carga de trabajo actual."
+        },
+        {
+            q: "Si el examen menciona 'Control administrativo total a nivel de Sistema Operativo', ¿a qué servicio se refiere?",
+            options: [
+                "AWS Lambda",
+                "Amazon S3",
+                "Amazon EC2",
+                "Amazon RDS"
+            ],
+            correct: 2,
+            explanation: "EC2 es un servicio IaaS que da al usuario acceso a nivel de ROOT o Administrador en el sistema operativo."
+        },
+        // ACUMULATIVAS MODULO 1
+        {
+            q: "¿Cuál de los siguientes es un beneficio de la computación en la nube que permite cambiar CAPEX por OPEX?",
+            options: [
+                "Elasticidad",
+                "Agilidad",
+                "Dejar de gastar dinero en centros de datos",
+                "Alcance Global"
+            ],
+            correct: 2,
+            explanation: "Al usar la nube, dejas de invertir en infraestructura física (Capital Expense) y pasas a pagar solo por lo que usas como un gasto operativo (Operating Expense)."
+        },
+        {
+            q: "¿Qué concepto describe la capacidad de AWS de ofrecer redundancia mediante múltiples centros de datos físicamente separados dentro de una región?",
+            options: [
+                "Regiones",
+                "Zonas de Disponibilidad (AZs)",
+                "Ubicaciones de Borde",
+                "Nube Híbrida"
+            ],
+            correct: 1,
+            explanation: "Las Zonas de Disponibilidad son uno o más centros de datos discretos dentro de una región, diseñados para aislamiento de fallos."
+        },
+        {
+            q: "En el Modelo de Responsabilidad Compartida, ¿cuál de las siguientes es responsabilidad de AWS?",
+            options: [
+                "Cifrado de datos del cliente",
+                "Configuración de grupos de seguridad (firewall)",
+                "Mantenimiento físico y seguridad de los centros de datos",
+                "Gestión de usuarios en IAM"
+            ],
+            correct: 2,
+            explanation: "AWS es responsable de la seguridad 'DE' la nube, lo que incluye la infraestructura física, el hardware y la red física."
+        },
+        {
+            q: "¿Cuál es el número mínimo de Zonas de Disponibilidad en una Región de AWS?",
+            options: [
+                "1",
+                "2",
+                "3",
+                "5"
+            ],
+            correct: 2,
+            explanation: "Como estándar actual para el examen CLF-C02, AWS diseña sus regiones para tener al menos 3 AZs independientes."
+        },
+        {
+            q: "¿Qué servicio se utiliza para cachear contenido cerca de los usuarios finales en Ubicaciones de Borde?",
+            options: [
+                "Amazon CloudFront",
+                "Amazon S3",
+                "AWS CloudTrail",
+                "Amazon VPC"
+            ],
+            correct: 0,
+            explanation: "Amazon CloudFront es la Red de Entrega de Contenido (CDN) que utiliza las Edge Locations para reducir la latencia."
+        },
+        {
+            q: "Un cliente desea demostrar que los centros de datos de AWS cumplen con la norma ISO 27001 para una auditoría. ¿Qué servicio debe usar?",
+            options: [
+                "AWS Trusted Advisor",
+                "AWS Artifact",
+                "AWS Config",
+                "Amazon Inspector"
+            ],
+            correct: 1,
+            explanation: "AWS Artifact es el portal donde los clientes descargan informes de cumplimiento y acuerdos legales de AWS."
+        },
+        {
+            q: "¿Qué principio de diseño recomienda distribuir recursos entre múltiples Zonas de Disponibilidad?",
+            options: [
+                "Elasticidad",
+                "Alta Disponibilidad (High Availability)",
+                "Seguridad por Oscuridad",
+                "Diseño Monolítico"
+            ],
+            correct: 1,
+            explanation: "La Alta Disponibilidad se logra eliminando puntos únicos de fallo distribuyendo la carga en múltiples AZs."
+        },
+        {
+            q: "Bajo el Modelo de Responsabilidad Compartida, ¿quién es responsable de elegir en qué Región se almacenan los datos?",
+            options: [
+                "AWS decide según la carga",
+                "El Gobierno del país",
+                "El Cliente",
+                "El proveedor de Internet"
+            ],
+            correct: 2,
+            explanation: "El cliente tiene el control total sobre la soberanía de sus datos y debe elegir la región que cumpla con sus requisitos legales o de latencia."
+        },
+        {
+            q: "¿Cuál es la principal ventaja de la 'Agilidad' en la nube?",
+            options: [
+                "Pagar menos por cada servidor",
+                "Reducir el tiempo para aprovisionar recursos de semanas a minutos",
+                "Hacer que las aplicaciones corran más rápido",
+                "Poder contratar a más personas"
+            ],
+            correct: 1,
+            explanation: "La agilidad en AWS permite a los desarrolladores experimentar y desplegar recursos casi instantáneamente."
+        },
+        {
+            q: "¿Qué tipo de control se clasifica como 'Compartido' en el modelo de responsabilidad?",
+            options: [
+                "Seguridad física de los edificios",
+                "Cifrado de datos en reposo",
+                "Gestión de parches y entrenamiento técnico",
+                "Destrucción de discos duros al final de su vida útil"
+            ],
+            correct: 2,
+            explanation: "La gestión de parches es compartida: AWS parcha la infraestructura (hipervisor), el cliente parcha sus instancias (Guest OS)."
+        }
+    ];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let incorrectIndices = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz(onlyFailed = false) {
+        if (onlyFailed) {
+            const failedQuestions = incorrectIndices.map(idx => currentQuestions[idx]);
+            currentQuestions = shuffle(failedQuestions);
+        } else {
+            currentQuestions = shuffle([...questions]);
+        }
+        
+        currentIndex = 0;
+        score = 0;
+        incorrectIndices = [];
+        
+        document.getElementById('quiz-container').classList.remove('hidden');
+        document.getElementById('results-card').style.display = 'none';
+        document.getElementById('current-score').innerText = '0';
+        
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = currentQuestions[currentIndex];
+        document.getElementById('q-number').innerText = currentIndex + 1;
+        document.getElementById('question-text').innerText = q.q;
+        document.getElementById('progress-bar').style.width = ((currentIndex / currentQuestions.length) * 100) + '%';
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        
+        q.options.forEach((opt, idx) => {
+            const div = document.createElement('div');
+            div.className = 'option';
+            div.innerText = opt;
+            div.onclick = () => checkAnswer(idx, div);
+            container.appendChild(div);
+        });
+        
+        document.getElementById('feedback-container').style.display = 'none';
+    }
+
+    function checkAnswer(selectedIdx, element) {
+        const q = currentQuestions[currentIndex];
+        const options = document.querySelectorAll('.option');
+        
+        options.forEach(opt => opt.classList.add('disabled'));
+        
+        if (selectedIdx === q.correct) {
+            element.classList.add('correct');
+            score++;
+            document.getElementById('current-score').innerText = score;
+        } else {
+            element.classList.add('incorrect');
+            options[q.correct].classList.add('correct');
+            incorrectIndices.push(currentIndex);
+        }
+        
+        document.getElementById('feedback-text').innerText = q.explanation;
+        document.getElementById('feedback-container').style.display = 'block';
+    }
+
+    document.getElementById('next-btn').onclick = () => {
+        currentIndex++;
+        if (currentIndex < currentQuestions.length) {
+            showQuestion();
+        } else {
+            showResults();
+        }
+    };
+
+    function showResults() {
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('results-card').style.display = 'block';
+        
+        const pct = Math.round((score / currentQuestions.length) * 100);
+        document.getElementById('final-score-pct').innerText = pct + '%';
+        document.getElementById('correct-count').innerText = score;
+        document.getElementById('incorrect-count').innerText = currentQuestions.length - score;
+        
+        if (pct >= 70) {
+            document.getElementById('final-score-pct').style.color = 'var(--success)';
+        } else {
+            document.getElementById('final-score-pct').style.color = 'var(--error)';
+        }
+    }
+
+    function resetQuiz(onlyFailed) {
+        if (onlyFailed && incorrectIndices.length === 0) {
+            alert("¡No tienes preguntas fallidas que reintentar!");
+            return;
+        }
+        initQuiz(onlyFailed);
+    }
+
+    // Iniciar al cargar
+    initQuiz();
+
+</script>
+
+</body>
+</html>

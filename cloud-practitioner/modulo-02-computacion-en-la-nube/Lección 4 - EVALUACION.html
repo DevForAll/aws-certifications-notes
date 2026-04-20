@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Exam Simulator - Módulo 2, Lección 4</title>
+    <style>
+        :root {
+            --aws-navy: #232F3E;
+            --aws-orange: #FF9900;
+            --aws-light-bg: #F2F3F3;
+            --aws-white: #FFFFFF;
+            --aws-gray: #545B64;
+            --success: #D4EDDA;
+            --error: #F8D7DA;
+            --explanation: #FFF9C4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-light-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-navy);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo span {
+            color: var(--aws-orange);
+            margin-left: 5px;
+        }
+
+        .progress-container {
+            width: 300px;
+            background: #444;
+            height: 10px;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: var(--aws-orange);
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        .score-board {
+            font-size: 0.9rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background: var(--aws-white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 1.25rem;
+            margin-top: 0;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            border: 1px solid #DDD;
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option-item:hover {
+            border-color: var(--aws-orange);
+            background-color: #FFF9F0;
+        }
+
+        .option-item.selected {
+            border-color: var(--aws-orange);
+            background-color: #FFF9F0;
+            font-weight: bold;
+        }
+
+        .option-item.correct {
+            background-color: var(--success);
+            border-color: #C3E6CB;
+        }
+
+        .option-item.incorrect {
+            background-color: var(--error);
+            border-color: #F5C6CB;
+        }
+
+        .explanation {
+            background-color: var(--explanation);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            display: none;
+            border-left: 4px solid var(--aws-orange);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: opacity 0.2s;
+        }
+
+        .btn-next {
+            background-color: var(--aws-orange);
+            color: white;
+        }
+
+        .btn-submit {
+            background-color: var(--aws-navy);
+            color: white;
+        }
+
+        #dashboard {
+            text-align: center;
+            background: white;
+            padding: 3rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: var(--aws-light-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 2rem;
+            border: 8px solid var(--aws-orange);
+        }
+
+        .result-circle .score {
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">AWS <span>CLF-C02 Trainer</span></div>
+    <div style="display: flex; align-items: center;">
+        <div class="progress-container"><div id="progress-bar"></div></div>
+        <div class="score-board">Pregunta <span id="current-q-num">1</span>/30</div>
+    </div>
+</header>
+
+<main>
+    <div id="quiz-container">
+        <!-- Questions will be injected here -->
+    </div>
+
+    <div id="dashboard">
+        <div class="result-circle">
+            <div class="score" id="final-score">0%</div>
+            <div>Puntuación</div>
+        </div>
+        <h2 id="result-message">¡Buen trabajo!</h2>
+        <p>Has completado la evaluación de la Lección 4 y el repaso acumulativo.</p>
+        <div class="dashboard-actions">
+            <button class="btn-submit" onclick="restartQuiz()">Reiniciar todo (Shuffle)</button>
+            <button class="btn-next" onclick="retryFailed()">Reintentar fallidas</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    const allQuestions = [
+        // LECCIÓN 4: LANZAR INSTANCIA EC2
+        {
+            q: "¿Qué es una Amazon Machine Image (AMI)?",
+            o: ["Un tipo de hardware para la instancia", "Una plantilla que contiene el sistema operativo y software base", "Un firewall virtual para la red", "Un servicio de almacenamiento de objetos"],
+            a: 1,
+            e: "La AMI es el 'molde' o plantilla que define el software (SO y aplicaciones) que tendrá la instancia al nacer."
+        },
+        {
+            q: "Al configurar una instancia EC2, ¿qué componente determina la capacidad de CPU y Memoria RAM?",
+            o: ["El Security Group", "La AMI", "El Instance Type (Tipo de Instancia)", "El Par de claves"],
+            a: 2,
+            e: "El Instance Type (como t2.micro) define las especificaciones de hardware de la instancia."
+        },
+        {
+            q: "¿Cuál es la forma más segura de permitir que una instancia EC2 acceda a un bucket de Amazon S3?",
+            o: ["Guardar las Access Keys en el código de la aplicación", "Usar un IAM Role asignado a la instancia", "Configurar el Security Group para permitir S3", "Hacer el bucket público"],
+            a: 1,
+            e: "Best Practice: Siempre usar IAM Roles (Instance Profiles) para otorgar permisos a servicios de AWS desde EC2."
+        },
+        {
+            q: "¿Cuándo se ejecuta el script definido en la sección 'User Data'?",
+            o: ["En cada reinicio de la instancia", "Solo en el primer arranque después del lanzamiento", "Cada vez que se detiene e inicia la instancia", "Cada hora automáticamente"],
+            a: 1,
+            e: "User Data (Bootstrapping) se ejecuta solo una vez, durante el primer ciclo de arranque de la instancia."
+        },
+        {
+            q: "Si necesitas conectarte a una instancia Linux mediante SSH, ¿qué puerto debe estar abierto en el Security Group?",
+            o: ["80", "443", "22", "3389"],
+            a: 2,
+            e: "Puerto 22 es para SSH (Linux). El 3389 es para RDP (Windows)."
+        },
+        {
+            q: "¿Qué sucede con la dirección IP pública de una instancia EC2 estándar si se detiene (Stop) y se vuelve a iniciar (Start)?",
+            o: ["Se mantiene idéntica", "Cambia a una nueva dirección IP", "La instancia pierde conectividad a internet para siempre", "Se convierte automáticamente en una Elastic IP"],
+            a: 1,
+            e: "Las IPs públicas son dinámicas. Al detener e iniciar, AWS asigna una nueva a menos que uses una Elastic IP."
+        },
+        {
+            q: "¿Qué servicio proporciona almacenamiento de bloques persistente para Amazon EC2?",
+            o: ["Amazon S3", "Amazon EBS (Elastic Block Store)", "Instance Store", "AWS Lambda"],
+            a: 1,
+            e: "EBS es el disco duro virtual persistente que se conecta a las instancias EC2."
+        },
+        {
+            q: "Deseas evitar que una instancia crítica sea borrada accidentalmente por alguien en la consola de AWS. ¿Qué opción debes activar?",
+            o: ["Delete on Termination", "Termination Protection", "IAM Role Protection", "Security Group Lock"],
+            a: 1,
+            e: "Termination Protection impide terminar la instancia hasta que la protección sea desactivada manualmente."
+        },
+        {
+            q: "¿Qué atributo de EBS determina si el volumen se elimina cuando la instancia es terminada?",
+            o: ["Termination Protection", "Delete on Termination", "EBS Persistence Toggle", "Storage Lock"],
+            a: 1,
+            e: "Si 'Delete on Termination' está activado (True), el volumen desaparece con la instancia. Si es False, el volumen sobrevive."
+        },
+        {
+            q: "Estás lanzando una instancia para una aplicación que requiere hardware físico dedicado para cumplir con licencias de software por socket. ¿Qué opción de Tenancy (Tenencia) elegirías?",
+            o: ["Shared Tenancy", "Dedicated Instance", "Dedicated Host", "Hibernated Host"],
+            a: 2,
+            e: "Dedicated Host ofrece control total sobre el servidor físico, necesario para licencias específicas."
+        },
+        {
+            q: "¿Qué sucede con los datos en la memoria RAM cuando una instancia EC2 se hiberna?",
+            o: ["Se pierden permanentemente", "Se guardan en el volumen raíz de EBS", "Se suben a Amazon S3", "AWS no permite hibernar instancias"],
+            a: 1,
+            e: "En la hibernación, el estado de la RAM se congela y se guarda en el volumen EBS raíz."
+        },
+        {
+            q: "¿Cuál es la familia de instancias EC2 optimizada para cargas de trabajo que requieren mucha memoria RAM (como bases de datos en memoria)?",
+            o: ["Familia C", "Familia R", "Familia T", "Familia I"],
+            a: 1,
+            e: "Familia R = Memoria (Memory Optimized). C = Compute, I = Storage (IOPS)."
+        },
+        {
+            q: "¿Cómo se llama el proceso de cargar automáticamente software en una instancia al inicio usando scripts?",
+            o: ["Cloning", "Bootstrapping", "Scaling", "Provisioning"],
+            a: 1,
+            e: "Bootstrapping es el término técnico para ejecutar scripts iniciales (User Data) para configurar la instancia."
+        },
+        {
+            q: "En un Security Group, ¿cuál es la configuración predeterminada para el tráfico entrante?",
+            o: ["Permitir todo el tráfico", "Denegar todo el tráfico", "Permitir solo SSH", "Permitir solo HTTP"],
+            a: 1,
+            e: "Por defecto, un Security Group deniega TODO el tráfico entrante hasta que añadas reglas explícitas."
+        },
+        {
+            q: "¿Qué archivo necesitas para autenticarte y obtener acceso a una instancia EC2 recién creada?",
+            o: ["La contraseña de tu usuario IAM", "El archivo de la clave privada (.pem o .ppk)", "El certificado de la AMI", "El token de la consola"],
+            a: 1,
+            e: "Necesitas la clave privada del Key Pair que seleccionaste al lanzar la instancia."
+        },
+        {
+            q: "Un cliente quiere usar la Capa Gratuita (Free Tier) de AWS para probar EC2. ¿Qué tipo de instancia es elegible?",
+            o: ["m5.large", "c5.xlarge", "t2.micro", "r5.2xlarge"],
+            a: 2,
+            e: "t2.micro (y en algunas regiones t3.micro) es la instancia estándar para el Free Tier."
+        },
+        {
+            q: "Si una instancia está en estado 'Stopped', ¿por qué cargos sigues pagando?",
+            o: ["Uso de CPU", "Memoria RAM", "Almacenamiento EBS y direcciones IP estáticas no usadas", "No se paga nada"],
+            a: 2,
+            e: "Aunque el cómputo (CPU/RAM) no se cobra, los recursos asociados como EBS y Elastic IPs siguen generando costo."
+        },
+        {
+            q: "¿Cuál es la principal diferencia entre un Security Group y una Network ACL?",
+            o: ["No hay diferencia", "Security Group es a nivel de instancia, Network ACL es a nivel de subred", "Security Group es de pago, Network ACL es gratuita", "Network ACL es para servidores Windows únicamente"],
+            a: 1,
+            e: "Security Group actúa como firewall de instancia. NACL actúa a nivel de subred (VPC)."
+        },
+        {
+            q: "¿Qué servicio te permite asignar una dirección IP estática que NO cambie nunca para tu instancia?",
+            o: ["CloudFront", "Elastic IP", "VPC Flow Logs", "Static Route 53"],
+            a: 1,
+            e: "Elastic IP es una IP pública estática diseñada para computación en la nube dinámica."
+        },
+        {
+            q: "Deseas lanzar 10 instancias idénticas para un servidor web. ¿Cuál es la forma más eficiente de hacerlo?",
+            o: ["Lanzar una por una manualmente", "Crear una AMI de una instancia ya configurada y usarla para lanzar las otras 9", "Copiar y pegar el hardware", "No se pueden lanzar instancias idénticas"],
+            a: 1,
+            e: "Crear una 'Golden Image' (AMI personalizada) permite replicar configuraciones exactas rápidamente."
+        },
+
+        // ACUMULATIVO: MÓDULO 1 Y M2L1-3
+        {
+            q: "¿Cuál de los siguientes es un beneficio de la computación en la nube que permite 'dejar de adivinar la capacidad'?",
+            o: ["Agilidad", "Escalabilidad/Elasticidad", "Economía de escala", "Global footprint"],
+            a: 1,
+            e: "La elasticidad permite ajustar recursos según la demanda, eliminando la necesidad de pre-comprar hardware sobrante."
+        },
+        {
+            q: "Bajo el Modelo de Responsabilidad Compartida, ¿quién es responsable de parchear el sistema operativo invitado (Guest OS) en EC2?",
+            o: ["AWS", "El Cliente", "Ambos", "Ninguno"],
+            a: 1,
+            e: "En EC2 (IaaS), el cliente es responsable de todo lo que ocurra 'EN' la nube, incluyendo el SO."
+        },
+        {
+            q: "¿Cuál es el concepto que describe cómo AWS reduce sus costos a medida que más clientes usan sus servicios?",
+            o: ["Agilidad", "Economía de escala", "Alta disponibilidad", "Pay-as-you-go"],
+            a: 1,
+            e: "Economías de escala: A mayor volumen, AWS puede negociar mejores precios de hardware y pasar esos ahorros al cliente."
+        },
+        {
+            q: "Una Región de AWS está compuesta por al menos cuántas Zonas de Disponibilidad (AZ)?",
+            o: ["1", "2", "5", "10"],
+            a: 1,
+            e: "Cada región tiene un mínimo de 2 (aunque la mayoría tiene 3 o más) para asegurar alta disponibilidad."
+        },
+        {
+            q: "¿Cuál es el servicio de almacenamiento de OBJETOS de AWS con durabilidad del 99.999999999%?",
+            o: ["Amazon EBS", "Amazon S3", "Amazon EFS", "Amazon RDS"],
+            a: 1,
+            e: "Amazon S3 es el servicio de almacenamiento de objetos (archivos) de alta durabilidad."
+        },
+        {
+            q: "¿Qué pilar del Marco de Buena Arquitectura (Well-Architected Framework) se enfoca en evitar fallas y recuperarse rápidamente?",
+            o: ["Seguridad", "Fiabilidad (Reliability)", "Eficiencia de rendimiento", "Optimización de costos"],
+            a: 1,
+            e: "La Fiabilidad se trata de asegurar que el sistema funcione y se recupere de interrupciones."
+        },
+        {
+            q: "¿Qué herramienta de AWS te permite estimar los costos antes de mover tus cargas de trabajo a la nube?",
+            o: ["AWS Trusted Advisor", "AWS Pricing Calculator", "Cost Explorer", "AWS Budgets"],
+            a: 1,
+            e: "Pricing Calculator se usa para estimaciones previas. Cost Explorer para analizar gastos ya realizados."
+        },
+        {
+            q: "¿Cuál es la diferencia entre Capex y Opex?",
+            o: ["No hay diferencia", "Capex es gasto por adelantado (Capital); Opex es gasto operativo según uso", "Opex es para hardware físico solamente", "Capex es más barato en la nube"],
+            a: 1,
+            e: "La nube mueve el gasto de Capex (inversión masiva inicial) a Opex (gasto variable mensual)."
+        },
+        {
+            q: "En el Modelo de Responsabilidad Compartida, ¿de qué es responsable AWS?",
+            o: ["Configurar Security Groups", "Seguridad física de los centros de datos", "Parchear aplicaciones del cliente", "Gestionar IAM"],
+            a: 1,
+            e: "AWS es responsable de la seguridad 'DE' la nube (infraestructura física, hardware, hipervisor)."
+        },
+        {
+            q: "¿Qué ubicación de infraestructura de AWS se utiliza para entregar contenido con baja latencia a través de Amazon CloudFront?",
+            o: ["Regiones", "Zonas de Disponibilidad", "Edge Locations (Ubicaciones de borde)", "VPC Subnets"],
+            a: 2,
+            e: "Las Edge Locations están distribuidas globalmente para cachear contenido cerca de los usuarios finales."
+        }
+    ];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let failedQuestions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz(questions) {
+        currentQuestions = shuffle([...questions]);
+        currentIndex = 0;
+        score = 0;
+        failedQuestions = [];
+        document.getElementById('quiz-container').innerHTML = '';
+        renderQuestion();
+        updateHeader();
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('quiz-container').style.display = 'block';
+    }
+
+    function renderQuestion() {
+        const qData = currentQuestions[currentIndex];
+        const container = document.getElementById('quiz-container');
+        
+        const card = document.createElement('div');
+        card.className = 'question-card active';
+        
+        let optionsHtml = '';
+        qData.o.forEach((opt, index) => {
+            optionsHtml += `<li class="option-item" onclick="checkAnswer(${index}, this)">${opt}</li>`;
+        });
+
+        card.innerHTML = `
+            <h2>${qData.q}</h2>
+            <ul class="options">${optionsHtml}</ul>
+            <div class="explanation" id="explanation-${currentIndex}">${qData.e}</div>
+            <div class="controls" id="controls-${currentIndex}" style="display:none">
+                <div></div>
+                <button class="btn-next" onclick="nextQuestion()">Siguiente</button>
+            </div>
+        `;
+        
+        container.innerHTML = '';
+        container.appendChild(card);
+    }
+
+    function checkAnswer(selectedIndex, element) {
+        const qData = currentQuestions[currentIndex];
+        const items = document.querySelectorAll('.option-item');
+        
+        // Prevent multiple clicks
+        if (document.getElementById(`explanation-${currentIndex}`).style.display === 'block') return;
+
+        if (selectedIndex === qData.a) {
+            element.classList.add('correct');
+            score++;
+        } else {
+            element.classList.add('incorrect');
+            items[qData.a].classList.add('correct');
+            failedQuestions.push(qData);
+        }
+
+        document.getElementById(`explanation-${currentIndex}`).style.display = 'block';
+        document.getElementById(`controls-${currentIndex}`).style.display = 'flex';
+        updateHeader();
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex < currentQuestions.length) {
+            renderQuestion();
+            updateHeader();
+        } else {
+            showDashboard();
+        }
+    }
+
+    function updateHeader() {
+        const progress = (currentIndex / currentQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+        document.getElementById('current-q-num').innerText = Math.min(currentIndex + 1, currentQuestions.length);
+    }
+
+    function showDashboard() {
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('dashboard').style.display = 'block';
+        const percent = Math.round((score / currentQuestions.length) * 100);
+        document.getElementById('final-score').innerText = `${percent}%`;
+        
+        if (percent >= 70) {
+            document.getElementById('result-message').innerText = "¡Felicidades! Estás listo para el siguiente nivel.";
+        } else {
+            document.getElementById('result-message').innerText = "Necesitas repasar un poco más. ¡No te rindas!";
+        }
+    }
+
+    function restartQuiz() {
+        initQuiz(allQuestions);
+    }
+
+    function retryFailed() {
+        if (failedQuestions.length > 0) {
+            initQuiz(failedQuestions);
+        } else {
+            alert("¡No tienes preguntas fallidas!");
+            restartQuiz();
+        }
+    }
+
+    // Start
+    initQuiz(allQuestions);
+
+</script>
+
+</body>
+</html>

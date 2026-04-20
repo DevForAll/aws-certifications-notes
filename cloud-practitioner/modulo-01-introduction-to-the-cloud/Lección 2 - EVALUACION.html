@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CLF-C02: Evaluación Lección 2 (Acumulativa)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amazon+Ember:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-squid-ink: #232f3e;
+            --aws-bg: #f2f3f3;
+            --white: #ffffff;
+            --correct: #e7f3e8;
+            --correct-border: #2d8133;
+            --incorrect: #fdeaea;
+            --incorrect-border: #d13212;
+            --explanation-bg: #fff9c4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-squid-ink);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-sim span { color: var(--aws-orange); }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+
+        .progress-bar {
+            background-color: #4a5568;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            background-color: var(--aws-orange);
+            width: 0%;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .score-box {
+            font-weight: bold;
+            background: rgba(255,255,255,0.1);
+            padding: 5px 15px;
+            border-radius: 4px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .question-card.active { display: block; }
+
+        h2 { margin-top: 0; font-size: 1.25rem; line-height: 1.4; }
+
+        .options {
+            display: grid;
+            gap: 12px;
+            margin-top: 1.5rem;
+        }
+
+        .option {
+            padding: 12px 15px;
+            border: 1px solid #d5dbdb;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: var(--aws-orange);
+            background-color: #faffff;
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+            font-weight: bold;
+        }
+
+        .option.correct {
+            background-color: var(--correct);
+            border-color: var(--correct-border);
+            pointer-events: none;
+        }
+
+        .option.incorrect {
+            background-color: var(--incorrect);
+            border-color: var(--incorrect-border);
+            pointer-events: none;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 4px;
+            background-color: var(--explanation-bg);
+            border-left: 4px solid var(--aws-orange);
+            display: none;
+        }
+
+        .btn-container {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        button {
+            background-color: var(--aws-orange);
+            color: var(--white);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 2px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        button:hover { background-color: #ec8b00; }
+
+        #dashboard {
+            text-align: center;
+            background: var(--white);
+            padding: 3rem;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .result-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 0 auto 2rem;
+        }
+
+        .dashboard-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary { background-color: var(--aws-navy); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-sim">AWS <span>Training</span> | Certificación</div>
+        <div class="progress-container">
+            <div class="progress-bar"><div id="progress-fill"></div></div>
+        </div>
+        <div class="score-box">Puntos: <span id="current-score">0</span> / 30</div>
+    </header>
+
+    <main id="quiz-container"></main>
+
+    <div id="dashboard">
+        <h2>Evaluación Finalizada</h2>
+        <div class="result-circle" id="final-score">0%</div>
+        <p id="result-text"></p>
+        <div class="dashboard-btns">
+            <button onclick="location.reload()">Reiniciar todo (Shuffle)</button>
+            <button class="btn-secondary" onclick="retryFailed()">Reintentar fallidas</button>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+            {
+                q: "¿Qué es la computación en la nube según la definición de AWS?",
+                options: [
+                    "La gestión local de servidores físicos en un centro de datos privado.",
+                    "La entrega bajo demanda de recursos de TI a través de Internet con pago por uso.",
+                    "La compra de hardware masivo para reducir costos operativos.",
+                    "El almacenamiento exclusivo de archivos en servidores remotos."
+                ],
+                correct: 1,
+                exp: "La computación en la nube es la entrega bajo demanda de potencia de cómputo, bases de datos, almacenamiento y otros recursos de TI a través de Internet con precios de pago por uso."
+            },
+            {
+                q: "Un beneficio clave de la nube es cambiar los gastos de capital (CapEx) por gastos variables. ¿Qué significa esto?",
+                options: [
+                    "Invertir grandes sumas en centros de datos antes de usarlos.",
+                    "Pagar solo por los recursos de TI que se consumen en lugar de invertir en hardware físico.",
+                    "Aumentar el costo fijo mensual para obtener mejores descuentos.",
+                    "Eliminar por completo los gastos operativos de la empresa."
+                ],
+                correct: 1,
+                exp: "En lugar de invertir en centros de datos y servidores físicos antes de saber cómo los va a usar, puede pagar solo cuando consuma recursos de TI y pagar solo por lo que use."
+            },
+            {
+                q: "¿Cómo se beneficia un cliente de las 'Economías de escala masiva' de AWS?",
+                options: [
+                    "Al comprar su propio hardware en grandes volúmenes.",
+                    "AWS traslada los ahorros de costos obtenidos por su escala masiva a los clientes mediante precios más bajos.",
+                    "El cliente recibe servidores gratuitos después de un año de uso.",
+                    "AWS permite al cliente vender su capacidad sobrante a otros usuarios."
+                ],
+                correct: 1,
+                exp: "Debido a que AWS agrega el uso de cientos de miles de clientes, logra economías de escala masiva que se traducen en precios de pago por uso más bajos."
+            },
+            {
+                q: "¿Qué problema resuelve el beneficio 'Dejar de adivinar la capacidad'?",
+                options: [
+                    "La falta de seguridad en los centros de datos físicos.",
+                    "El exceso o insuficiencia de recursos (sobre-aprovisionamiento o infra-aprovisionamiento).",
+                    "La dificultad de contratar personal técnico capacitado.",
+                    "La necesidad de realizar copias de seguridad manuales."
+                ],
+                correct: 1,
+                exp: "En lugar de adivinar cuánta capacidad de infraestructura necesita y terminar con recursos inactivos o capacidad insuficiente, puede escalar hacia arriba o hacia abajo según sea necesario."
+            },
+            {
+                q: "¿A qué se refiere el término 'Agilidad' en la nube de AWS?",
+                options: [
+                    "A la velocidad con la que los servidores físicos se envían a la oficina del cliente.",
+                    "A la capacidad de reducir el tiempo necesario para disponer de recursos de TI para los desarrolladores de semanas a minutos.",
+                    "A la rapidez con la que los empleados de AWS responden tickets de soporte.",
+                    "A la velocidad de conexión de fibra óptica entre continentes."
+                ],
+                correct: 1,
+                exp: "En un entorno de computación en la nube, los nuevos recursos de TI están a solo un clic de distancia, lo que reduce drásticamente el tiempo de desarrollo y experimentación."
+            },
+            {
+                q: "¿Qué significa 'Globalizarse en minutos'?",
+                options: [
+                    "Contratar empleados en todo el mundo a través de un portal web.",
+                    "Capacidad de desplegar aplicaciones en múltiples regiones AWS globalmente con unos pocos clics.",
+                    "Traducir el sitio web de la empresa a todos los idiomas automáticamente.",
+                    "Mover físicamente los servidores de una oficina a otra en poco tiempo."
+                ],
+                correct: 1,
+                exp: "AWS permite implementar aplicaciones en múltiples regiones alrededor del mundo en minutos, proporcionando una menor latencia y una mejor experiencia para sus clientes."
+            },
+            {
+                q: "¿Cuál es el modelo de arquitectura básica donde un cliente solicita un servicio y un servidor responde?",
+                options: [
+                    "Modelo Punto a Punto.",
+                    "Modelo Cliente-Servidor.",
+                    "Modelo de Malla Global.",
+                    "Modelo de Cómputo Aislado."
+                ],
+                correct: 1,
+                exp: "En la computación, un cliente realiza una solicitud (ej. ver una página web) y un servidor (computadora potente) valida y responde a esa solicitud."
+            },
+            {
+                q: "Usted tiene una infraestructura local que conecta a la nube de AWS para manejar picos de tráfico. ¿Qué tipo de implementación es esta?",
+                options: [
+                    "Nube privada (On-premises).",
+                    "Implementación Híbrida.",
+                    "Implementación basada totalmente en la nube.",
+                    "Estrategia de Cero Nube."
+                ],
+                correct: 1,
+                exp: "Una implementación híbrida conecta la infraestructura local con recursos basados en la nube para migrar o extender las capacidades de la empresa."
+            },
+            {
+                q: "¿Cuántas Zonas de Disponibilidad (AZs) hay como mínimo en cada región de AWS?",
+                options: [
+                    "1",
+                    "2",
+                    "3",
+                    "5"
+                ],
+                correct: 2,
+                exp: "Cada Región de AWS tiene un mínimo de 3 Zonas de Disponibilidad (AZs) para garantizar redundancia y alta disponibilidad."
+            },
+            {
+                q: "¿Cuál es el propósito de las 'Ubicaciones de Borde' (Edge Locations) de AWS?",
+                options: [
+                    "Alojar bases de datos principales de la empresa.",
+                    "Almacenar en caché contenido para entregarlo con menor latencia a los usuarios finales.",
+                    "Ejecutar servidores de aplicaciones de alto rendimiento.",
+                    "Ser el centro de datos principal para las regiones pequeñas."
+                ],
+                correct: 1,
+                exp: "Las ubicaciones de borde se utilizan con servicios como Amazon CloudFront para entregar contenido a los usuarios finales con la menor latencia posible."
+            },
+            {
+                q: "Si una empresa quiere cumplir con una regulación que exige que los datos permanezcan dentro de un país específico, ¿qué debe elegir?",
+                options: [
+                    "Una Zona de Disponibilidad específica.",
+                    "Una Región de AWS ubicada en ese país.",
+                    "Una Ubicación de Borde cercana.",
+                    "El servicio AWS Local Zones."
+                ],
+                correct: 1,
+                exp: "La selección de la Región es el factor principal para el cumplimiento normativo y la soberanía de los datos."
+            },
+            {
+                q: "¿Qué caracteriza a las Zonas de Disponibilidad (AZs) dentro de una región?",
+                options: [
+                    "Están ubicadas en el mismo edificio para compartir energía.",
+                    "Están físicamente separadas por decenas de kilómetros pero conectadas por redes de baja latencia.",
+                    "Son copias lógicas, no físicas, de los datos.",
+                    "Están en diferentes países para evitar desastres nacionales."
+                ],
+                correct: 1,
+                exp: "Las AZs están separadas físicamente por una distancia significativa (decenas de kilómetros) para evitar que un solo desastre afecte a múltiples zonas, manteniendo baja latencia entre ellas."
+            },
+            {
+                q: "¿Aproximadamente cuántos clientes activos atiende AWS actualmente?",
+                options: [
+                    "Más de 10,000.",
+                    "Más de 100,000.",
+                    "Más de 1,000,000.",
+                    "Más de 10,000,000."
+                ],
+                correct: 2,
+                exp: "AWS atiende actualmente a más de 1,000,000 de clientes activos en todo el mundo."
+            },
+            {
+                q: "¿Cuál es el término utilizado para describir la capacidad de ajustar automáticamente los recursos de TI según la demanda?",
+                options: [
+                    "Aprovisionamiento manual.",
+                    "Elasticidad.",
+                    "Virtualización.",
+                    "Redundancia estática."
+                ],
+                correct: 1,
+                exp: "La elasticidad permite que la infraestructura se expanda o contraiga automáticamente según la demanda real del servicio."
+            },
+            {
+                q: "En el examen AWS, ¿qué significa 'Undifferentiated heavy lifting'?",
+                options: [
+                    "El desarrollo de código innovador para la aplicación.",
+                    "Las tareas de mantenimiento de infraestructura física (energía, racks, cableado) que AWS gestiona por usted.",
+                    "El entrenamiento de los empleados en nuevas tecnologías.",
+                    "La gestión del marketing y ventas de la empresa."
+                ],
+                correct: 1,
+                exp: "AWS se encarga del 'trabajo pesado indiferenciado' de los centros de datos, permitiéndole enfocarse en lo que realmente diferencia a su negocio."
+            },
+            {
+                q: "¿Qué ventaja financiera ofrece el modelo de 'Gasto Variable' de AWS?",
+                options: [
+                    "Previsibilidad total de costos fijos anuales.",
+                    "Eliminación de la necesidad de presupuestar el departamento de TI.",
+                    "Flexibilidad para pagar solo por lo que se usa y dejar de pagar al desaprovisionar.",
+                    "Descuentos obligatorios del 50% para nuevos clientes."
+                ],
+                correct: 2,
+                exp: "El gasto variable permite que los costos se alineen directamente con el consumo, evitando el desperdicio de dinero en capacidad no utilizada."
+            },
+            {
+                q: "¿Cuál es la diferencia clave entre Alta Disponibilidad (HA) y Tolerancia a Fallos (FT)?",
+                options: [
+                    "HA es para datos y FT es para cómputo.",
+                    "HA minimiza el tiempo de inactividad, mientras que FT busca cero tiempo de inactividad incluso ante fallos.",
+                    "HA es más cara que FT.",
+                    "HA requiere múltiples regiones y FT solo múltiples AZs."
+                ],
+                correct: 1,
+                exp: "La alta disponibilidad busca que el sistema esté accesible la mayor parte del tiempo, mientras que la tolerancia a fallos implica que el sistema no se detiene en absoluto ante el fallo de componentes."
+            },
+            {
+                q: "Usted gestiona sus recursos de AWS a través de un navegador web. ¿Cómo se llama técnicamente este portal?",
+                options: [
+                    "AWS Command Line Interface.",
+                    "AWS Management Console.",
+                    "AWS Software Development Kit.",
+                    "AWS Control Tower."
+                ],
+                correct: 1,
+                exp: "La Consola de Administración de AWS es la interfaz gráfica basada en navegador para gestionar los servicios de la nube."
+            },
+            {
+                q: "¿Qué sucede con los costos cuando se 'desaprovisiona' un recurso en AWS?",
+                options: [
+                    "Se debe seguir pagando por el resto del mes.",
+                    "Se detiene el cobro por ese recurso de inmediato (según el modelo de pago por uso).",
+                    "Se cobra una penalización por cancelación.",
+                    "Los datos se mueven automáticamente a una región más barata."
+                ],
+                correct: 1,
+                exp: "Una de las mayores ventajas es que deja de pagar por los recursos en el momento en que deja de usarlos (desaprovisionamiento)."
+            },
+            {
+                q: "¿Cuál de estos NO es un criterio principal para elegir una Región de AWS?",
+                options: [
+                    "Cumplimiento normativo.",
+                    "Cercanía a los usuarios (latencia).",
+                    "Disponibilidad de servicios específicos.",
+                    "El nombre de la ciudad donde se encuentra."
+                ],
+                correct: 3,
+                exp: "Los criterios reales son Cumplimiento, Proximidad, Servicios Disponibles y Precio. El nombre de la ciudad no es un factor técnico de decisión."
+            },
+            {
+                q: "Si una aplicación experimenta un pico de tráfico inesperado un domingo, ¿qué beneficio de la nube ayuda a manejarlo sin intervención humana?",
+                options: [
+                    "Economías de escala.",
+                    "Dejar de adivinar la capacidad (Elasticidad).",
+                    "Globalización en minutos.",
+                    "Soberanía de datos."
+                ],
+                correct: 1,
+                exp: "Al no tener que adivinar la capacidad, la infraestructura puede escalar automáticamente para manejar el pico de tráfico y luego contraerse."
+            },
+            {
+                q: "¿Qué término describe el proceso de poner a disposición recursos de TI de forma inmediata?",
+                options: [
+                    "Virtualización.",
+                    "Aprovisionamiento.",
+                    "Despliegue local.",
+                    "Instalación de Rack."
+                ],
+                correct: 1,
+                exp: "El aprovisionamiento es el acto de asignar y activar recursos digitales en la nube."
+            },
+            {
+                q: "¿Qué tipo de implementación de nube es más común en empresas grandes que están en medio de una migración lenta?",
+                options: [
+                    "Totalmente en la nube.",
+                    "Híbrida.",
+                    "On-premises pura.",
+                    "Multinube sin conexión."
+                ],
+                correct: 1,
+                exp: "La nube híbrida permite mantener sistemas antiguos localmente mientras se aprovechan nuevos servicios en la nube."
+            },
+            {
+                q: "AWS tiene más de ______ servicios disponibles actualmente.",
+                options: [
+                    "50",
+                    "100",
+                    "200",
+                    "300"
+                ],
+                correct: 3,
+                exp: "AWS ofrece actualmente una plataforma con más de 300 servicios integrados."
+            },
+            {
+                q: "¿Quién es responsable de la seguridad FÍSICA de los centros de datos en AWS?",
+                options: [
+                    "El cliente.",
+                    "AWS.",
+                    "Ambos (Modelo Compartido).",
+                    "Una empresa de seguridad externa."
+                ],
+                correct: 1,
+                exp: "Según el modelo de responsabilidad compartida, AWS es responsable de la seguridad 'DE' la nube, lo que incluye la seguridad física de los centros de datos."
+            },
+            {
+                q: "Un desarrollador quiere probar una nueva base de datos pero no sabe si funcionará. ¿Por qué AWS es ideal para esto?",
+                options: [
+                    "Porque AWS obliga a comprar una licencia anual.",
+                    "Porque puede crear el entorno en minutos, probarlo y borrarlo pagando solo por las horas de uso (Agilidad y bajo costo).",
+                    "Porque AWS corregirá automáticamente el código del desarrollador.",
+                    "Porque las pruebas en la nube siempre son exitosas."
+                ],
+                correct: 1,
+                exp: "La velocidad, agilidad y el modelo de pago por uso permiten experimentar con bajo riesgo financiero."
+            },
+            {
+                q: "Si un desastre natural afecta a una ciudad entera, ¿por qué es probable que una aplicación en AWS siga funcionando si está bien diseñada?",
+                options: [
+                    "Porque los centros de datos de AWS son indestructibles.",
+                    "Porque está desplegada en múltiples Zonas de Disponibilidad separadas por decenas de kilómetros.",
+                    "Porque AWS mueve los servidores físicamente antes del desastre.",
+                    "Porque el satélite de AWS mantiene la conexión."
+                ],
+                correct: 1,
+                exp: "El diseño Multi-AZ permite que si una zona falla, las otras continúen operando el servicio."
+            },
+            {
+                q: "¿Qué analogía usa AWS para explicar la alta disponibilidad?",
+                options: [
+                    "Tener una sola computadora muy potente.",
+                    "Tener una cadena de cafeterías en diferentes ubicaciones de la ciudad.",
+                    "Tener un generador de electricidad en el sótano.",
+                    "Usar un sistema de entrega a domicilio por drones."
+                ],
+                correct: 1,
+                exp: "La analogía de la cafetería explica que si una tienda tiene un problema (derrame en la caja), los clientes pueden ir a otra ubicación cercana para recibir su servicio."
+            },
+            {
+                q: "La computación en la nube permite sustituir la inversión inicial masiva por un costo variable. ¿Qué término financiero representa esta inversión inicial?",
+                options: [
+                    "OPEX.",
+                    "CAPEX.",
+                    "ROI.",
+                    "TCO."
+                ],
+                correct: 1,
+                exp: "CAPEX (Capital Expenditure) son los gastos de capital iniciales en activos físicos. AWS permite cambiarlos por OPEX (Operating Expenditure)."
+            },
+            {
+                q: "¿Qué sucede con la latencia cuando se usa una Ubicación de Borde para contenido estático?",
+                options: [
+                    "Aumenta debido al paso extra.",
+                    "Disminuye porque el contenido se entrega desde una ubicación más cercana al usuario.",
+                    "Se mantiene igual.",
+                    "Depende de la velocidad de la base de datos."
+                ],
+                correct: 1,
+                exp: "Las ubicaciones de borde reducen la latencia al acercar el contenido (caché) físicamente al usuario final."
+            }
+        ];
+
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let failedQuestions = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            questions = shuffle([...questionsData]);
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            
+            const q = questions[currentQuestionIndex];
+            const card = document.createElement('div');
+            card.className = 'question-card active';
+            
+            const qTitle = document.createElement('h2');
+            qTitle.innerText = `${currentQuestionIndex + 1}. ${q.q}`;
+            card.appendChild(qTitle);
+            
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options';
+            
+            q.options.forEach((opt, index) => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option';
+                optDiv.innerText = opt;
+                optDiv.onclick = () => checkAnswer(index, optDiv, card);
+                optionsDiv.appendChild(optDiv);
+            });
+            
+            card.appendChild(optionsDiv);
+            
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
+            feedback.id = 'feedback-box';
+            feedback.innerHTML = `<strong>Explicación:</strong> ${q.exp}`;
+            card.appendChild(feedback);
+            
+            const btnCont = document.createElement('div');
+            btnCont.className = 'btn-container';
+            const nextBtn = document.createElement('button');
+            nextBtn.id = 'next-btn';
+            nextBtn.innerText = currentQuestionIndex === questions.length - 1 ? 'Finalizar' : 'Siguiente';
+            nextBtn.style.display = 'none';
+            nextBtn.onclick = nextQuestion;
+            btnCont.appendChild(nextBtn);
+            card.appendChild(btnCont);
+            
+            quizContainer.appendChild(card);
+            updateProgress();
+        }
+
+        function checkAnswer(selectedIndex, element, card) {
+            const q = questions[currentQuestionIndex];
+            const options = card.querySelectorAll('.option');
+            const feedback = card.querySelector('.feedback');
+            const nextBtn = card.querySelector('#next-btn');
+            
+            options.forEach(opt => opt.onclick = null); // Disable further clicks
+            
+            if (selectedIndex === q.correct) {
+                element.classList.add('correct');
+                score++;
+                document.getElementById('current-score').innerText = score;
+            } else {
+                element.classList.add('incorrect');
+                options[q.correct].classList.add('correct');
+                failedQuestions.push(q);
+            }
+            
+            feedback.style.display = 'block';
+            nextBtn.style.display = 'block';
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < questions.length) {
+                showQuestion();
+            } else {
+                showDashboard();
+            }
+        }
+
+        function updateProgress() {
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+        }
+
+        function showDashboard() {
+            document.getElementById('quiz-container').style.display = 'none';
+            const dash = document.getElementById('dashboard');
+            dash.style.display = 'block';
+            
+            const percent = Math.round((score / questions.length) * 100);
+            document.getElementById('final-score').innerText = `${percent}%`;
+            
+            const text = document.getElementById('result-text');
+            if (percent >= 80) {
+                text.innerText = "¡Excelente! Estás listo para dominar los conceptos básicos de AWS.";
+            } else if (percent >= 60) {
+                text.innerText = "Buen trabajo, pero te recomendamos repasar los puntos críticos.";
+            } else {
+                text.innerText = "Necesitas repasar las lecciones. Enfócate en los 6 beneficios y la infraestructura global.";
+            }
+            document.getElementById('progress-fill').style.width = `100%`;
+        }
+
+        function retryFailed() {
+            if (failedQuestions.length === 0) {
+                alert("¡No tienes preguntas fallidas!");
+                return;
+            }
+            questions = shuffle([...failedQuestions]);
+            failedQuestions = [];
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('current-score').innerText = "0";
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            showQuestion();
+        }
+
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>

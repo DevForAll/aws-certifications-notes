@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CLF-C02 - M2 L2: Tipos de Instancias EC2 y Acumulativo</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-light-gray: #f2f3f3;
+            --white: #ffffff;
+            --success: #e7f4e4;
+            --error: #fdf2f2;
+            --explanation: #fff9c4;
+            --text-dark: #16191f;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-light-gray);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+
+        .progress-bar {
+            background-color: #404d5e;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            background-color: var(--aws-orange);
+            width: 0%;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            font-size: 0.9rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .card.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 { margin-top: 0; font-size: 1.3rem; }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .option-btn {
+            background: var(--white);
+            border: 1px solid #d5dbdb;
+            padding: 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option-btn.selected {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+            border-width: 2px;
+        }
+
+        .option-btn.correct {
+            background-color: var(--success);
+            border-color: #2e7d32;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--error);
+            border-color: #d32f2f;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .explanation {
+            background-color: var(--explanation);
+            border-left: 4px solid var(--aws-orange);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+
+        button.primary {
+            background-color: var(--aws-orange);
+            border: none;
+            color: white;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button.primary:hover {
+            background-color: #ec7211;
+        }
+
+        button.primary:disabled {
+            background-color: #eaeded;
+            color: #aab7b8;
+            cursor: not-allowed;
+        }
+
+        #dashboard {
+            text-align: center;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 2rem auto;
+        }
+
+        .dashboard-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim">AWS EXAM SIMULATOR</div>
+    <div class="progress-container">
+        <div class="progress-bar">
+            <div id="progress-fill"></div>
+        </div>
+    </div>
+    <div class="stats">
+        Puntuación: <span id="current-score">0</span> | Pregunta: <span id="current-index">1</span>/30
+    </div>
+</header>
+
+<main id="quiz-container">
+    <!-- Preguntas se inyectarán aquí -->
+</main>
+
+<div id="dashboard" class="card">
+    <h2>Resultados de la Evaluación</h2>
+    <div class="score-circle" id="final-score-percent">0%</div>
+    <p id="score-summary"></p>
+    <div class="dashboard-buttons">
+        <button class="primary" onclick="restartQuiz()">Reiniciar todo (Shuffle)</button>
+        <button class="primary" id="retry-failed-btn" onclick="retryFailed()">Reintentar fallidas</button>
+    </div>
+</div>
+
+<script>
+    const allQuestions = [
+        // MÓDULO 2 - LECCIÓN 2: TIPOS DE INSTANCIAS
+        {
+            q: "¿Qué familia de instancias de Amazon EC2 es la opción ideal si no sabe cómo se comportará su carga de trabajo con anticipación?",
+            options: [
+                "Optimizadas para computación",
+                "Optimizadas para memoria",
+                "Uso general",
+                "Optimizadas para almacenamiento"
+            ],
+            correct: 2,
+            exp: "Las instancias de uso general proporcionan un equilibrio de recursos y son el punto de partida recomendado cuando el rendimiento de la carga de trabajo es incierto."
+        },
+        {
+            q: "Usted necesita ejecutar una base de datos de alto rendimiento que procesa grandes conjuntos de datos en memoria RAM. ¿Qué tipo de instancia debería elegir?",
+            options: [
+                "Computación acelerada",
+                "Optimizada para memoria",
+                "Optimizada para almacenamiento",
+                "Uso general"
+            ],
+            correct: 1,
+            exp: "Las instancias optimizadas para memoria están diseñadas para cargas de trabajo que procesan grandes conjuntos de datos en memoria (RAM)."
+        },
+        {
+            q: "¿Qué familia de instancias utiliza aceleradores de hardware para realizar funciones de manera más eficiente que el software ejecutándose en una CPU?",
+            options: [
+                "Computación acelerada",
+                "Optimizada para computación",
+                "Optimizada para almacenamiento",
+                "Uso general"
+            ],
+            correct: 0,
+            exp: "La computación acelerada utiliza coprocesadores de hardware (GPUs, FPGAs) para realizar cálculos de punto flotante o procesamiento de gráficos."
+        },
+        {
+            q: "Un servidor de juegos multijugador requiere una alta potencia de procesamiento por segundo. ¿Qué familia de instancias es la más adecuada?",
+            options: [
+                "Uso general",
+                "Optimizada para almacenamiento",
+                "Optimizada para memoria",
+                "Optimizada para computación"
+            ],
+            correct: 3,
+            exp: "Las instancias optimizadas para computación son ideales para tareas con uso intensivo de CPU, como servidores de juegos y HPC."
+        },
+        {
+            q: "¿Qué característica de la nube de AWS permite cambiar el tipo o tamaño de una instancia EC2 si las necesidades de rendimiento cambian?",
+            options: [
+                "Alta disponibilidad",
+                "Flexibilidad (Agilidad)",
+                "Modelo de responsabilidad compartida",
+                "Economías de escala"
+            ],
+            correct: 1,
+            exp: "La flexibilidad de la nube permite redimensionar o cambiar tipos de instancias rápidamente según sea necesario."
+        },
+        {
+            q: "Las instancias optimizadas para almacenamiento son ideales para...",
+            options: [
+                "Cargas de trabajo con alto rendimiento para datos almacenados localmente",
+                "Cargas de trabajo con uso intensivo de CPU",
+                "Procesamiento de gráficos 3D",
+                "Aplicaciones con tráfico equilibrado"
+            ],
+            correct: 0,
+            exp: "Estas instancias están optimizadas para cargas de trabajo que requieren acceso rápido de lectura/escritura a datos almacenados localmente (como bases de datos NoSQL)."
+        },
+        {
+            q: "En la nomenclatura 't3.micro', ¿qué representa el prefijo 't'?",
+            options: [
+                "El tamaño de la instancia",
+                "La familia de la instancia",
+                "La generación de la tecnología",
+                "La región de despliegue"
+            ],
+            correct: 1,
+            exp: "El primer carácter (o grupo de caracteres) representa la familia de la instancia (ej. T para general, C para compute)."
+        },
+        {
+            q: "¿Cuál es el principal beneficio de elegir el tamaño de instancia correcto?",
+            options: [
+                "Aumentar el límite de servicio de AWS",
+                "Garantizar que AWS gestione el sistema operativo",
+                "Equilibrar el rendimiento con el costo para no pagar por recursos innecesarios",
+                "Eliminar la necesidad de un balanceador de carga"
+            ],
+            correct: 2,
+            exp: "Seleccionar el tamaño correcto asegura que obtengas el rendimiento necesario sin desperdiciar dinero en recursos infrautilizados."
+        },
+        // MÓDULO 2 - LECCIÓN 1: INTRODUCCIÓN A EC2
+        {
+            q: "¿Qué es Amazon EC2?",
+            options: [
+                "Un servicio de almacenamiento de objetos",
+                "Un servicio que proporciona servidores virtuales seguros y de tamaño ajustable",
+                "Un servicio de base de datos administrado",
+                "Un servicio para registrar nombres de dominio"
+            ],
+            correct: 1,
+            exp: "Elastic Compute Cloud (EC2) proporciona capacidad de cómputo segura y ajustable en la nube."
+        },
+        {
+            q: "¿Qué es una Amazon Machine Image (AMI)?",
+            options: [
+                "Una foto de la consola de AWS",
+                "Una plantilla que contiene la configuración de software necesaria para lanzar una instancia",
+                "Un tipo de almacenamiento de base de datos",
+                "Un monitor de rendimiento para EC2"
+            ],
+            correct: 1,
+            exp: "Una AMI es la plantilla (OS, servidor de aplicaciones, etc.) que se usa para crear una instancia EC2."
+        },
+        // ACUMULATIVO MÓDULO 1
+        {
+            q: "¿Cuál de los siguientes es un beneficio de la computación en la nube según AWS?",
+            options: [
+                "Inversión de capital fija inicial",
+                "Dejar de adivinar la capacidad",
+                "Gestión total del hardware por parte del cliente",
+                "Aumento del tiempo de comercialización"
+            ],
+            correct: 1,
+            exp: "Uno de los 6 beneficios es 'dejar de adivinar la capacidad' gracias a la elasticidad."
+        },
+        {
+            q: "Bajo el Modelo de Responsabilidad Compartida, ¿de qué es responsable el CLIENTE?",
+            options: [
+                "Seguridad física de los centros de datos",
+                "Mantenimiento de la infraestructura de red",
+                "Parches del sistema operativo invitado y configuración del firewall",
+                "Eliminación de unidades de disco duro"
+            ],
+            correct: 2,
+            exp: "El cliente es responsable de la seguridad 'en' la nube, lo que incluye parches del OS y grupos de seguridad (firewall)."
+        },
+        {
+            q: "Bajo el Modelo de Responsabilidad Compartida, ¿de qué es responsable AWS?",
+            options: [
+                "Gestión de los datos de la aplicación",
+                "Configuración de las cuentas de usuario de IAM",
+                "Seguridad 'de' la nube (infraestructura física, hardware, software)",
+                "Cifrado de los datos del cliente"
+            ],
+            correct: 2,
+            exp: "AWS es responsable de la seguridad 'de' la nube, que incluye la infraestructura global."
+        },
+        {
+            q: "¿Qué es una Zona de Disponibilidad (AZ)?",
+            options: [
+                "Un centro de datos único en el mundo",
+                "Uno o más centros de datos discretos con alimentación, red y conectividad redundantes",
+                "Una ubicación geográfica con miles de servidores",
+                "Una caché de contenido cerca de los usuarios finales"
+            ],
+            correct: 1,
+            exp: "Una AZ consiste en uno o más centros de datos dentro de una Región de AWS."
+        },
+        {
+            q: "¿Cuál es el beneficio de 'Global en minutos'?",
+            options: [
+                "AWS paga sus facturas internacionales",
+                "Puede desplegar aplicaciones en múltiples Regiones de todo el mundo rápidamente",
+                "El soporte técnico responde en menos de un minuto",
+                "La consola de AWS está traducida a todos los idiomas"
+            ],
+            correct: 1,
+            exp: "La infraestructura global permite desplegar aplicaciones cerca de usuarios en todo el mundo con unos pocos clics."
+        },
+        {
+            q: "El beneficio de la 'Economía de escala' significa que...",
+            options: [
+                "Los precios aumentan a medida que AWS crece",
+                "AWS puede lograr precios de pago por uso más bajos debido a su escala masiva",
+                "El cliente debe comprar servidores a gran escala",
+                "Solo las grandes empresas pueden usar AWS"
+            ],
+            correct: 1,
+            exp: "Debido a los cientos de miles de clientes, AWS puede lograr mayores economías de escala y transferir los ahorros a los clientes."
+        },
+        {
+            q: "¿Qué componente de la infraestructura global de AWS se utiliza para entregar contenido a los usuarios con baja latencia?",
+            options: [
+                "Regiones",
+                "Zonas de Disponibilidad",
+                "Ubicaciones de borde (Edge Locations)",
+                "VPC"
+            ],
+            correct: 2,
+            exp: "Las ubicaciones de borde (Edge Locations) se utilizan con servicios como CloudFront para entregar contenido rápidamente."
+        },
+        {
+            q: "Cambiar de un gasto de capital (CAPEX) a un gasto variable (OPEX) es un beneficio de:",
+            options: [
+                "Agilidad",
+                "Elasticidad",
+                "Cambiar el gasto de capital por gastos variables",
+                "Economías de escala"
+            ],
+            correct: 2,
+            exp: "En lugar de invertir en centros de datos antes de usarlos, solo pagas por lo que consumes."
+        },
+        {
+            q: "¿Quién es responsable de la seguridad de la fuente de alimentación física en un centro de datos de AWS?",
+            options: [
+                "El cliente",
+                "AWS",
+                "El proveedor de servicios de internet",
+                "Responsabilidad compartida al 50%"
+            ],
+            correct: 1,
+            exp: "La seguridad física y la infraestructura de soporte de los centros de datos es responsabilidad exclusiva de AWS."
+        },
+        {
+            q: "¿Cuál es la principal ventaja de utilizar múltiples Zonas de Disponibilidad?",
+            options: [
+                "Menor costo de almacenamiento",
+                "Mayor tolerancia a fallos y alta disponibilidad",
+                "Conexión directa a internet",
+                "Gestión automática de parches"
+            ],
+            correct: 1,
+            exp: "Si una AZ falla, tu aplicación puede seguir funcionando en otra AZ dentro de la misma región."
+        },
+        // MÁS ESCENARIOS DE INSTANCIAS (Consolidación)
+        {
+            q: "Usted está ejecutando una aplicación de Machine Learning que requiere procesamiento paralelo masivo mediante GPUs. ¿Qué familia elige?",
+            options: [
+                "Optimizada para computación",
+                "Optimizada para memoria",
+                "Computación acelerada",
+                "Optimizada para almacenamiento"
+            ],
+            correct: 2,
+            exp: "El uso de GPUs para procesamiento paralelo es el caso de uso clásico de la Computación Acelerada."
+        },
+        {
+            q: "Una startup quiere lanzar un sitio web sencillo para mostrar su portafolio. El tráfico es moderado y constante. ¿Qué familia es la más económica y adecuada?",
+            options: [
+                "Uso general",
+                "Optimizada para computación",
+                "Computación acelerada",
+                "Optimizada para almacenamiento"
+            ],
+            correct: 0,
+            exp: "Para sitios web sencillos con tráfico moderado, las instancias de uso general (como la familia T) son ideales."
+        },
+        {
+            q: "Usted necesita un sistema de archivos distribuido que requiere una latencia de disco mínima y millones de operaciones de E/S por segundo (IOPS). ¿Qué familia elige?",
+            options: [
+                "Uso general",
+                "Optimizada para memoria",
+                "Optimizada para almacenamiento",
+                "Computación acelerada"
+            ],
+            correct: 2,
+            exp: "La optimización para almacenamiento ofrece el rendimiento necesario para IOPS masivos en discos locales."
+        },
+        {
+            q: "¿Cuál es la diferencia clave entre 'Optimizada para Computación' y 'Computación Acelerada'?",
+            options: [
+                "La primera usa CPUs rápidas, la segunda usa aceleradores de hardware (GPUs/FPGAs)",
+                "La primera es gratis, la segunda no",
+                "La primera es para bases de datos, la segunda para web",
+                "No hay diferencia, son sinónimos"
+            ],
+            correct: 0,
+            exp: "Optimizada para computación = CPUs de alto rendimiento. Computación acelerada = Aceleradores de hardware especializados."
+        },
+        {
+            q: "¿Qué significa el concepto de 'Elasticidad' en Amazon EC2?",
+            options: [
+                "Los servidores son de goma",
+                "La capacidad de aumentar o disminuir los recursos de cómputo según la demanda",
+                "Que el precio nunca cambia",
+                "Que puedes usar EC2 en cualquier país"
+            ],
+            correct: 1,
+            exp: "La elasticidad permite ajustar la capacidad automáticamente para que coincida con la demanda actual."
+        },
+        {
+            q: "Si su aplicación necesita realizar análisis de datos científicos complejos que consumen mucha CPU pero poca RAM, ¿qué familia es mejor?",
+            options: [
+                "Optimizada para memoria",
+                "Optimizada para computación",
+                "Uso general",
+                "Optimizada para almacenamiento"
+            ],
+            correct: 1,
+            exp: "Cargas de trabajo científicas con uso intensivo de CPU = Optimizada para Computación."
+        },
+        {
+            q: "Bajo el modelo de responsabilidad compartida, ¿quién es responsable de configurar las listas de control de acceso a la red (NACL)?",
+            options: [
+                "AWS",
+                "El cliente",
+                "El fabricante del router",
+                "Nadie, es automático"
+            ],
+            correct: 1,
+            exp: "La configuración de red lógica (como firewalls, NACLs, Grupos de Seguridad) es responsabilidad del cliente."
+        },
+        {
+            q: "¿Cuál de estas opciones describe mejor una Región de AWS?",
+            options: [
+                "Un solo centro de datos",
+                "Un área geográfica que contiene múltiples zonas de disponibilidad aisladas y separadas",
+                "Un conjunto de servidores en la oficina del cliente",
+                "Una conexión por cable submarino"
+            ],
+            correct: 1,
+            exp: "Una región es un área geográfica física que contiene múltiples AZs."
+        },
+        {
+            q: "Usted quiere hospedar un repositorio de código Git. ¿Qué familia de instancia es la más equilibrada para esta tarea?",
+            options: [
+                "Computación acelerada",
+                "Optimizada para almacenamiento",
+                "Uso general",
+                "Optimizada para memoria"
+            ],
+            correct: 2,
+            exp: "Los repositorios de código son un caso de uso típico para instancias de uso general debido a su carga de trabajo equilibrada."
+        },
+        {
+            q: "¿Qué sucede con el costo si usted detiene una instancia EC2?",
+            options: [
+                "Sigue pagando por el cómputo (CPU/RAM)",
+                "Deja de pagar por el cómputo, pero puede seguir pagando por el almacenamiento asociado",
+                "AWS le devuelve todo el dinero del mes",
+                "La instancia se borra permanentemente"
+            ],
+            correct: 1,
+            exp: "EC2 es pago por uso. Si se detiene, dejas de pagar por el cómputo, aunque el almacenamiento (EBS) puede seguir generando costos."
+        }
+    ];
+
+    let currentQuestions = [];
+    let currentIndex = 0;
+    let score = 0;
+    let failedQuestions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz(questionsToUse) {
+        currentQuestions = shuffle([...questionsToUse]);
+        currentIndex = 0;
+        score = 0;
+        failedQuestions = [];
+        document.getElementById('quiz-container').innerHTML = '';
+        document.getElementById('dashboard').classList.remove('active');
+        renderQuestion();
+        updateStats();
+    }
+
+    function renderQuestion() {
+        const qData = currentQuestions[currentIndex];
+        const card = document.createElement('div');
+        card.className = 'card active';
+        card.id = `q-${currentIndex}`;
+
+        let optionsHtml = '';
+        qData.options.forEach((opt, index) => {
+            optionsHtml += `<button class="option-btn" onclick="checkAnswer(${index}, this)">${opt}</button>`;
+        });
+
+        card.innerHTML = `
+            <h2>${qData.q}</h2>
+            <div class="options">${optionsHtml}</div>
+            <div class="feedback" id="feedback-${currentIndex}">
+                <div class="explanation">
+                    <strong>Explicación:</strong> ${qData.exp}
+                </div>
+            </div>
+            <div class="actions">
+                <button class="primary" id="next-btn-${currentIndex}" onclick="nextQuestion()" disabled>Siguiente</button>
+            </div>
+        `;
+
+        document.getElementById('quiz-container').appendChild(card);
+    }
+
+    function checkAnswer(selectedIndex, btn) {
+        const qData = currentQuestions[currentIndex];
+        const buttons = btn.parentElement.querySelectorAll('.option-btn');
+        
+        // Deshabilitar todos los botones
+        buttons.forEach(b => b.disabled = true);
+        
+        const feedback = document.getElementById(`feedback-${currentIndex}`);
+        feedback.style.display = 'block';
+
+        if (selectedIndex === qData.correct) {
+            btn.classList.add('correct');
+            score++;
+            feedback.style.backgroundColor = 'var(--success)';
+        } else {
+            btn.classList.add('incorrect');
+            buttons[qData.correct].classList.add('correct');
+            feedback.style.backgroundColor = 'var(--error)';
+            failedQuestions.push(qData);
+        }
+
+        document.getElementById(`next-btn-${currentIndex}`).disabled = false;
+        updateStats();
+    }
+
+    function nextQuestion() {
+        document.getElementById(`q-${currentIndex}`).classList.remove('active');
+        currentIndex++;
+        
+        if (currentIndex < currentQuestions.length) {
+            renderQuestion();
+            updateStats();
+        } else {
+            showDashboard();
+        }
+    }
+
+    function updateStats() {
+        document.getElementById('current-score').innerText = score;
+        document.getElementById('current-index').innerText = Math.min(currentIndex + 1, currentQuestions.length);
+        const progress = ((currentIndex) / currentQuestions.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+    }
+
+    function showDashboard() {
+        document.getElementById('quiz-container').innerHTML = '';
+        const dashboard = document.getElementById('dashboard');
+        dashboard.classList.add('active');
+        
+        const percent = Math.round((score / currentQuestions.length) * 100);
+        document.getElementById('final-score-percent').innerText = `${percent}%`;
+        
+        let message = "";
+        if (percent >= 70) {
+            message = "¡Excelente! Estás dominando los conceptos de AWS.";
+            document.getElementById('final-score-percent').style.borderColor = "#2e7d32";
+        } else {
+            message = "Buen intento. Te recomendamos repasar los puntos críticos de la lección.";
+            document.getElementById('final-score-percent').style.borderColor = "#d32f2f";
+        }
+        
+        document.getElementById('score-summary').innerText = `Has respondido correctamente ${score} de ${currentQuestions.length} preguntas. ${message}`;
+        
+        const retryBtn = document.getElementById('retry-failed-btn');
+        retryBtn.style.display = failedQuestions.length > 0 ? 'inline-block' : 'none';
+    }
+
+    function restartQuiz() {
+        initQuiz(allQuestions);
+    }
+
+    function retryFailed() {
+        initQuiz(failedQuestions);
+    }
+
+    // Iniciar por primera vez
+    initQuiz(allQuestions);
+
+</script>
+
+</body>
+</html>

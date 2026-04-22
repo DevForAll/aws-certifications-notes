@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner - Evaluación M2 L5</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-white: #ffffff;
+            --aws-bg: #f2f3f3;
+            --correct: #e7f4e4;
+            --incorrect: #fde7e9;
+            --explanation-bg: #fff9c4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-navy);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--aws-white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+
+        .progress-bar {
+            background-color: #4c5a69;
+            border-radius: 10px;
+            height: 10px;
+            width: 100%;
+        }
+
+        #progress-fill {
+            background-color: var(--aws-orange);
+            height: 100%;
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .score-board {
+            font-size: 1.1rem;
+            min-width: 100px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.2rem;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .option-btn {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option-btn.selected {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct);
+            border-color: #2e7d32;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect);
+            border-color: #d32f2f;
+        }
+
+        .explanation {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--explanation-bg);
+            border-radius: 6px;
+            display: none;
+            border-left: 5px solid var(--aws-orange);
+        }
+
+        #next-btn, #restart-btn {
+            background-color: var(--aws-orange);
+            color: var(--aws-navy);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            float: right;
+            margin-top: 1rem;
+        }
+
+        #next-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .hidden { display: none; }
+
+        #results-card {
+            text-align: center;
+        }
+
+        .final-score {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--aws-orange);
+            margin: 1rem 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .badge-pass { background-color: var(--correct); color: #2e7d32; }
+        .badge-fail { background-color: var(--incorrect); color: #d32f2f; }
+
+        .multi-select-hint {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim">AWS <span>CLF-C02</span> Engine</div>
+    <div class="progress-container">
+        <div class="progress-bar"><div id="progress-fill"></div></div>
+    </div>
+    <div class="score-board">Puntuación: <span id="current-score">0</span></div>
+</header>
+
+<main>
+    <div id="quiz-container">
+        <div class="card" id="question-card">
+            <div id="question-meta" style="color: #666; font-size: 0.8rem; margin-bottom: 0.5rem;">Pregunta 1 de 35</div>
+            <h2 id="question-text">Cargando pregunta...</h2>
+            <div id="multi-hint" class="multi-select-hint hidden">(Seleccione 2 opciones)</div>
+            <div class="options" id="options-container"></div>
+            <div class="explanation" id="explanation-text"></div>
+            <button id="next-btn" onclick="handleNext()">Verificar</button>
+        </div>
+
+        <div class="card hidden" id="results-card">
+            <h2>Resultados del Examen</h2>
+            <div id="result-badge" class="badge"></div>
+            <div class="final-score" id="final-score-text">0/35</div>
+            <p id="result-message"></p>
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <button id="restart-btn" onclick="restartQuiz(false)" style="float: none;">Reintentar todo</button>
+                <button id="restart-failed-btn" onclick="restartQuiz(true)" style="background: var(--aws-navy); color: white; border: none; padding: 0.8rem 2rem; border-radius: 4px; font-weight: bold; cursor: pointer;">Reintentar fallidas</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+    const questions = [
+        {
+            q: "Una empresa tiene una carga de trabajo de procesamiento de video por lotes que puede pausarse y reanudarse en cualquier momento. ¿Qué opción de precios de EC2 ofrece el mayor ahorro de costos?",
+            options: ["Instancias bajo demanda", "Instancias reservadas", "Instancias Spot", "Savings Plans"],
+            correct: ["Instancias Spot"],
+            explanation: "Las instancias Spot ofrecen hasta un 90% de descuento. Son ideales para cargas de trabajo tolerantes a interrupciones, como el procesamiento por lotes."
+        },
+        {
+            q: "Usted desea comprometerse con un gasto constante de $15 por hora durante 3 años para obtener descuentos en EC2, AWS Lambda y AWS Fargate. ¿Qué opción debería elegir?",
+            options: ["Instancias reservadas estándar", "Savings Plans", "Instancias reservadas convertibles", "Hosts dedicados"],
+            correct: ["Savings Plans"],
+            explanation: "Savings Plans es el modelo basado en compromiso de gasto ($/hora) que aplica no solo a EC2, sino también a Fargate y Lambda."
+        },
+        {
+            q: "Una aplicación requiere aislamiento físico completo y el cliente necesita usar sus propias licencias de software (BYOL) vinculadas a los núcleos físicos. ¿Qué opción es obligatoria?",
+            options: ["Instancias dedicadas", "Hosts dedicados", "Instancias reservadas", "Instancias Spot"],
+            correct: ["Hosts dedicados"],
+            explanation: "Los Hosts dedicados proporcionan servidores físicos exclusivos y visibilidad de los sockets/núcleos, necesarios para ciertos requisitos de cumplimiento y licencias BYOL."
+        },
+        {
+            q: "AWS ha emitido una advertencia de interrupción para una instancia Spot. ¿De cuánto tiempo dispone el usuario para guardar su trabajo?",
+            options: ["30 segundos", "5 minutos", "2 minutos", "10 minutos"],
+            correct: ["2 minutos"],
+            explanation: "AWS proporciona exactamente 2 minutos de aviso antes de interrumpir una instancia Spot para reclamar la capacidad."
+        },
+        {
+            q: "¿Qué modelo de pago de Instancias Reservadas ofrece el mayor nivel de descuento?",
+            options: ["No Upfront (Sin pago adelantado)", "Partial Upfront (Pago parcial)", "All Upfront (Todo por adelantado)", "Monthly Upfront"],
+            correct: ["All Upfront (Todo por adelantado)"],
+            explanation: "Pagar el 100% al inicio (All Upfront) garantiza el mayor descuento porcentual disponible."
+        },
+        {
+            q: "Una empresa nueva está lanzando una aplicación y no conoce sus patrones de tráfico. ¿Cuál es la recomendación de AWS para establecer una línea base de uso?",
+            options: ["Comprar Instancias Reservadas por 1 año", "Usar Instancias Spot para ahorrar desde el inicio", "Usar Instancias Bajo Demanda (On-Demand)", "Contratar un Host Dedicado"],
+            correct: ["Usar Instancias Bajo Demanda (On-Demand)"],
+            explanation: "AWS recomienda usar On-Demand al principio para descubrir la 'línea base' de uso sin compromisos a largo plazo."
+        },
+        {
+            q: "¿Cuál es la diferencia principal entre Instancias Dedicadas y Hosts Dedicados? (Elija 2)",
+            options: [
+                "Los Hosts Dedicados ofrecen visibilidad de sockets y núcleos físicos.",
+                "Las Instancias Dedicadas son más caras que los Hosts Dedicados.",
+                "Los Hosts Dedicados permiten el uso de licencias de software específicas (BYOL).",
+                "Las Instancias Dedicadas garantizan que el hardware no se comparta con nadie, ni siquiera con otras cuentas del mismo cliente."
+            ],
+            correct: ["Los Hosts Dedicados ofrecen visibilidad de sockets y núcleos físicos.", "Los Hosts Dedicados permiten el uso de licencias de software específicas (BYOL)."],
+            explanation: "Los Hosts Dedicados permiten ver los núcleos físicos y son necesarios para BYOL; las Instancias Dedicadas solo garantizan aislamiento de hardware frente a otros clientes."
+        },
+        {
+            q: "Usted necesita flexibilidad para cambiar la familia de instancias (ej. de C5 a M5) durante el periodo de un contrato de reserva. ¿Qué tipo de reserva debería adquirir?",
+            options: ["Instancia Reservada Estándar", "Instancia Reservada Convertible", "Instancia Spot", "Instancia Bajo Demanda"],
+            correct: ["Instancia Reservada Convertible"],
+            explanation: "Las reservas convertibles permiten cambiar la familia de instancias y otros parámetros, a cambio de un descuento ligeramente menor que las estándar."
+        },
+        {
+            q: "Un desarrollador necesita una instancia optimizada para tareas que requieren un alto uso de CPU, como la transcodificación de video. ¿Qué familia de instancias debería elegir?",
+            options: ["Familia T3 (Uso general)", "Familia C5 (Computación)", "Familia R5 (Memoria)", "Familia I3 (Almacenamiento)"],
+            correct: ["Familia C5 (Computación)"],
+            explanation: "La familia 'C' (Compute) está diseñada para cargas de trabajo que requieren procesadores de alto rendimiento."
+        },
+        {
+            q: "¿Cuál de los siguientes es un servicio de cómputo que permite ejecutar código sin gestionar servidores?",
+            options: ["Amazon EC2", "Amazon S3", "AWS Lambda", "Amazon EBS"],
+            correct: ["AWS Lambda"],
+            explanation: "AWS Lambda es el servicio Serverless (sin servidor) por excelencia de AWS."
+        },
+        {
+            q: "¿Qué herramienta permite aprovisionar recursos de AWS mediante scripts de línea de comandos en Windows, Linux o macOS?",
+            options: ["Consola de administración de AWS", "AWS SDK", "AWS CLI", "AWS CloudFormation"],
+            correct: ["AWS CLI"],
+            explanation: "La Interfaz de Línea de Comandos de AWS (CLI) permite gestionar servicios mediante comandos de terminal."
+        },
+        {
+            q: "Según el Modelo de Responsabilidad Compartida, ¿cuál de las siguientes es responsabilidad de AWS?",
+            options: ["Configurar los grupos de seguridad (Security Groups)", "Mantenimiento físico de los centros de datos", "Parchear el sistema operativo de una instancia EC2", "Cifrar los datos del cliente"],
+            correct: ["Mantenimiento físico de los centros de datos"],
+            explanation: "AWS es responsable de la seguridad 'DE' la nube (infraestructura física, hardware, virtualización)."
+        },
+        {
+            q: "¿Cuál de los siguientes es un beneficio de la computación en la nube que permite a las empresas dejar de adivinar la capacidad?",
+            options: ["Economías de escala", "Escalabilidad/Elasticidad", "Agilidad", "Despliegue global en minutos"],
+            correct: ["Escalabilidad/Elasticidad"],
+            explanation: "La elasticidad permite ajustar los recursos según la demanda real, eliminando la necesidad de predecir la capacidad máxima."
+        },
+        {
+            q: "¿Cómo se llama el concepto de agrupar centros de datos dentro de una Región para proporcionar alta disponibilidad?",
+            options: ["Ubicaciones de borde (Edge Locations)", "Zonas de Disponibilidad (AZ)", "Puntos de Presencia", "Redes de Entrega de Contenido"],
+            correct: ["Zonas de Disponibilidad (AZ)"],
+            explanation: "Las Zonas de Disponibilidad son clústeres de centros de datos aislados entre sí para tolerar fallos."
+        },
+        {
+            q: "Una empresa quiere reducir sus costos operativos moviendo sus servidores locales a AWS. ¿Qué cambios en el modelo de gastos ocurrirán? (Elija 2)",
+            options: ["Cambio de OpEx a CapEx", "Cambio de CapEx a OpEx", "Cambio de Costos Variables a Costos Fijos", "Cambio de Costos Fijos a Costos Variables"],
+            correct: ["Cambio de CapEx a OpEx", "Cambio de Costos Fijos a Costos Variables"],
+            explanation: "Moverse a la nube cambia los Gastos de Capital (CapEx) por Gastos Operativos (OpEx) y costos variables basados en el consumo real."
+        },
+        {
+            q: "Si una instancia EC2 Spot es terminada por AWS debido a falta de capacidad, ¿cómo se factura el uso de esa fracción de hora?",
+            options: ["Se cobra la hora completa", "AWS no cobra por la hora parcial interrumpida", "Se cobra el doble por la interrupción", "El cliente recibe una multa"],
+            correct: ["AWS no cobra por la hora parcial interrumpida"],
+            explanation: "Si AWS interrumpe la instancia Spot, no se cobra la hora parcial. Si el usuario la termina, se cobra por segundo (en Linux/Windows)."
+        },
+        {
+            q: "¿Qué servicios están incluidos en la cobertura de un Savings Plan de tipo 'Compute'? (Elija 3)",
+            options: ["Amazon EC2", "AWS Lambda", "AWS Fargate", "Amazon RDS", "Amazon S3", "Amazon DynamoDB"],
+            correct: ["Amazon EC2", "AWS Lambda", "AWS Fargate"],
+            explanation: "Compute Savings Plans aplica a EC2, Lambda y Fargate."
+        },
+        {
+            q: "¿Cuál es la principal ventaja de las Instancias Bajo Demanda?",
+            options: ["El precio más bajo posible", "Flexibilidad total sin compromisos a largo plazo", "Hardware físico dedicado", "Garantía de capacidad reservada"],
+            correct: ["Flexibilidad total sin compromisos a largo plazo"],
+            explanation: "La ventaja de On-Demand es el autoservicio y la capacidad de iniciar/detener instancias sin contratos previos."
+        },
+        {
+            q: "Un cliente necesita ejecutar una base de datos crítica durante los próximos 12 meses de forma ininterrumpida. ¿Qué opción es la más rentable?",
+            options: ["Instancias Spot", "Instancias Reservadas de 1 año", "Instancias Bajo Demanda", "Host Dedicado"],
+            correct: ["Instancias Reservadas de 1 año"],
+            explanation: "Para cargas de estado estable conocidas (12 meses), las Instancias Reservadas ofrecen un descuento significativo frente a On-Demand."
+        },
+        {
+            q: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable de gestionar las licencias en un Host Dedicado?",
+            options: ["AWS", "El Cliente", "Ambos compartida", "El proveedor del hardware"],
+            correct: ["El Cliente"],
+            explanation: "El cliente es responsable de gestionar sus propias licencias (BYOL) y el software que instala en el host."
+        },
+        {
+            q: "¿Qué sucede con una instancia reservada si no se utiliza durante un periodo del contrato?",
+            options: ["AWS devuelve el dinero prorrateado", "Se puede canjear por créditos de almacenamiento", "Se sigue cobrando el cargo por el compromiso de capacidad", "Se detiene el cobro automáticamente"],
+            correct: ["Se sigue cobrando el cargo por el compromiso de capacidad"],
+            explanation: "Una reserva es un compromiso de pago. Si no usas la instancia, el cargo se realiza de todos modos."
+        },
+        {
+            q: "Usted necesita el máximo aislamiento posible en la nube por razones regulatorias estrictas. ¿Qué opción de EC2 debería elegir?",
+            options: ["VPC (Virtual Private Cloud)", "Instancias Dedicadas", "Hosts Dedicados", "Grupos de Seguridad"],
+            correct: ["Hosts Dedicados"],
+            explanation: "Los Hosts Dedicados ofrecen aislamiento a nivel de servidor físico, proporcionando el mayor nivel de control y visibilidad."
+        },
+        {
+            q: "¿Cuál es el periodo de compromiso típico para Savings Plans e Instancias Reservadas?",
+            options: ["6 meses o 1 año", "1 año o 3 años", "2 años o 5 años", "Únicamente por meses"],
+            correct: ["1 año o 3 años"],
+            explanation: "AWS ofrece contratos de 1 o 3 años para sus modelos de reserva y ahorro."
+        },
+        {
+            q: "¿Qué opción de precios de EC2 es más similar a 'pagar por la electricidad según el consumo real'?",
+            options: ["Spot", "Reserved", "On-Demand", "Dedicated"],
+            correct: ["On-Demand"],
+            explanation: "On-Demand es el modelo de utilidad pura: pagas exactamente por lo que usas sin contrato previo."
+        },
+        {
+            q: "Una aplicación tiene un uso base constante de 4 instancias y picos ocasionales de 10 instancias. ¿Cuál es la estrategia de costos más eficiente?",
+            options: ["10 instancias On-Demand", "10 instancias Reservadas", "4 instancias Reservadas y 6 On-Demand para los picos", "10 instancias Spot"],
+            correct: ["4 instancias Reservadas y 6 On-Demand para los picos"],
+            explanation: "Combinar Reservas para la carga base y On-Demand para los picos es la arquitectura de costos recomendada."
+        },
+        {
+            q: "¿Qué herramienta de AWS analiza su historial de uso para recomendar el tipo de instancia EC2 ideal para ahorrar dinero?",
+            options: ["AWS Trusted Advisor", "AWS Cost Explorer", "AWS Compute Optimizer", "AWS Budgets"],
+            correct: ["AWS Compute Optimizer"],
+            explanation: "Compute Optimizer usa aprendizaje automático para recomendar el tamaño y tipo de instancia óptimo según el rendimiento histórico."
+        },
+        {
+            q: "Al comparar el TCO (Costo Total de Propiedad), ¿qué costo se elimina completamente al mover servidores locales a Amazon EC2?",
+            options: ["Gestión del sistema operativo", "Costo de electricidad y refrigeración del centro de datos", "Seguridad de los datos del cliente", "Licencias de aplicaciones de terceros"],
+            correct: ["Costo de electricidad y refrigeración del centro de datos"],
+            explanation: "AWS asume la responsabilidad y el costo de la infraestructura física, incluyendo energía y climatización."
+        },
+        {
+            q: "¿Qué describe mejor el beneficio de 'Agilidad' en AWS?",
+            options: ["Reducir el costo por unidad al comprar en masa", "Velocidad para experimentar y desplegar recursos en minutos", "Tener centros de datos en cada país", "Escalar automáticamente con la demanda"],
+            correct: ["Velocidad para experimentar y desplegar recursos en minutos"],
+            explanation: "La agilidad se refiere a la rapidez para innovar al reducir drásticamente el tiempo de aprovisionamiento de TI."
+        },
+        {
+            q: "En una instancia EC2, ¿quién es responsable de parchear una vulnerabilidad en una base de datos instalada por el usuario?",
+            options: ["AWS", "El Cliente", "El fabricante del hardware", "El equipo de soporte de AWS"],
+            correct: ["El Cliente"],
+            explanation: "Según el modelo de responsabilidad compartida, el cliente es responsable de todo el software instalado sobre el sistema operativo."
+        },
+        {
+            q: "¿Qué característica de AWS permite que las aplicaciones sigan operativas incluso ante el fallo total de un centro de datos?",
+            options: ["Edge Locations", "Despliegue Multi-AZ (Zonas de Disponibilidad)", "Roles de IAM", "Amazon CloudFront"],
+            correct: ["Despliegue Multi-AZ (Zonas de Disponibilidad)"],
+            explanation: "El despliegue Multi-AZ garantiza alta disponibilidad al replicar recursos en zonas físicamente aisladas."
+        },
+        {
+            q: "¿Qué tipo de instancia EC2 es ideal para aplicaciones que requieren acceso ultrarrápido a conjuntos de datos locales (Instance Store)?",
+            options: ["Optimización para almacenamiento", "Optimización para memoria", "Cómputo acelerado", "Uso general"],
+            correct: ["Optimización para almacenamiento"],
+            explanation: "Las instancias optimizadas para almacenamiento (como la serie I) ofrecen alta tasa de IOPS para datos locales masivos."
+        },
+        {
+            q: "¿Cuál es el beneficio de la 'Economía de Escala' que AWS traslada a sus clientes?",
+            options: ["Precios más bajos debido a la compra masiva de hardware por parte de AWS", "El cliente puede comprar más instancias", "La nube crece infinitamente", "Las instancias se vuelven más rápidas con el tiempo"],
+            correct: ["Precios más bajos debido a la compra masiva de hardware por parte de AWS"],
+            explanation: "Al tener millones de clientes, AWS opera a una escala que reduce costos operativos, traduciéndose en reducciones de precios frecuentes."
+        },
+        {
+            q: "¿Cuál es la función principal de las Ubicaciones de Borde (Edge Locations)?",
+            options: ["Ejecutar bases de datos pesadas", "Almacenar copias de seguridad de larga duración", "Cachear contenido para entregarlo con baja latencia", "Proporcionar aislamiento físico para licencias"],
+            correct: ["Cachear contenido para entregarlo con baja latencia"],
+            explanation: "Las Edge Locations se usan con CloudFront para acercar el contenido a los usuarios finales y reducir la latencia."
+        },
+        {
+            q: "¿Qué modelo de precios es más adecuado para servidores de prueba que solo se utilizan 4 horas al día?",
+            options: ["Instancias Reservadas", "Instancias Bajo Demanda (pagando solo las 4 horas)", "Savings Plans de 3 años", "Hosts Dedicados"],
+            correct: ["Instancias Bajo Demanda (pagando solo las 4 horas)"],
+            explanation: "Para usos esporádicos y de corta duración, On-Demand es lo más eficiente al no requerir compromisos."
+        },
+        {
+            q: "Usted adquiere una Instancia Reservada para una Zona de Disponibilidad (AZ) específica. ¿Qué garantiza esto?",
+            options: ["Que la instancia nunca tendrá errores", "Un descuento en el precio y reserva de capacidad en esa AZ", "Soporte técnico premium dedicado", "Acceso exclusivo a hardware nuevo"],
+            correct: ["Un descuento en el precio y reserva de capacidad en esa AZ"],
+            explanation: "Las reservas zonales garantizan capacidad en la AZ elegida, además del descuento. Las regionales solo garantizan el descuento."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOptions = [];
+    let shuffledQuestions = [];
+    let failedQuestions = [];
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function initQuiz() {
+        shuffledQuestions = JSON.parse(JSON.stringify(questions)); // Deep copy
+        shuffleArray(shuffledQuestions);
+        
+        // No barajamos las opciones aquí de forma estática, 
+        // lo haremos dinámicamente en renderQuestion para no romper los índices correctos.
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        const qData = shuffledQuestions[currentQuestionIndex];
+        const container = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+        const multiHint = document.getElementById('multi-hint');
+        
+        selectedOptions = [];
+        nextBtn.disabled = true;
+        nextBtn.innerText = "Verificar";
+        document.getElementById('explanation-text').style.display = 'none';
+        container.innerHTML = '';
+        
+        document.getElementById('question-meta').innerText = `Pregunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
+        document.getElementById('question-text').innerText = qData.q;
+
+        // Barajar opciones y mantener rastro de las correctas
+        const originalOptions = [...qData.options];
+        shuffleArray(originalOptions);
+        qData.currentOptions = originalOptions;
+
+        if (qData.correct.length > 1) {
+            multiHint.classList.remove('hidden');
+            multiHint.innerText = `(Seleccione ${qData.correct.length} opciones)`;
+        } else {
+            multiHint.classList.add('hidden');
+        }
+
+        qData.currentOptions.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(index, btn);
+            container.appendChild(btn);
+        });
+
+        updateProgress();
+    }
+
+    function selectOption(index, btn) {
+        const qData = shuffledQuestions[currentQuestionIndex];
+        
+        if (qData.correct.length === 1) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedOptions = [index];
+            document.getElementById('next-btn').disabled = false;
+        } else {
+            if (selectedOptions.includes(index)) {
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                btn.classList.remove('selected');
+            } else if (selectedOptions.length < qData.correct.length) {
+                selectedOptions.push(index);
+                btn.classList.add('selected');
+            }
+            document.getElementById('next-btn').disabled = selectedOptions.length !== qData.correct.length;
+        }
+    }
+
+    function handleNext() {
+        const nextBtn = document.getElementById('next-btn');
+        if (nextBtn.innerText === "Verificar") {
+            checkAnswer();
+        } else {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        }
+    }
+
+    function checkAnswer() {
+        const qData = shuffledQuestions[currentQuestionIndex];
+        const buttons = document.querySelectorAll('.option-btn');
+        const nextBtn = document.getElementById('next-btn');
+        
+        // Identificar qué índices de las opciones actuales son correctos basados en el texto
+        const correctIndices = [];
+        qData.currentOptions.forEach((opt, idx) => {
+            if (qData.correct.includes(opt)) {
+                correctIndices.push(idx);
+            }
+        });
+
+        const isCorrect = selectedOptions.length === correctIndices.length && 
+                          selectedOptions.every(val => correctIndices.includes(val));
+
+        buttons.forEach((btn, index) => {
+            btn.disabled = true;
+            if (correctIndices.includes(index)) {
+                btn.classList.add('correct');
+            } else if (selectedOptions.includes(index)) {
+                btn.classList.add('incorrect');
+            }
+        });
+
+        if (isCorrect) {
+            score++;
+            document.getElementById('current-score').innerText = score;
+        } else {
+            failedQuestions.push(shuffledQuestions[currentQuestionIndex]);
+        }
+
+        const exp = document.getElementById('explanation-text');
+        exp.innerText = qData.explanation;
+        exp.style.display = 'block';
+        
+        nextBtn.innerText = "Siguiente";
+    }
+
+    function updateProgress() {
+        const progress = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
+    }
+
+    function showResults() {
+        document.getElementById('question-card').classList.add('hidden');
+        document.getElementById('results-card').classList.remove('hidden');
+        document.getElementById('progress-fill').style.width = `100%`;
+        
+        const finalScoreText = document.getElementById('final-score-text');
+        const resultBadge = document.getElementById('result-badge');
+        const percent = (score / shuffledQuestions.length) * 100;
+        
+        finalScoreText.innerText = `${score} / ${shuffledQuestions.length}`;
+        
+        if (percent >= 70) {
+            resultBadge.innerText = "¡APROBADO!";
+            resultBadge.className = "badge badge-pass";
+            document.getElementById('result-message').innerText = "Excelente dominio de los conceptos de facturación y fundamentos de AWS.";
+        } else {
+            resultBadge.innerText = "NO APROBADO";
+            resultBadge.className = "badge badge-fail";
+            document.getElementById('result-message').innerText = "Te recomendamos repasar los modelos de precios de EC2 y el ahorro de costos.";
+        }
+
+        document.getElementById('restart-failed-btn').style.display = failedQuestions.length > 0 ? 'inline-block' : 'none';
+    }
+
+    function restartQuiz(onlyFailed) {
+        if (onlyFailed && failedQuestions.length > 0) {
+            shuffledQuestions = [...failedQuestions];
+        } else {
+            shuffledQuestions = JSON.parse(JSON.stringify(questions));
+            shuffleArray(shuffledQuestions);
+        }
+        
+        failedQuestions = [];
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('current-score').innerText = "0";
+        document.getElementById('results-card').classList.add('hidden');
+        document.getElementById('question-card').classList.remove('hidden');
+        renderQuestion();
+    }
+
+    initQuiz();
+</script>
+
+</body>
+</html>

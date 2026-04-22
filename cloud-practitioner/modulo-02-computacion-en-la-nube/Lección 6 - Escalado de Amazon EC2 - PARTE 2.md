@@ -37,6 +37,12 @@ Este módulo profundiza en las **estrategias de escalado** en AWS, explicando la
     - Mantiene el **número deseado de instancias** en todo momento
     - Opera **basado en métricas** de rendimiento
 
+![[Pasted image 20260422003454.png]]
+
+![[Pasted image 20260422003511.png]]
+![[Pasted image 20260422003526.png]]
+
+
 ### **Escalado Independiente de Componentes** (Probabilidad de examen: **MEDIA-ALTA**)
 
 - **Concepto crítico**: Cada componente de la aplicación puede escalarse de forma **independiente**

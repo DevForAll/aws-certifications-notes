@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CLF-C02 - Evaluación Módulo 2, Lección 6 (Parte 1)</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-bg: #f2f3f3;
+            --white: #ffffff;
+            --correct: #e7f4e4;
+            --incorrect: #fdf2f2;
+            --explanation: #fff9c4;
+            --text-dark: #16191f;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .progress-container {
+            width: 300px;
+            background: #404b5a;
+            height: 10px;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--aws-orange);
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        h2 { margin-top: 0; font-size: 1.3rem; }
+
+        .option {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            border: 1px solid #d5dbdb;
+            border-radius: 4px;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            border-color: var(--aws-orange);
+            background-color: #faffff;
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: #fff9f0;
+        }
+
+        .option.correct {
+            background-color: var(--correct);
+            border-color: #2e7d32;
+        }
+
+        .option.incorrect {
+            background-color: var(--incorrect);
+            border-color: #d32f2f;
+        }
+
+        .explanation-box {
+            background-color: var(--explanation);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+            border-left: 4px solid var(--aws-orange);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        button.nav-btn {
+            background-color: var(--aws-navy);
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button.nav-btn:hover { background-color: #37475a; }
+
+        #score-display { font-weight: bold; color: var(--aws-orange); }
+
+        #dashboard {
+            display: none;
+            text-align: center;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: #f8f9f9;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #eaeded;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim">AWS <span style="color:var(--aws-orange)">Tutor</span> Exam Engine</div>
+    <div style="display: flex; align-items: center;">
+        <div class="progress-container"><div id="progress-bar"></div></div>
+        <div id="score-display">Puntaje: 0/30</div>
+    </div>
+</header>
+
+<div class="container">
+    <div id="quiz-area">
+        <div class="card" id="question-card">
+            <div id="question-type" style="font-size: 0.8rem; color: #666; margin-bottom: 0.5rem; text-transform: uppercase;"></div>
+            <h2 id="question-text">Cargando pregunta...</h2>
+            <div id="options-container"></div>
+            <div id="explanation" class="explanation-box"></div>
+            <div class="controls">
+                <button id="submit-btn" class="nav-btn">Verificar Respuesta</button>
+                <button id="next-btn" class="nav-btn" style="display:none">Siguiente Pregunta</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard" class="card">
+        <h1>¡Evaluación Completada!</h1>
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div style="font-size: 0.9rem; color: #666;">Puntuación Final</div>
+                <div id="final-score" style="font-size: 2.5rem; font-weight: bold; color: var(--aws-orange);">0%</div>
+            </div>
+            <div class="stat-card">
+                <div style="font-size: 0.9rem; color: #666;">Respuestas Correctas</div>
+                <div id="correct-count" style="font-size: 2.5rem; font-weight: bold;">0 / 30</div>
+            </div>
+        </div>
+        <div id="performance-msg" style="margin-bottom: 2rem; font-style: italic;"></div>
+        <button onclick="restartQuiz()" class="nav-btn" style="background-color: var(--aws-orange);">Reiniciar con Orden Aleatorio</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        // --- LECCIÓN 6 PARTE 1: ESCALADO & HA ---
+        {
+            type: "Negocio",
+            text: "Una empresa experimenta picos de tráfico impredecibles cada viernes por la tarde. ¿Qué concepto de AWS les permite ajustar automáticamente la capacidad de sus instancias EC2 para mantener el rendimiento y minimizar costos?",
+            options: [
+                "Escalabilidad vertical",
+                "Elasticidad",
+                "Alta Disponibilidad",
+                "Aprovisionamiento programático"
+            ],
+            correct: 1,
+            explanation: "La **Elasticidad** es la capacidad de ajustar automáticamente los recursos en respuesta a cambios en la demanda. Esto asegura que haya suficiente capacidad durante los picos y se ahorren costos durante los valles."
+        },
+        {
+            type: "Arquitectura",
+            text: "¿Cuál es la mejor práctica recomendada por AWS para garantizar que una aplicación siga funcionando incluso si un centro de datos completo falla?",
+            options: [
+                "Desplegar la aplicación en múltiples regiones.",
+                "Utilizar instancias EC2 de tipo 'Compute Optimized'.",
+                "Desplegar instancias redundantes en múltiples Zonas de Disponibilidad (AZ).",
+                "Aumentar el tamaño de la instancia EC2 (Scale Up)."
+            ],
+            correct: 2,
+            explanation: "Las **Zonas de Disponibilidad (AZ)** son centros de datos aislados dentro de una región. Desplegar en múltiples AZs protege la aplicación contra fallos de infraestructura local."
+        },
+        {
+            type: "Técnica",
+            text: "En el contexto de Amazon EC2, ¿qué significa 'Escalado Horizontal'?",
+            options: [
+                "Aumentar la RAM y CPU de una instancia existente.",
+                "Agregar más instancias del mismo tipo al sistema.",
+                "Mover instancias de una AZ a otra automáticamente.",
+                "Cambiar el modelo de precios de On-Demand a Reserved."
+            ],
+            correct: 1,
+            explanation: "El **Escalado Horizontal** (Scale Out) consiste en añadir más instancias para manejar la carga, lo cual es fundamental para la Alta Disponibilidad."
+        },
+        {
+            type: "Negocio",
+            text: "Un CFO está preocupado por pagar por capacidad de servidor que no se utiliza durante la noche. ¿Cuál es el beneficio de la nube de AWS que aborda directamente esta preocupación?",
+            options: [
+                "Velocidad y agilidad",
+                "Dejar de adivinar la capacidad",
+                "Beneficiarse de economías de escala masivas",
+                "Despliegue global en minutos"
+            ],
+            correct: 1,
+            explanation: "Al 'dejar de adivinar la capacidad', las empresas pueden usar la elasticidad para escalar hacia abajo cuando no hay demanda, eliminando el desperdicio de recursos."
+        },
+        {
+            type: "Técnica",
+            text: "¿Qué término describe un componente de infraestructura que, si falla, provoca que todo el sistema deje de funcionar?",
+            options: [
+                "Zona de Disponibilidad única",
+                "Punto único de falla (Single Point of Failure)",
+                "Instancia redundante",
+                "Escalado vertical insuficiente"
+            ],
+            correct: 1,
+            explanation: "Un **Punto único de falla (SPOF)** es cualquier parte de un sistema que, al fallar, detiene la operación completa. La arquitectura Multi-AZ elimina los SPOF."
+        },
+        {
+            type: "Negocio",
+            text: "Usted desea crear rápidamente una segunda copia exacta de un servidor de 'toma de pedidos' para soportar un aumento de clientes. ¿Qué característica de AWS facilita esto?",
+            options: [
+                "Mantenimiento manual de hardware",
+                "Aprovisionamiento programático",
+                "Pago por uso (Pay-as-you-go)",
+                "Almacenamiento en caché de borde"
+            ],
+            correct: 1,
+            explanation: "El **Aprovisionamiento Programático** permite usar código o scripts para crear instancias idénticas de forma rápida y consistente, facilitando la replicación."
+        },
+        {
+            type: "Seguridad",
+            text: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable de configurar el escalado automático y la redundancia de las aplicaciones?",
+            options: [
+                "AWS",
+                "El Cliente",
+                "Ambos (Responsabilidad compartida)",
+                "El proveedor de hardware del centro de datos"
+            ],
+            correct: 1,
+            explanation: "El cliente es responsable de la configuración de sus aplicaciones 'EN' la nube, lo que incluye la arquitectura de alta disponibilidad y el auto-escalado."
+        },
+        {
+            type: "Arquitectura",
+            text: "Seleccione los DOS componentes esenciales para lograr Alta Disponibilidad (HA) en AWS (Elija 2):",
+            options: [
+                "Redundancia de instancias",
+                "Uso de una sola Zona de Disponibilidad para mayor velocidad",
+                "Distribución en múltiples Zonas de Disponibilidad",
+                "Uso exclusivo de instancias Spot"
+            ],
+            correct: [0, 2],
+            isMulti: true,
+            explanation: "La **Alta Disponibilidad** se logra combinando la **redundancia** (múltiples instancias) con la **distribución geográfica aislada** (múltiples AZs)."
+        },
+        {
+            type: "Negocio",
+            text: "¿Cuál es la principal diferencia entre Alta Disponibilidad (HA) y Tolerancia a Fallos?",
+            options: [
+                "HA es más cara que la Tolerancia a Fallos.",
+                "HA garantiza que el sistema esté disponible la mayor parte del tiempo; la Tolerancia a Fallos garantiza que no haya ninguna interrupción perceptible.",
+                "AWS no ofrece Tolerancia a Fallos, solo HA.",
+                "HA se refiere solo a bases de datos."
+            ],
+            correct: 1,
+            explanation: "La **Alta Disponibilidad** busca minimizar el tiempo de inactividad, mientras que la **Tolerancia a Fallos** es un nivel superior donde el sistema continúa operando sin degradación alguna ante fallos."
+        },
+        {
+            type: "Técnica",
+            text: "¿Qué ocurre con una aplicación desplegada en múltiples AZs si una de las AZs sufre un corte de energía masivo?",
+            options: [
+                "La aplicación deja de funcionar en toda la región.",
+                "Las instancias en las AZs restantes asumen la carga y mantienen el servicio.",
+                "AWS reinicia automáticamente toda la región en otro país.",
+                "Los datos se pierden permanentemente."
+            ],
+            correct: 1,
+            explanation: "Gracias al aislamiento de fallos, las AZs restantes en la región continúan operando, permitiendo que la aplicación siga disponible."
+        },
+
+        // --- ACUMULATIVO MÓDULO 2 (1-5) ---
+        {
+            type: "Técnica",
+            text: "Usted necesita ejecutar una base de datos que requiere un alto rendimiento de memoria. ¿Qué familia de instancias EC2 debería elegir?",
+            options: [
+                "General Purpose",
+                "Compute Optimized",
+                "Memory Optimized",
+                "Storage Optimized"
+            ],
+            correct: 2,
+            explanation: "Las instancias **Memory Optimized** están diseñadas para cargas de trabajo que procesan grandes conjuntos de datos en memoria, como bases de datos de alto rendimiento."
+        },
+        {
+            type: "Negocio",
+            text: "Una empresa tiene una carga de trabajo constante que durará 3 años. ¿Qué modelo de precios de EC2 ofrece el mayor descuento?",
+            options: [
+                "On-Demand",
+                "Reserved Instances",
+                "Spot Instances",
+                "Dedicated Hosts"
+            ],
+            correct: 1,
+            explanation: "Las **Reserved Instances** ofrecen descuentos significativos (hasta 72%) a cambio de un compromiso de 1 o 3 años para cargas de trabajo estables."
+        },
+        {
+            type: "Negocio",
+            text: "Usted tiene una tarea de procesamiento de datos por lotes que puede ser interrumpida sin problemas. ¿Qué modelo de precios es el más económico?",
+            options: [
+                "On-Demand",
+                "Reserved Instances",
+                "Spot Instances",
+                "On-Premises"
+            ],
+            correct: 2,
+            explanation: "Las **Spot Instances** permiten usar capacidad ociosa de AWS con hasta un 90% de descuento, pero pueden ser terminadas por AWS con poco aviso, ideal para tareas tolerantes a fallos."
+        },
+        {
+            type: "Técnica",
+            text: "¿Qué herramienta permite aprovisionar recursos de AWS a través de una interfaz gráfica de usuario basada en navegador?",
+            options: [
+                "AWS CLI",
+                "AWS SDK",
+                "AWS Management Console",
+                "AWS CloudFormation"
+            ],
+            correct: 2,
+            explanation: "La **AWS Management Console** es la interfaz visual para gestionar recursos de AWS."
+        },
+
+        // --- ACUMULATIVO MÓDULO 1 ---
+        {
+            type: "Seguridad",
+            text: "Bajo el Modelo de Responsabilidad Compartida, ¿cuál de las siguientes es una responsabilidad de AWS?",
+            options: [
+                "Configuración de Grupos de Seguridad",
+                "Parchear el Sistema Operativo invitado (Guest OS)",
+                "Mantenimiento físico del hardware del centro de datos",
+                "Gestión de identidades de usuarios (IAM)"
+            ],
+            correct: 2,
+            explanation: "AWS es responsable de la seguridad **DE** la nube, lo que incluye la infraestructura física, el software de virtualización y el hardware."
+        },
+        {
+            type: "Negocio",
+            text: "¿Qué beneficio de la nube se refiere a la capacidad de desplegar aplicaciones a nivel mundial en cuestión de minutos?",
+            options: [
+                "Economías de escala",
+                "Agilidad",
+                "Despliegue Global",
+                "Gasto variable"
+            ],
+            correct: 2,
+            explanation: "La infraestructura global de AWS permite replicar aplicaciones en múltiples regiones del mundo rápidamente."
+        },
+        {
+            type: "Arquitectura",
+            text: "¿Qué es una Región de AWS?",
+            options: [
+                "Un solo centro de datos.",
+                "Un área geográfica que contiene múltiples Zonas de Disponibilidad aisladas.",
+                "Una colección de redes de entrega de contenido (Edge Locations).",
+                "Un servidor físico en la oficina del cliente."
+            ],
+            correct: 1,
+            explanation: "Una **Región** es una ubicación geográfica física que contiene dos o más Zonas de Disponibilidad."
+        },
+        {
+            type: "Negocio",
+            text: "El concepto de 'economías de escala' en AWS significa que:",
+            options: [
+                "Los clientes deben pagar más a medida que AWS crece.",
+                "AWS puede pasar los ahorros de costos a los clientes debido a su escala masiva de operación.",
+                "Los clientes deben comprar su propio hardware a granel.",
+                "La nube solo es barata para grandes empresas."
+            ],
+            correct: 1,
+            explanation: "A medida que AWS escala, sus costos operativos bajan, lo que les permite reducir los precios para los clientes (más de 100 reducciones de precio históricas)."
+        },
+        {
+            type: "Técnica",
+            text: "¿Cuál es el modelo de computación en la nube donde los recursos se ofrecen a través de Internet al público general?",
+            options: [
+                "Nube Privada",
+                "Nube Híbrida",
+                "Nube Pública",
+                "On-Premises"
+            ],
+            correct: 2,
+            explanation: "La **Nube Pública** es el modelo donde los servicios son propiedad de un proveedor (como AWS) y se entregan a través de Internet."
+        },
+        {
+            type: "Seguridad",
+            text: "Usted necesita proteger su instancia EC2 de tráfico de red no deseado a nivel de instancia. ¿Qué herramienta de AWS utilizaría?",
+            options: [
+                "AWS Shield",
+                "Security Groups (Grupos de Seguridad)",
+                "IAM Roles",
+                "AWS KMS"
+            ],
+            correct: 1,
+            explanation: "Los **Security Groups** actúan como firewalls virtuales para las instancias EC2, controlando el tráfico entrante y saliente."
+        },
+
+        // --- MÁS ESCALADO & VARIADOS ---
+        {
+            type: "Negocio",
+            text: "Una startup quiere probar una idea de aplicación durante solo 2 horas. ¿Qué modelo de precios de EC2 es el más adecuado?",
+            options: [
+                "Spot Instances",
+                "On-Demand",
+                "Reserved Instances",
+                "Savings Plans"
+            ],
+            correct: 1,
+            explanation: "Para pruebas cortas e impredecibles, **On-Demand** es ideal porque no requiere compromiso y se paga por segundo o minuto."
+        },
+        {
+            type: "Arquitectura",
+            text: "¿Cuál es el número mínimo recomendado de Zonas de Disponibilidad para una arquitectura de alta disponibilidad?",
+            options: [
+                "1",
+                "2",
+                "5",
+                "10"
+            ],
+            correct: 1,
+            explanation: "Se requieren al menos **2 AZs** para garantizar que si una falla, la otra pueda mantener el servicio."
+        },
+        {
+            type: "Técnica",
+            text: "Seleccione las TRES características que definen la computación en la nube según AWS (Elija 3):",
+            options: [
+                "Entrega bajo demanda de recursos de TI",
+                "Uso de hardware físico dedicado exclusivamente en su oficina",
+                "Precios de pago por uso",
+                "Entrega a través de Internet",
+                "Contratos forzosos de 5 años"
+            ],
+            correct: [0, 2, 3],
+            isMulti: true,
+            explanation: "La nube se define por ser **bajo demanda**, con **pago por uso** y entrega vía **Internet**."
+        },
+        {
+            type: "Negocio",
+            text: "¿Cómo ayuda la elasticidad a mejorar la satisfacción del cliente?",
+            options: [
+                "Reduciendo el precio de la suscripción mensual.",
+                "Garantizando que la aplicación tenga capacidad suficiente para responder rápidamente incluso durante picos de tráfico.",
+                "Permitiendo que los clientes elijan el color del servidor.",
+                "Eliminando la necesidad de soporte técnico."
+            ],
+            correct: 1,
+            explanation: "Si una aplicación escala automáticamente con la demanda, los clientes no experimentan lentitud ni errores durante momentos de mucho uso."
+        },
+        {
+            type: "Seguridad",
+            text: "¿Quién es responsable de la seguridad física de los centros de datos de AWS?",
+            options: [
+                "El cliente",
+                "AWS",
+                "El gobierno local",
+                "El equipo de seguridad contratado por el cliente"
+            ],
+            correct: 1,
+            explanation: "AWS es responsable de la infraestructura física (Seguridad DE la nube)."
+        },
+        {
+            type: "Técnica",
+            text: "¿Qué significa el término 'Agilidad' en la nube?",
+            options: [
+                "La velocidad física de los servidores.",
+                "La capacidad de reducir el tiempo necesario para poner recursos a disposición de los desarrolladores.",
+                "La capacidad de los servidores para moverse entre países.",
+                "El nombre de un nuevo procesador de AWS."
+            ],
+            correct: 1,
+            explanation: "La **Agilidad** permite pasar de la idea a la implementación en minutos, en lugar de esperar semanas por hardware."
+        },
+        {
+            type: "Arquitectura",
+            text: "Si usted 'escala verticalmente' (Scale Up) una instancia de base de datos, ¿qué está haciendo?",
+            options: [
+                "Añadiendo una segunda base de datos en otra AZ.",
+                "Cambiando la instancia a un tipo con más potencia (ej: de t3.micro a t3.large).",
+                "Cambiando de AWS a un centro de datos propio.",
+                "Aumentando la velocidad de la conexión a Internet."
+            ],
+            correct: 1,
+            explanation: "Escalar verticalmente significa aumentar la capacidad de una sola instancia existente."
+        },
+        {
+            type: "Negocio",
+            text: "Una empresa quiere migrar a la nube para cambiar costos fijos (CapEx) por costos variables (OpEx). ¿A qué beneficio se refiere?",
+            options: [
+                "Aumento de velocidad y agilidad",
+                "Cambiar gasto de capital por gasto variable",
+                "Dejar de gastar dinero en centros de datos",
+                "Economías de escala"
+            ],
+            correct: 1,
+            explanation: "Es el pilar de 'Trade capital expense for variable expense'."
+        },
+        {
+            type: "Técnica",
+            text: "¿Cuál de estos servicios de AWS es un servicio de cómputo?",
+            options: [
+                "Amazon S3",
+                "Amazon EC2",
+                "Amazon VPC",
+                "Amazon RDS"
+            ],
+            correct: 1,
+            explanation: "Amazon **EC2** (Elastic Compute Cloud) es el servicio de servidores virtuales (cómputo)."
+        },
+        {
+            type: "Negocio",
+            text: "La 'Alta Disponibilidad' es un concepto que busca principalmente evitar:",
+            options: [
+                "Costos altos",
+                "Tiempo de inactividad (Downtime)",
+                "Uso de Python",
+                "El uso de consolas gráficas"
+            ],
+            correct: 1,
+            explanation: "El objetivo principal de la Alta Disponibilidad es asegurar que el sistema esté operativo el mayor tiempo posible."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOptions = [];
+    let shuffledQuestions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function initQuiz() {
+        shuffledQuestions = [...questions];
+        shuffle(shuffledQuestions);
+        currentQuestionIndex = 0;
+        score = 0;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = shuffledQuestions[currentQuestionIndex];
+        selectedOptions = [];
+        
+        document.getElementById('question-type').innerText = q.type;
+        document.getElementById('question-text').innerText = q.text + (q.isMulti ? " (Elija todas las que correspondan)" : "");
+        
+        const container = document.getElementById('options-container');
+        container.innerHTML = '';
+        
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(index, btn);
+            container.appendChild(btn);
+        });
+
+        document.getElementById('explanation').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'block';
+        document.getElementById('next-btn').style.display = 'none';
+        updateUI();
+    }
+
+    function selectOption(index, btn) {
+        const q = shuffledQuestions[currentQuestionIndex];
+        if (q.isMulti) {
+            if (selectedOptions.includes(index)) {
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                btn.classList.remove('selected');
+            } else {
+                selectedOptions.push(index);
+                btn.classList.add('selected');
+            }
+        } else {
+            selectedOptions = [index];
+            Array.from(document.getElementsByClassName('option')).forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+        }
+    }
+
+    function checkAnswer() {
+        if (selectedOptions.length === 0) return;
+        
+        const q = shuffledQuestions[currentQuestionIndex];
+        const buttons = document.getElementsByClassName('option');
+        let isCorrect = false;
+
+        if (q.isMulti) {
+            isCorrect = q.correct.length === selectedOptions.length && q.correct.every(v => selectedOptions.includes(v));
+        } else {
+            isCorrect = selectedOptions[0] === q.correct;
+        }
+
+        if (isCorrect) score++;
+
+        // Visual feedback
+        Array.from(buttons).forEach((btn, index) => {
+            const isRight = q.isMulti ? q.correct.includes(index) : index === q.correct;
+            const isChosen = selectedOptions.includes(index);
+
+            if (isRight) btn.classList.add('correct');
+            else if (isChosen) btn.classList.add('incorrect');
+            btn.disabled = true;
+        });
+
+        const expBox = document.getElementById('explanation');
+        expBox.innerHTML = `<strong>${isCorrect ? '¡Correcto!' : 'Incorrecto'}</strong><br>${q.explanation}`;
+        expBox.style.display = 'block';
+        
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+        updateUI();
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            showQuestion();
+        } else {
+            showDashboard();
+        }
+    }
+
+    function updateUI() {
+        const progress = (currentQuestionIndex / shuffledQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+        document.getElementById('score-display').innerText = `Puntaje: ${score}/${shuffledQuestions.length}`;
+    }
+
+    function showDashboard() {
+        document.getElementById('quiz-area').style.display = 'none';
+        const dash = document.getElementById('dashboard');
+        dash.style.display = 'block';
+        
+        const percent = Math.round((score / shuffledQuestions.length) * 100);
+        document.getElementById('final-score').innerText = `${percent}%`;
+        document.getElementById('correct-count').innerText = `${score} / ${shuffledQuestions.length}`;
+        
+        let msg = "";
+        if (percent >= 85) msg = "¡Excelente! Estás listo para el examen real. Domina los conceptos de escalado.";
+        else if (percent >= 70) msg = "Buen trabajo. Revisa los puntos críticos de Alta Disponibilidad y vuelve a intentarlo.";
+        else msg = "Necesitas reforzar los conceptos. Revisa las lecciones del Módulo 1 y el Modelo de Responsabilidad Compartida.";
+        
+        document.getElementById('performance-msg').innerText = msg;
+    }
+
+    function restartQuiz() {
+        document.getElementById('quiz-area').style.display = 'block';
+        document.getElementById('dashboard').style.display = 'none';
+        initQuiz();
+    }
+
+    document.getElementById('submit-btn').onclick = checkAnswer;
+    document.getElementById('next-btn').onclick = nextQuestion;
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

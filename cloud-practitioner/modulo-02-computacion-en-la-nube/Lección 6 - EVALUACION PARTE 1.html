@@ -43,7 +43,8 @@
         }
 
         .progress-container {
-            width: 300px;
+            flex: 1;
+            max-width: 300px;
             background: #404b5a;
             height: 10px;
             border-radius: 5px;
@@ -154,6 +155,27 @@
             padding: 1.5rem;
             border-radius: 8px;
             border: 1px solid #eaeded;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                flex-wrap: wrap;
+                padding: 0.5rem 1rem;
+                gap: 0.5rem;
+            }
+            .logo-sim { font-size: 1rem; }
+            header > div:last-child {
+                width: 100%;
+            }
+            .progress-container {
+                flex: 1;
+                max-width: none;
+                margin-right: 10px;
+            }
+            #score-display { font-size: 0.85rem; }
+            .container { padding: 0 0.5rem; }
+            .card { padding: 1.2rem; }
+            .stat-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>

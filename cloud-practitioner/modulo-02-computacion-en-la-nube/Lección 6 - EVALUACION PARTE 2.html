@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CLF-C02: Evaluación Módulo 2 - Lección 6 (Parte 2)</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-light-gray: #f2f3f3;
+            --aws-white: #ffffff;
+            --success-green: #e7f4e4;
+            --error-red: #fdf0f0;
+            --warning-yellow: #fff9c4;
+            --text-dark: #16191f;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-light-gray);
+            margin: 0;
+            padding: 0;
+            color: var(--text-dark);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--aws-white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+            margin-right: 5px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            background: rgba(255,255,255,0.2);
+            height: 10px;
+            border-radius: 5px;
+        }
+
+        #progress-bar {
+            background-color: var(--aws-orange);
+            height: 100%;
+            width: 0%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        h2 { margin-top: 0; color: var(--aws-navy); }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .option {
+            padding: 1rem;
+            border: 2px solid #eaeded;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: #fff4e5;
+        }
+
+        .option.correct {
+            background-color: var(--success-green);
+            border-color: #2d7d32;
+        }
+
+        .option.incorrect {
+            background-color: var(--error-red);
+            border-color: #d32f2f;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 6px;
+            background-color: var(--warning-yellow);
+            display: none;
+        }
+
+        .feedback h4 { margin-top: 0; color: #856404; }
+
+        .btn {
+            background-color: var(--aws-orange);
+            color: var(--aws-white);
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover { background-color: #ec7211; }
+        .btn:disabled { background-color: #eaeded; color: #aab7b8; cursor: not-allowed; }
+
+        #results-dashboard { display: none; text-align: center; }
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin: 2rem auto;
+        }
+
+        .summary-list { text-align: left; margin: 2rem 0; }
+        .summary-item { padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+
+        .multi-hint { font-size: 0.9rem; color: #666; font-style: italic; margin-bottom: 0.5rem; }
+
+        @media (max-width: 600px) {
+            header {
+                flex-wrap: wrap;
+                padding: 0.5rem 1rem;
+                gap: 0.5rem;
+            }
+            .logo-sim { font-size: 1rem; }
+            .progress-container {
+                width: 100%;
+                margin: 0;
+                flex-grow: unset;
+            }
+            #score-display { font-size: 0.9rem; }
+            .container { padding: 0 0.5rem; }
+            .card { padding: 1.2rem; }
+            .score-circle { width: 120px; height: 120px; font-size: 2rem; }
+        }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim"><span>☁</span> AWS Academy CLF-C02</div>
+    <div class="progress-container"><div id="progress-bar"></div></div>
+    <div id="score-display">Puntos: 0</div>
+</header>
+
+<div class="container">
+    <div id="quiz-container">
+        <div class="card" id="question-card">
+            <div id="question-meta" style="color: #666; margin-bottom: 1rem;">Pregunta <span id="current-q-num">1</span> de 30</div>
+            <div id="multi-select-hint" class="multi-hint" style="display:none;">(Seleccione 2 o más opciones según se indique)</div>
+            <h3 id="question-text">Cargando pregunta...</h3>
+            <div class="options-container" id="options"></div>
+            <div style="margin-top: 2rem; display: flex; justify-content: space-between;">
+                <button id="submit-btn" class="btn" onclick="checkAnswer()">Enviar Respuesta</button>
+                <button id="next-btn" class="btn" style="display:none;" onclick="nextQuestion()">Siguiente Pregunta</button>
+            </div>
+            <div id="explanation" class="feedback">
+                <h4>Explicación Técnica:</h4>
+                <p id="explanation-text"></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="results-dashboard" class="card">
+        <h2>¡Evaluación Completada!</h2>
+        <div class="score-circle" id="final-score">0%</div>
+        <p id="performance-msg"></p>
+        <div class="summary-list">
+            <div class="summary-item">Preguntas totales: 30</div>
+            <div class="summary-item">Aciertos: <span id="correct-count">0</span></div>
+            <div class="summary-item">Errores: <span id="wrong-count">0</span></div>
+        </div>
+        <div style="display: flex; gap: 1rem; justify-content: center;">
+            <button class="btn" onclick="location.reload()">Reiniciar Todo (Shuffle)</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const allQuestions = [
+        // --- MODULO 2 LECCIÓN 6 PARTE 2 (Nuevas) ---
+        {
+            q: "¿Qué servicio de AWS es responsable de añadir o eliminar automáticamente instancias EC2 basándose en métricas de rendimiento?",
+            o: ["Amazon CloudWatch", "Amazon EC2 Auto Scaling", "Elastic Load Balancing", "AWS Lambda"],
+            a: [1],
+            e: "Amazon EC2 Auto Scaling es el servicio que gestiona la elasticidad de las instancias EC2. CloudWatch solo monitorea y ELB solo distribuye tráfico."
+        },
+        {
+            q: "Un administrador desea que su aplicación mantenga siempre al menos 2 instancias ejecutándose, pero que pueda subir hasta 10 durante picos de tráfico. ¿Qué parámetros de Auto Scaling debe configurar?",
+            o: ["Capacidad Mínima y Capacidad Máxima", "Capacidad Deseada solamente", "Target Tracking Policy solamente", "Launch Template"],
+            a: [0],
+            e: "La Capacidad Mínima (2) garantiza disponibilidad base y la Capacidad Máxima (10) limita el crecimiento para control de costos."
+        },
+        {
+            q: "Usted nota que su instancia EC2 se está quedando sin RAM para un proceso específico de análisis de datos que no puede distribuirse. ¿Qué estrategia de escalado debe aplicar?",
+            o: ["Escalado Horizontal (Scale Out)", "Escalado Vertical (Scale Up)", "Escalado de Red (Network Scaling)", "Escalado de Almacenamiento"],
+            a: [1],
+            e: "El escalado vertical (Scale Up) implica aumentar la potencia (CPU/RAM) de una sola instancia. Es ideal para tareas que no pueden paralelizarse."
+        },
+        {
+            q: "Escenario: Una aplicación web tiene un componente de frontend y uno de procesamiento de imágenes en el backend. ¿Cuál es el beneficio de escalarlos de forma independiente?",
+            o: ["Aumenta el acoplamiento de la aplicación", "Reduce la latencia de red automáticamente", "Optimización de costos al no sobreprovisionar componentes que no lo necesitan", "Permite usar una sola AZ para todo"],
+            a: [2],
+            e: "Escalar componentes independientemente asegura que solo pagues por la potencia necesaria en cada parte del proceso (ej. tener 5 frontends y solo 2 backends)."
+        },
+        {
+            q: "¿Cuál es la función principal de Amazon CloudWatch en el proceso de Auto Scaling?",
+            o: ["Lanzar las nuevas instancias en diferentes AZs", "Recopilar métricas y activar alarmas cuando se cruzan umbrales", "Distribuir el tráfico entre las instancias", "Terminar instancias que fallan en el health check"],
+            a: [1],
+            e: "CloudWatch es el sistema de monitoreo. Detecta cambios (como CPU al 80%) y avisa a Auto Scaling para que este tome la acción."
+        },
+        {
+            q: "¿Qué sucede cuando ocurre un 'Scale In' en un grupo de Auto Scaling?",
+            o: ["Se añaden instancias para manejar más carga", "Se aumenta el tamaño de las instancias existentes", "Se eliminan instancias porque la demanda ha disminuido", "Se cambia el tipo de instancia de m5 a t3"],
+            a: [2],
+            e: "Scale In (Escalado hacia adentro) es la eliminación de recursos sobrantes para ahorrar costos cuando la demanda baja."
+        },
+        {
+            q: "Usted desea que su grupo de Auto Scaling mantenga el uso de CPU promedio al 50%. ¿Qué tipo de política de escalado es la más adecuada?",
+            o: ["Simple Scaling", "Target Tracking Scaling", "Scheduled Scaling", "Manual Scaling"],
+            a: [1],
+            e: "Target Tracking funciona como un termostato: tú defines el objetivo (50% CPU) y AWS ajusta las instancias automáticamente para mantenerlo."
+        },
+        {
+            q: "Seleccione 2 beneficios del escalado horizontal (Scale Out) sobre el vertical (Scale Up).",
+            o: ["Mayor tolerancia a fallos", "No requiere reiniciar la instancia", "Menor complejidad de red", "Permite mayor paralelismo de tareas", "Es siempre más barato por unidad"],
+            a: [0, 3],
+            m: true,
+            e: "El escalado horizontal ofrece alta disponibilidad (si una falla, hay otras) y permite procesar múltiples solicitudes en paralelo."
+        },
+        {
+            q: "¿Qué componente de Auto Scaling define 'QUÉ' tipo de instancia se va a lanzar (AMI, Tipo de instancia, Security Groups)?",
+            o: ["Scaling Policy", "Launch Template", "Auto Scaling Group", "CloudWatch Alarm"],
+            a: [1],
+            e: "El Launch Template (Plantilla de Lanzamiento) es el 'blueprint' o plano que contiene toda la configuración de la instancia."
+        },
+        {
+            q: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable de definir el umbral (threshold) de CPU para el auto escalado?",
+            o: ["AWS", "El Cliente", "Ambos comparten la responsabilidad", "Amazon CloudWatch"],
+            a: [1],
+            e: "El cliente es responsable de la configuración 'EN' la nube, incluyendo las reglas y métricas de su propia infraestructura."
+        },
+        
+        // --- CUMULATIVAS MODULO 1 ---
+        {
+            q: "¿Qué beneficio de la nube de AWS se refiere a 'dejar de adivinar la capacidad'?",
+            o: ["Economías de escala", "Agilidad", "Escalabilidad/Elasticidad", "Ir global en minutos"],
+            a: [2],
+            e: "La elasticidad permite que la capacidad suba o baje automáticamente, eliminando la necesidad de predecir cuántos servidores comprar."
+        },
+        {
+            q: "¿Cuál es la definición de una Región de AWS?",
+            o: ["Un centro de datos único", "Un área geográfica que contiene múltiples Zonas de Disponibilidad", "Un conjunto de Edge Locations", "Una red global de fibra óptica"],
+            a: [1],
+            e: "Una Región es una ubicación geográfica física que consta de dos o más Zonas de Disponibilidad (AZ)."
+        },
+        {
+            q: "Según el Modelo de Responsabilidad Compartida, ¿cuál es una responsabilidad de AWS?",
+            o: ["Configuración de grupos de seguridad", "Gestión de parches del sistema operativo de una instancia EC2", "Protección de la infraestructura global (Hardware, Software, Redes)", "Cifrado de datos del lado del cliente"],
+            a: [2],
+            e: "AWS es responsable de la seguridad 'DE' la nube (la infraestructura física y el software que ejecuta los servicios)."
+        },
+        {
+            q: "¿Qué pilar del AWS Well-Architected Framework se centra en evitar el sobreprovisionamiento y usar el modelo de precios adecuado?",
+            o: ["Excelencia Operativa", "Seguridad", "Optimización de Costos", "Eficiencia del Rendimiento"],
+            a: [2],
+            e: "La optimización de costos busca eliminar gastos innecesarios mediante el dimensionamiento correcto y el uso de opciones como instancias Spot o Reservadas."
+        },
+        {
+            q: "Un cliente desea ejecutar una carga de trabajo con una latencia mínima para usuarios en diferentes países. ¿Qué componente de la infraestructura global debe usar?",
+            o: ["Regiones", "Zonas de Disponibilidad", "Edge Locations (CloudFront)", "VPC Subnets"],
+            a: [2],
+            e: "Las Edge Locations se utilizan para entregar contenido con baja latencia a los usuarios finales a través de Amazon CloudFront."
+        },
+
+        // --- CUMULATIVAS MODULO 2 (EC2, Tipos, Precios) ---
+        {
+            q: "Usted necesita ejecutar una base de datos de alto rendimiento que requiere un acceso muy rápido a grandes conjuntos de datos en memoria local. ¿Qué familia de instancias EC2 debería elegir?",
+            o: ["Compute Optimized (C)", "Memory Optimized (R)", "Storage Optimized (I)", "General Purpose (M)"],
+            a: [1],
+            e: "La familia 'R' (Memory Optimized) es ideal para cargas de trabajo que procesan grandes cantidades de datos en memoria (RAM)."
+        },
+        {
+            q: "Su empresa tiene una carga de trabajo constante que durará 3 años. ¿Qué modelo de precios de EC2 ofrece el mayor ahorro?",
+            o: ["On-Demand", "Spot Instances", "Reserved Instances (o Savings Plans)", "Dedicated Hosts"],
+            a: [2],
+            e: "Las instancias reservadas pueden ofrecer hasta un 72% de descuento comparado con On-Demand para compromisos a largo plazo (1 o 3 años)."
+        },
+        {
+            q: "Usted tiene una tarea de procesamiento por lotes (batch) que puede interrumpirse sin problemas y desea el menor costo posible. ¿Qué opción elige?",
+            o: ["On-Demand", "Spot Instances", "Reserved Instances", "Dedicated Instances"],
+            a: [1],
+            e: "Las instancias Spot ofrecen los mayores descuentos (hasta 90%) aprovechando la capacidad ociosa de AWS, pero pueden ser terminadas con 2 min de aviso."
+        },
+        {
+            q: "¿Cuál es la diferencia principal entre un Application Load Balancer (ALB) y un Network Load Balancer (NLB)?",
+            o: ["ALB es para HTTP/HTTPS (Capa 7) y NLB es para TCP/UDP (Capa 4)", "ALB es más rápido que NLB", "NLB solo funciona en una Zona de Disponibilidad", "ALB es gratuito y NLB es de pago"],
+            a: [0],
+            e: "ALB opera a nivel de aplicación (Capa 7), permitiendo reglas de enrutamiento avanzadas por URL. NLB es para ultra alto rendimiento y baja latencia a nivel de red (Capa 4)."
+        },
+        {
+            q: "Seleccione 2 formas de interactuar/aprovisionar recursos en AWS.",
+            o: ["AWS Management Console", "AWS CloudTrail", "AWS Command Line Interface (CLI)", "AWS Shield", "Amazon Inspector"],
+            a: [0, 2],
+            m: true,
+            e: "La Consola y el CLI son herramientas principales para crear y gestionar recursos. CloudTrail es para auditoría y Shield para protección DDoS."
+        },
+
+        // --- MAS PREGUNTAS DE ESCALADO Y ESCENARIOS ---
+        {
+            q: "Escenario: Una tienda online tiene una venta relámpago todos los viernes a las 6:00 PM. ¿Qué configuración de Auto Scaling es la más eficiente?",
+            o: ["Dynamic Scaling con CloudWatch", "Scheduled Scaling", "Predictive Scaling", "Manual Scaling"],
+            a: [1],
+            e: "Si el evento es predecible en el tiempo (todos los viernes a una hora fija), Scheduled Scaling es lo más eficiente para preparar la capacidad antes de que lleguen los usuarios."
+        },
+        {
+            q: "¿Qué significa el término 'Elasticidad' en el contexto de EC2?",
+            o: ["La capacidad de cambiar el nombre de las instancias", "La capacidad de ajustar automáticamente los recursos para coincidir con la demanda", "La capacidad de mover instancias entre diferentes cuentas de AWS", "La capacidad de usar diferentes sistemas operativos"],
+            a: [1],
+            e: "Elasticidad es la capacidad de expandir o contraer recursos computacionales de forma automática."
+        },
+        {
+            q: "Si una instancia EC2 en un Auto Scaling Group falla en una prueba de salud (health check), ¿qué hace el servicio por defecto?",
+            o: ["Reinicia la instancia físicamente", "Envía un correo al administrador", "Termina la instancia no saludable y lanza una nueva", "Mueve la instancia a otra Región"],
+            a: [2],
+            e: "Auto Scaling garantiza la disponibilidad reemplazando automáticamente las instancias que dejan de responder."
+        },
+        {
+            q: "¿Cuál de estos NO es una métrica estándar de CloudWatch para activar un escalado de EC2?",
+            o: ["Uso de CPU", "Tráfico de red de entrada", "Contenido de los archivos en el disco duro", "Número de solicitudes al balanceador"],
+            a: [2],
+            e: "CloudWatch no puede ver el 'contenido' de los archivos por defecto (necesitaría un agente especial). Solo ve métricas a nivel de hipervisor como CPU y Red."
+        },
+        {
+            q: "Seleccione 3 parámetros que se definen en un Auto Scaling Group (ASG).",
+            o: ["VPC y Subnets donde lanzar instancias", "Capacidad Mínima", "Configuración de seguridad del centro de datos", "Capacidad Máxima", "Métrica de salud (EC2 o ELB)", "Nombre del usuario raíz de AWS"],
+            a: [0, 1, 3], // También 4 es correcta pero pide 3.
+            m: true,
+            e: "En un ASG defines dónde se lanzan (VPC/Subnets), cuántas (Mín/Máx/Deseada) y cómo saber si están bien (Health Checks)."
+        },
+        {
+            q: "Usted quiere que AWS use Machine Learning para observar los patrones de tráfico de las últimas semanas y escale sus instancias antes de que ocurran los picos. ¿Qué usa?",
+            o: ["Target Tracking", "Predictive Scaling", "Simple Scaling", "Step Scaling"],
+            a: [1],
+            e: "Predictive Scaling analiza datos históricos para anticipar cambios en la demanda, una característica avanzada muy valorada en el CLF-C02."
+        },
+        {
+            q: "¿Por qué el escalado vertical (Scale Up) se considera menos 'tolerante a fallos' que el horizontal?",
+            o: ["Porque es más caro", "Porque sigues teniendo un punto único de falla (una sola instancia)", "Porque requiere más ancho de banda", "Porque AWS no lo permite en todas las Regiones"],
+            a: [1],
+            e: "Si escalas verticalmente y esa única instancia potente falla, tu aplicación cae. Con escalado horizontal, tienes varias instancias y la falla de una no detiene el servicio."
+        },
+        {
+            q: "Usted necesita asegurarse de que su aplicación esté disponible incluso si una Zona de Disponibilidad completa falla. ¿Cómo ayuda Auto Scaling?",
+            o: ["Copia los datos a S3 automáticamente", "Puede lanzar instancias en múltiples Zonas de Disponibilidad (AZs) dentro de una Región", "Mueve las instancias a otra cuenta de AWS", "Cifra las instancias para que no fallen"],
+            a: [1],
+            e: "Auto Scaling Group puede abarcar múltiples AZs para garantizar alta disponibilidad en caso de desastres a nivel de centro de datos."
+        },
+        {
+            q: "¿Cuál es el propósito del 'Cooldown Period' en Auto Scaling?",
+            o: ["Enfriar los servidores físicos en el centro de datos", "Evitar que el grupo lance o termine instancias adicionales antes de que las anteriores se estabilicen", "Ahorrar energía durante la noche", "Permitir que el administrador tome un descanso"],
+            a: [1],
+            e: "El Cooldown evita que el sistema 'reaccione de más' (over-react) lanzando demasiadas instancias mientras las recién creadas aún están arrancando."
+        },
+        {
+            q: "En una arquitectura elástica, ¿cuál es el papel del Elastic Load Balancer (ELB)?",
+            o: ["Almacenar archivos estáticos", "Monitorear el uso de CPU", "Distribuir el tráfico entrante de manera uniforme entre todas las instancias saludables", "Crear copias de seguridad de la base de datos"],
+            a: [2],
+            e: "El ELB es el punto de entrada que reparte la carga de trabajo entre las instancias que Auto Scaling va creando o eliminando."
+        }
+    ];
+
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let correctCount = 0;
+    let wrongCount = 0;
+    let selectedOptions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz() {
+        currentQuestions = shuffle([...allQuestions]).slice(0, 30);
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const question = currentQuestions[currentQuestionIndex];
+        document.getElementById('question-text').innerText = question.q;
+        document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+        
+        const optionsContainer = document.getElementById('options');
+        optionsContainer.innerHTML = '';
+        selectedOptions = [];
+        
+        const isMulti = question.m === true;
+        document.getElementById('multi-select-hint').style.display = isMulti ? 'block' : 'none';
+
+        question.o.forEach((option, index) => {
+            const div = document.createElement('div');
+            div.className = 'option';
+            div.innerText = option;
+            div.onclick = () => selectOption(index, isMulti, div);
+            optionsContainer.appendChild(div);
+        });
+
+        document.getElementById('explanation').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'block';
+        document.getElementById('submit-btn').disabled = true;
+        document.getElementById('next-btn').style.display = 'none';
+        
+        updateProgressBar();
+    }
+
+    function selectOption(index, isMulti, element) {
+        if (document.getElementById('submit-btn').style.display === 'none') return;
+
+        if (isMulti) {
+            if (selectedOptions.includes(index)) {
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                element.classList.remove('selected');
+            } else {
+                selectedOptions.push(index);
+                element.classList.add('selected');
+            }
+        } else {
+            selectedOptions = [index];
+            const allOptions = document.querySelectorAll('.option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            element.classList.add('selected');
+        }
+        
+        document.getElementById('submit-btn').disabled = selectedOptions.length === 0;
+    }
+
+    function checkAnswer() {
+        const question = currentQuestions[currentQuestionIndex];
+        const allOptionsElements = document.querySelectorAll('.option');
+        
+        let isCorrect = false;
+        if (question.m) {
+            isCorrect = question.a.length === selectedOptions.length && 
+                        question.a.every(val => selectedOptions.includes(val));
+        } else {
+            isCorrect = selectedOptions[0] === question.a[0];
+        }
+
+        allOptionsElements.forEach((el, index) => {
+            if (question.a.includes(index)) {
+                el.classList.add('correct');
+            } else if (selectedOptions.includes(index)) {
+                el.classList.add('incorrect');
+            }
+        });
+
+        if (isCorrect) {
+            score += 10;
+            correctCount++;
+        } else {
+            wrongCount++;
+        }
+
+        document.getElementById('score-display').innerText = `Puntos: ${score}`;
+        document.getElementById('explanation-text').innerText = question.e;
+        document.getElementById('explanation').style.display = 'block';
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < currentQuestions.length) {
+            showQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function updateProgressBar() {
+        const progress = ((currentQuestionIndex) / currentQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+    }
+
+    function showResults() {
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('results-dashboard').style.display = 'block';
+        document.getElementById('progress-bar').style.width = `100%`;
+        
+        const finalPercent = Math.round((correctCount / currentQuestions.length) * 100);
+        document.getElementById('final-score').innerText = `${finalPercent}%`;
+        document.getElementById('correct-count').innerText = correctCount;
+        document.getElementById('wrong-count').innerText = wrongCount;
+
+        let msg = "";
+        if (finalPercent >= 85) msg = "¡Excelente! Estás listo para el examen real.";
+        else if (finalPercent >= 70) msg = "Buen trabajo, pero repasa los conceptos que fallaste.";
+        else msg = "Necesitas estudiar más. Revisa las lecciones y vuelve a intentarlo.";
+        
+        document.getElementById('performance-msg').innerText = msg;
+    }
+
+    initQuiz();
+</script>
+
+</body>
+</html>

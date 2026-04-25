@@ -3,21 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Exam Simulator - Módulo 2 Lección 6 Parte 2</title>
+    <title>AWS Certified Cloud Practitioner - Evaluación M2 L6 P2</title>
     <style>
         :root {
             --aws-navy: #232f3e;
             --aws-orange: #ff9900;
             --aws-white: #ffffff;
-            --aws-gray: #f2f3f3;
-            --success: #e7f4e4;
-            --error: #fdf0f0;
-            --explanation: #fff9c4;
+            --aws-bg: #f2f3f3;
+            --correct: #e7f4e4;
+            --incorrect: #fde7e9;
+            --explanation-bg: #fff9c4;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--aws-gray);
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
             margin: 0;
             padding: 0;
             color: var(--aws-navy);
@@ -38,527 +38,616 @@
 
         .logo-sim {
             font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
+            font-size: 1.5rem;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
         }
 
         .progress-container {
             flex-grow: 1;
             margin: 0 2rem;
-            background: #404d5e;
-            height: 10px;
-            border-radius: 5px;
-            overflow: hidden;
         }
 
-        #progress-bar {
+        .progress-bar {
+            background-color: #4c5a69;
+            border-radius: 10px;
+            height: 10px;
+            width: 100%;
+        }
+
+        #progress-fill {
             background-color: var(--aws-orange);
             height: 100%;
+            border-radius: 10px;
             width: 0%;
             transition: width 0.3s ease;
         }
 
         .score-board {
-            font-weight: bold;
+            font-size: 1.1rem;
+            min-width: 100px;
         }
 
-        .container {
+        main {
             max-width: 800px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
 
         .card {
-            background-color: var(--aws-white);
+            background: var(--aws-white);
             border-radius: 8px;
             padding: 2rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
         }
 
-        .question-text {
+        h2 {
+            margin-top: 0;
             font-size: 1.2rem;
-            margin-bottom: 1.5rem;
             line-height: 1.5;
         }
 
         .options {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
         }
 
-        .option {
-            padding: 1rem;
+        .option-btn {
+            background: #fff;
             border: 2px solid #ddd;
-            border-radius: 5px;
+            border-radius: 6px;
+            padding: 1rem;
+            text-align: left;
             cursor: pointer;
             transition: all 0.2s;
+            font-size: 1rem;
             display: flex;
             align-items: center;
         }
 
-        .option:hover {
+        .option-btn:hover:not(:disabled) {
             border-color: var(--aws-orange);
             background-color: #fffaf0;
         }
 
-        .option.selected {
+        .option-btn.selected {
             border-color: var(--aws-orange);
-            background-color: #fff4e6;
+            background-color: #fffaf0;
         }
 
-        .option.correct {
+        .option-btn.correct {
+            background-color: var(--correct);
             border-color: #2e7d32;
-            background-color: var(--success);
         }
 
-        .option.incorrect {
+        .option-btn.incorrect {
+            background-color: var(--incorrect);
             border-color: #d32f2f;
-            background-color: var(--error);
         }
 
         .explanation {
             margin-top: 1.5rem;
             padding: 1rem;
-            background-color: var(--explanation);
-            border-left: 5px solid var(--aws-orange);
-            border-radius: 4px;
+            background-color: var(--explanation-bg);
+            border-radius: 6px;
             display: none;
+            border-left: 5px solid var(--aws-orange);
+            font-size: 0.95rem;
+            line-height: 1.4;
         }
 
-        .btn {
+        #next-btn, #restart-btn {
             background-color: var(--aws-orange);
-            color: var(--aws-white);
+            color: var(--aws-navy);
             border: none;
-            padding: 0.8rem 1.5rem;
+            padding: 0.8rem 2rem;
             border-radius: 4px;
-            cursor: pointer;
             font-weight: bold;
-            font-size: 1rem;
+            cursor: pointer;
+            float: right;
             margin-top: 1rem;
         }
 
-        .btn:disabled {
+        #next-btn:disabled {
             background-color: #ccc;
             cursor: not-allowed;
         }
 
-        #dashboard {
+        .hidden { display: none; }
+
+        #results-card {
             text-align: center;
-            display: none;
         }
 
-        .result-circle {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            border: 10px solid var(--aws-orange);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
+        .final-score {
+            font-size: 3rem;
             font-weight: bold;
-            margin: 2rem auto;
+            color: var(--aws-orange);
+            margin: 1rem 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .badge-pass { background-color: var(--correct); color: #2e7d32; }
+        .badge-fail { background-color: var(--incorrect); color: #d32f2f; }
+
+        .multi-select-hint {
+            font-style: italic;
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
         }
 
         @media (max-width: 600px) {
-            header { flex-wrap: wrap; padding: 0.5rem 1rem; gap: 0.5rem; }
-            .logo-sim { font-size: 1rem; }
-            .progress-container { width: 100%; margin: 0; flex-grow: unset; }
+            header {
+                flex-wrap: wrap;
+                padding: 0.5rem 1rem;
+                gap: 0.5rem;
+            }
+            .logo-sim { font-size: 1.1rem; }
+            .progress-container {
+                width: 100%;
+                margin: 0;
+                flex-grow: unset;
+            }
+            .score-board { font-size: 0.9rem; min-width: unset; }
             main { padding: 0 0.5rem; }
-            .result-circle { width: 120px; height: 120px; font-size: 1.8rem; }
+            .card { padding: 1.2rem; }
         }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-sim">AWS CERTIFIED CLOUD PRACTITIONER</div>
+    <div class="logo-sim">AWS <span>CLF-C02</span> Engine</div>
     <div class="progress-container">
-        <div id="progress-bar"></div>
+        <div class="progress-bar"><div id="progress-fill"></div></div>
     </div>
-    <div class="score-board">Puntuación: <span id="current-score">0</span></div>
+    <div class="score-board">Score: <span id="current-score">0</span></div>
 </header>
 
-<div class="container">
-    <div id="quiz-area">
+<main>
+    <div id="quiz-container">
         <div class="card" id="question-card">
-            <div id="question-count" style="color: #666; margin-bottom: 0.5rem;">Pregunta 1 de 20</div>
-            <div class="question-text" id="question-text">Cargando pregunta...</div>
-            <div class="options" id="options-container">
-                <!-- Opciones se cargan aquí -->
+            <div id="question-meta" style="color: #666; font-size: 0.8rem; margin-bottom: 0.5rem;">Pregunta 1 de 35</div>
+            <h2 id="question-text">Cargando pregunta...</h2>
+            <div id="multi-hint" class="multi-select-hint hidden">(Seleccione 2 opciones)</div>
+            <div class="options" id="options-container"></div>
+            <div class="explanation" id="explanation-text"></div>
+            <button id="next-btn" onclick="handleNext()">Verificar</button>
+        </div>
+
+        <div class="card hidden" id="results-card">
+            <h2>Resultados del Examen</h2>
+            <div id="result-badge" class="badge"></div>
+            <div class="final-score" id="final-score-text">0/35</div>
+            <p id="result-message"></p>
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <button id="restart-btn" onclick="restartQuiz(false)" style="float: none;">Reintentar todo</button>
+                <button id="restart-failed-btn" onclick="restartQuiz(true)" style="background: var(--aws-navy); color: white; border: none; padding: 0.8rem 2rem; border-radius: 4px; font-weight: bold; cursor: pointer;">Reintentar fallidas</button>
             </div>
-            <div class="explanation" id="explanation-box">
-                <strong>Explicación:</strong> <span id="explanation-text"></span>
-            </div>
-            <button class="btn" id="next-btn" onclick="handleNext()" disabled>Siguiente Pregunta</button>
         </div>
     </div>
-
-    <div id="dashboard" class="card">
-        <h2>Examen Finalizado</h2>
-        <div class="result-circle" id="final-score">0%</div>
-        <p id="result-message"></p>
-        <button class="btn" onclick="restartQuiz()">Reiniciar todo (Shuffle)</button>
-    </div>
-</div>
+</main>
 
 <script>
-    const allQuestions = [
+    const questions = [
         {
-            question: "¿Cuál es la función principal de Amazon EC2 Auto Scaling?",
-            options: [
-                "Monitorear el uso de CPU de las instancias",
-                "Añadir o eliminar automáticamente instancias EC2 para mantener el número deseado según la demanda",
-                "Distribuir el tráfico web entre múltiples regiones",
-                "Almacenar datos de forma persistente"
-            ],
-            correct: 1,
-            explanation: "EC2 Auto Scaling es el servicio encargado de la ejecución: añade (Scale Out) o quita (Scale In) instancias para cumplir con las políticas de capacidad."
+            q: "¿Qué servicio de AWS es el responsable de añadir o eliminar instancias EC2 automáticamente basándose en la demanda?",
+            options: ["Amazon CloudWatch", "Amazon EC2 Auto Scaling", "Elastic Load Balancing", "AWS Config"],
+            correct: ["Amazon EC2 Auto Scaling"],
+            explanation: "Amazon EC2 Auto Scaling es el servicio que automatiza la elasticidad, manteniendo el número correcto de instancias en respuesta a la demanda."
         },
         {
-            question: "¿Qué servicio de AWS se utiliza para recopilar métricas y emitir alarmas que disparan el auto-escalado?",
-            options: [
-                "Amazon EC2 Auto Scaling",
-                "Amazon CloudWatch",
-                "AWS Trusted Advisor",
-                "AWS Systems Manager"
-            ],
-            correct: 1,
-            explanation: "Amazon CloudWatch es el monitor que observa las métricas (CPU, red, etc.) y envía la alarma para que Auto Scaling actúe."
+            q: "Usted desea configurar su flota de instancias para que siempre haya un mínimo de 2 instancias funcionando, pero que nunca supere las 10 para controlar los costos. ¿Qué parámetros de Auto Scaling debe configurar?",
+            options: ["Capacidad inicial y Capacidad final", "Capacidad mínima y Capacidad máxima", "Launch Template y Target Group", "Subredes y Grupos de Seguridad"],
+            correct: ["Capacidad mínima y Capacidad máxima"],
+            explanation: "La capacidad mínima asegura la disponibilidad básica y la capacidad máxima actúa como un techo para proteger el presupuesto."
         },
         {
-            question: "En una configuración de Auto Scaling, ¿cuál es el propósito de la 'Capacidad Mínima'?",
-            options: [
-                "Es el máximo de dinero que se quiere gastar",
-                "Garantizar que siempre haya un número base de instancias funcionando, incluso si no hay tráfico",
-                "Indicar cuántas instancias hay en este momento exacto",
-                "Limitar el número de usuarios que pueden entrar al sitio"
-            ],
-            correct: 1,
-            explanation: "La Capacidad Mínima asegura que el servicio esté siempre disponible a un nivel básico, evitando que se quede con cero instancias."
+            q: "¿Qué servicio monitorea las métricas de rendimiento (como uso de CPU o latencia) y activa alarmas que disparan acciones de escalado?",
+            options: ["AWS CloudTrail", "Amazon CloudWatch", "AWS Trusted Advisor", "Amazon Inspector"],
+            correct: ["Amazon CloudWatch"],
+            explanation: "Amazon CloudWatch es el 'monitor' que vigila las métricas y activa las alarmas necesarias para que Auto Scaling actúe."
         },
         {
-            question: "¿Qué documento de configuración se utiliza en Auto Scaling para definir qué tipo de instancia, AMI y Security Group se deben usar al lanzar nuevas instancias?",
-            options: [
-                "IAM Policy",
-                "Launch Template",
-                "S3 Bucket Policy",
-                "VPC Peering"
-            ],
-            correct: 1,
-            explanation: "El Launch Template es la 'receta' o plano que define todas las características de las nuevas instancias que Auto Scaling creará."
+            q: "Una empresa de e-commerce sabe que cada viernes a las 6:00 PM el tráfico aumenta significativamente debido a una oferta semanal. ¿Qué estrategia de escalado es la más eficiente?",
+            options: ["Escalado dinámico", "Escalado programado (Scheduled Scaling)", "Escalado vertical", "Escalado reactivo"],
+            correct: ["Escalado programado (Scheduled Scaling)"],
+            explanation: "El escalado programado se utiliza cuando se conocen de antemano las variaciones de carga en fechas y horas específicas."
         },
         {
-            question: "Una empresa sabe que todos los viernes a las 6 PM el tráfico aumenta significativamente. ¿Qué estrategia de escalado es la más adecuada?",
-            options: [
-                "Dynamic Scaling",
-                "Predictive Scaling",
-                "Scheduled Scaling",
-                "Manual Scaling"
-            ],
-            correct: 2,
-            explanation: "El Scheduled Scaling (escalado programado) es ideal para eventos conocidos con fecha y hora fija."
+            q: "¿Cuál es el beneficio de usar 'Launch Templates' en lugar de 'Launch Configurations' en un grupo de Auto Scaling? (Actualización CLF-C02)",
+            options: ["Launch Templates no tienen costo", "Launch Templates permiten el versionamiento y el uso de múltiples tipos de instancias", "Launch Templates solo funcionan con instancias Spot", "Launch Templates son obligatorios para S3"],
+            correct: ["Launch Templates permiten el versionamiento y el uso de múltiples tipos de instancias"],
+            explanation: "Los Launch Templates son la versión moderna y recomendada por AWS, ya que permiten gestionar versiones y mezclar tipos de compra (Spot/On-Demand)."
         },
         {
-            question: "¿Qué característica de Amazon EC2 Auto Scaling permite predecir el tráfico futuro basándose en patrones históricos usando Machine Learning?",
-            options: [
-                "Dynamic Scaling",
-                "Predictive Scaling",
-                "Scheduled Scaling",
-                "Auto ML Scaling"
-            ],
-            correct: 1,
-            explanation: "El Predictive Scaling usa Machine Learning para analizar el pasado y adelantarse a la demanda futura (CLF-C02)."
+            q: "En la analogía de la cafetería, si un barista se enferma y deja de trabajar, ¿qué acción tomaría Amazon EC2 Auto Scaling para mantener la disponibilidad?",
+            options: ["Aumentar el sueldo de los otros baristas", "Lanzar una nueva instancia para reemplazar la que falló", "Cerrar la cafetería temporalmente", "Mover la fila a otra tienda física"],
+            correct: ["Lanzar una nueva instancia para reemplazar la que falló"],
+            explanation: "Auto Scaling realiza comprobaciones de estado periódicas; si una instancia es 'unhealthy' (insalubre), la termina y lanza una nueva automáticamente."
         },
         {
-            question: "¿Qué ocurre si una instancia dentro de un grupo de Auto Scaling falla su 'Health Check' (prueba de salud)?",
-            options: [
-                "Auto Scaling la reinicia automáticamente",
-                "Auto Scaling la termina y lanza una nueva instancia para reemplazarla",
-                "CloudWatch envía un correo al administrador y espera instrucciones",
-                "La instancia se queda ahí pero deja de recibir tráfico"
-            ],
-            correct: 1,
-            explanation: "Auto Scaling mantiene la 'Capacidad Deseada'. Si una instancia muere, la reemplaza automáticamente por una nueva para mantener el número de servidores configurado."
+            q: "Su aplicación utiliza una base de datos que está alcanzando sus límites de memoria. Usted decide cambiar la instancia t3.micro de la base de datos por una r5.large. ¿Qué tipo de escalado es este?",
+            options: ["Escalado Horizontal (Scale Out)", "Escalado Vertical (Scale Up)", "Escalado Elástico", "Escalado de Redundancia"],
+            correct: ["Escalado Vertical (Scale Up)"],
+            explanation: "Cambiar a una instancia más potente (más CPU/RAM) es un escalado vertical o 'Scale Up'."
         },
         {
-            question: "¿Qué concepto describe el periodo de espera después de una actividad de escalado antes de que pueda ocurrir otra?",
-            options: [
-                "Latencia de Red",
-                "Cooldown Period",
-                "Warm-up Time",
-                "Time-to-Live (TTL)"
-            ],
-            correct: 1,
-            explanation: "El Cooldown Period evita que el sistema escale de más (o de menos) muy rápido antes de ver el efecto real de la primera acción de escalado."
+            q: "¿Cuál es la principal ventaja del escalado horizontal (Scale Out) frente al escalado vertical en una arquitectura de nube?",
+            options: ["Es más fácil de configurar", "Permite una mayor disponibilidad y no tiene límites físicos teóricos", "Es más barato por instancia individual", "No requiere el uso de balanceadores de carga"],
+            correct: ["Permite una mayor disponibilidad y no tiene límites físicos teóricos"],
+            explanation: "El escalado horizontal permite añadir nodos infinitamente y evita puntos únicos de falla, lo que lo hace superior para la Alta Disponibilidad."
         },
         {
-            question: "¿Cuál es el beneficio de escalar los componentes de una aplicación de forma independiente?",
-            options: [
-                "Se ve más ordenado en la consola",
-                "Optimización de costos: escalas solo lo que necesita más recursos (ej. solo el backend)",
-                "Permite usar diferentes regiones",
-                "Reduce la latencia de CloudWatch"
-            ],
-            correct: 1,
-            explanation: "Si el cuello de botella está solo en el procesamiento de datos, no necesitas pagar por más servidores web frontales. Escalar cada pieza ahorra dinero."
+            q: "Usted desea utilizar Machine Learning para que su flota de EC2 se anticipe a los cambios de tráfico basándose en patrones históricos. ¿Qué característica de Auto Scaling debería usar?",
+            options: ["Dynamic Scaling", "Predictive Scaling", "Step Scaling", "Manual Scaling"],
+            correct: ["Predictive Scaling"],
+            explanation: "El Escalado Predictivo (Predictive Scaling) utiliza algoritmos de aprendizaje automático para predecir la demanda futura y aprovisionar instancias antes de que llegue el tráfico."
         },
         {
-            question: "Usted desea que su aplicación escale cuando el uso de CPU supere el 70%. ¿Qué objeto de CloudWatch debe crear?",
-            options: [
-                "Un Dashboard",
-                "Una Alarma",
-                "Un Log Group",
-                "Un Event Rule"
-            ],
-            correct: 1,
-            explanation: "Las Alarmas de CloudWatch son las que notifican a otros servicios (como Auto Scaling) cuando una métrica cruza un umbral definido."
+            q: "¿Qué sucede durante un evento de 'Scale In'?",
+            options: ["Se añaden nuevas instancias al grupo", "Se eliminan instancias del grupo para ahorrar costos", "Se cambia el tamaño de las instancias existentes", "Se mueven las instancias a una zona de disponibilidad diferente"],
+            correct: ["Se eliminan instancias del grupo para ahorrar costos"],
+            explanation: "Scale In es el proceso de reducir el número de instancias cuando la demanda ha bajado, optimizando el gasto."
         },
         {
-            question: "En la analogía de la cafetería, ¿qué representaría Amazon CloudWatch?",
-            options: [
-                "El supervisor que cuenta cuántas personas hay en la fila y si los baristas están cansados",
-                "El nuevo barista que llega a ayudar",
-                "El menú de precios",
-                "La máquina de café"
-            ],
-            correct: 0,
-            explanation: "CloudWatch es el observador/monitor que recopila los datos sobre el rendimiento del sistema."
+            q: "Según el Modelo de Responsabilidad Compartida, ¿quién es responsable del mantenimiento físico de los racks de servidores donde se ejecutan las instancias EC2? (CUMULATIVO)",
+            options: ["El cliente", "AWS", "Ambos", "El proveedor de energía"],
+            correct: ["AWS"],
+            explanation: "AWS es responsable de la seguridad y mantenimiento físico 'DE' la nube (infraestructura global)."
         },
         {
-            question: "¿Cuál es la 'Trampa de Examen' más común sobre CloudWatch?",
-            options: [
-                "Decir que CloudWatch puede crear instancias por sí solo",
-                "Decir que CloudWatch es solo para S3",
-                "Decir que CloudWatch es gratuito para siempre",
-                "Decir que CloudWatch no tiene interfaz gráfica"
-            ],
-            correct: 0,
-            explanation: "Recuerda: CloudWatch monitorea y avisa (Alarma), pero NO tiene el poder de crear recursos. Esa es tarea de Auto Scaling."
+            q: "¿Cuál de los siguientes es un beneficio de la computación en la nube que permite a las empresas dejar de invertir grandes sumas en centros de datos propios? (CUMULATIVO)",
+            options: ["Agilidad", "Cambiar gasto de capital (CapEx) por gasto operativo (OpEx)", "Elasticidad", "Economías de escala"],
+            correct: ["Cambiar gasto de capital (CapEx) por gasto operativo (OpEx)"],
+            explanation: "La nube permite pagar por el uso (OpEx) en lugar de comprar hardware por adelantado (CapEx)."
         },
         {
-            question: "¿Qué sucede con el costo si Auto Scaling realiza un 'Scale In'?",
-            options: [
-                "El costo aumenta debido a la tarifa de terminación",
-                "El costo disminuye porque se dejan de pagar las instancias eliminadas",
-                "El costo se mantiene igual",
-                "El costo se transfiere a CloudWatch"
-            ],
-            correct: 1,
-            explanation: "Scale In = Menos instancias = Menos gasto. Es el corazón del ahorro por pago por uso."
+            q: "Una empresa desea desplegar su aplicación en una ubicación geográfica cercana a sus usuarios en Australia. ¿Qué componente de la infraestructura global de AWS debe elegir? (CUMULATIVO)",
+            options: ["Una Zona de Disponibilidad", "Una Región", "Una Ubicación de Borde", "Una VPC"],
+            correct: ["Una Región"],
+            explanation: "Las Regiones son las áreas geográficas principales (ej. Sydney) donde se despliegan los recursos."
         },
         {
-            question: "Elija 3 parámetros fundamentales de un grupo de Auto Scaling: (Seleccione 3)",
-            options: [
-                "Capacidad Mínima",
-                "Capacidad Máxima",
-                "Capacidad Deseada",
-                "Capacidad Reservada",
-                "Capacidad On-Demand"
-            ],
-            multi: true,
-            correct: [0, 1, 2],
-            explanation: "Min, Max y Desired (Deseada) son los tres valores que definen el tamaño de la flota en un Auto Scaling Group."
+            q: "Usted necesita ejecutar un microservicio que solo tarda 5 segundos en procesar una imagen y no quiere gestionar servidores. ¿Qué servicio es el más adecuado? (CUMULATIVO)",
+            options: ["Amazon EC2", "AWS Lambda", "Amazon S3", "AWS Elastic Beanstalk"],
+            correct: ["AWS Lambda"],
+            explanation: "AWS Lambda es el servicio Serverless ideal para tareas cortas y disparadas por eventos sin gestión de servidores."
         },
         {
-            question: "Un cliente quiere combinar instancias On-Demand para estabilidad e instancias Spot para ahorro dentro de un mismo grupo de escalado. ¿Qué debe usar?",
-            options: [
-                "Launch Configuration",
-                "Launch Template",
-                "IAM Role",
-                "Placement Group"
-            ],
-            correct: 1,
-            explanation: "Los Launch Templates (Plantillas de Lanzamiento) permiten configuraciones avanzadas como el uso de múltiples tipos de compra (On-Demand + Spot)."
+            q: "En una arquitectura Multi-AZ, ¿qué beneficio principal se obtiene si una Zona de Disponibilidad entera sufre un corte de energía? (CUMULATIVO)",
+            options: ["Menor latencia", "Mayor seguridad de datos", "Alta Disponibilidad (HA) y continuidad del negocio", "Menores costos de almacenamiento"],
+            correct: ["Alta Disponibilidad (HA) y continuidad del negocio"],
+            explanation: "Las arquitecturas Multi-AZ garantizan que si una AZ falla, los recursos en otras AZs sigan operativos."
         },
         {
-            question: "¿Qué métrica NO es estándar en CloudWatch para EC2 y requeriría un agente adicional? (Pregunta difícil)",
-            options: [
-                "Uso de CPU",
-                "Utilización de Memoria RAM",
-                "Tráfico de Red Entrante",
-                "Estado de la instancia"
-            ],
-            correct: 1,
-            explanation: "La RAM es una métrica a nivel de Sistema Operativo, no del hipervisor. AWS ve el CPU y la Red, pero para ver la RAM necesitas instalar un agente (o es una métrica personalizada)."
+            q: "¿Cómo se llama el documento JSON que define los permisos de usuario en AWS? (CUMULATIVO)",
+            options: ["AWS Config", "Política de IAM (IAM Policy)", "Security Group", "Access Control List (ACL)"],
+            correct: ["Política de IAM (IAM Policy)"],
+            explanation: "Las políticas de IAM en formato JSON definen qué acciones están permitidas o denegadas para un usuario, rol o grupo."
         },
         {
-            question: "¿Cuál es la principal ventaja del Dynamic Scaling sobre el Scheduled Scaling?",
-            options: [
-                "Es más barato",
-                "Permite responder a cambios de tráfico impredecibles",
-                "No requiere CloudWatch",
-                "Solo funciona en una AZ"
-            ],
-            correct: 1,
-            explanation: "El escalado dinámico responde a lo que está pasando AHORA (basado en métricas), mientras que el programado solo sigue un reloj."
+            q: "¿Cuál de las siguientes es una métrica estándar que CloudWatch puede monitorear en una instancia EC2 sin necesidad de instalar agentes adicionales?",
+            options: ["Uso de memoria RAM", "Uso de CPU", "Espacio en disco utilizado", "Procesos internos del sistema operativo"],
+            correct: ["Uso de CPU"],
+            explanation: "El uso de CPU, red y estado de disco son métricas básicas. La RAM requiere un agente de CloudWatch adicional porque es una métrica a nivel de SO."
         },
         {
-            question: "¿En qué se basa el Auto Scaling para saber que debe 'terminar' (eliminar) una instancia?",
+            q: "Usted tiene dos partes de su aplicación: un portal web y un motor de procesamiento de video. ¿Cuál es la mejor práctica de escalado para estos componentes?",
             options: [
-                "En la métrica de 'Scale In' definida en la política de escalado",
-                "En que la instancia está muy vieja",
-                "En que el cliente ya no tiene dinero",
-                "En que la instancia alcanzó el 100% de CPU"
+                "Escalar ambos componentes juntos usando el mismo grupo de Auto Scaling.",
+                "Escalarlos de forma independiente para optimizar los costos según la carga específica de cada parte.",
+                "Usar solo escalado vertical para evitar complicaciones.",
+                "Desactivar el escalado para el portal web para ahorrar dinero."
             ],
-            correct: 0,
-            explanation: "Las políticas de escalado definen tanto cuándo añadir como cuándo quitar instancias (ej. 'si el CPU baja del 20%, quita 1 instancia')."
+            correct: ["Escalarlos de forma independiente para optimizar los costos según la carga específica de cada parte."],
+            explanation: "AWS permite escalar piezas de forma independiente. Si hay muchos pedidos pero poco procesamiento, solo escalas el portal web y ahorras dinero en el motor de video."
         },
         {
-            question: "Si una empresa quiere 'Alta Disponibilidad' usando Auto Scaling, ¿cómo debe configurar el grupo?",
-            options: [
-                "Asignar subredes en múltiples Zonas de Disponibilidad",
-                "Poner el máximo de instancias en 1",
-                "Usar solo instancias tipo T2 micro",
-                "Desactivar CloudWatch"
-            ],
-            correct: 0,
-            explanation: "Al asignar subredes de varias AZs, Auto Scaling distribuirá las instancias automáticamente entre ellas, protegiendo contra fallos de una zona."
+            q: "¿Qué pilar del Well-Architected Framework se enfoca en usar los recursos de computación de la manera más eficiente para reducir gastos innecesarios? (CUMULATIVO)",
+            options: ["Seguridad", "Optimización de costos", "Excelencia operativa", "Eficiencia del rendimiento"],
+            correct: ["Optimización de costos"],
+            explanation: "La optimización de costos se centra en evitar el sobreprovisionamiento y usar modelos de precios adecuados (Spot, Reservas)."
         },
         {
-            question: "Resumen: ¿Qué par de servicios permiten la 'Elasticidad' en EC2?",
+            q: "¿Qué modelo de precios de EC2 permite a los usuarios pujar por la capacidad sobrante de AWS con descuentos de hasta el 90%? (CUMULATIVO)",
+            options: ["On-Demand", "Reserved Instances", "Spot Instances", "Dedicated Hosts"],
+            correct: ["Spot Instances"],
+            explanation: "Las instancias Spot ofrecen los mayores descuentos al usar la capacidad excedente de AWS."
+        },
+        {
+            q: "¿Qué herramienta de AWS proporciona recomendaciones para mejorar la seguridad, reducir costos y aumentar el rendimiento de su cuenta? (CUMULATIVO)",
+            options: ["AWS Budgets", "AWS Trusted Advisor", "Amazon Inspector", "AWS CloudTrail"],
+            correct: ["AWS Trusted Advisor"],
+            explanation: "Trusted Advisor analiza su cuenta y ofrece recomendaciones en 5 categorías, incluyendo optimización de costos y seguridad."
+        },
+        {
+            q: "Usted necesita aislar sus recursos de red en la nube de forma lógica. ¿Qué servicio debe usar? (CUMULATIVO)",
+            options: ["Amazon Route 53", "Amazon VPC (Virtual Private Cloud)", "AWS Direct Connect", "Amazon CloudFront"],
+            correct: ["Amazon VPC (Virtual Private Cloud)"],
+            explanation: "VPC permite crear una red virtual aislada lógicamente para sus recursos de AWS."
+        },
+        {
+            q: "¿Cuál es la función principal de Amazon S3? (CUMULATIVO)",
+            options: ["Ejecutar código de aplicaciones", "Almacenamiento de objetos altamente escalable", "Servicio de base de datos relacional", "Gestión de flotas de servidores"],
+            correct: ["Almacenamiento de objetos altamente escalable"],
+            explanation: "Amazon S3 es un servicio de almacenamiento de objetos diseñado para almacenar y recuperar cualquier cantidad de datos."
+        },
+        {
+            q: "Según el Modelo de Responsabilidad Compartida, ¿quién es responsable de parchear el Sistema Operativo de una instancia de Amazon EC2? (CUMULATIVO)",
+            options: ["AWS", "El Cliente", "Ambos", "El fabricante del sistema operativo"],
+            correct: ["El Cliente"],
+            explanation: "En servicios de infraestructura como EC2 (IaaS), el cliente es responsable del sistema operativo y las aplicaciones."
+        },
+        {
+            q: "Usted desea transferir petabytes de datos a AWS pero su conexión a internet es muy lenta. ¿Qué dispositivo físico de AWS puede solicitar? (CUMULATIVO)",
+            options: ["AWS Outposts", "AWS Snowball", "AWS WAF", "Amazon EBS"],
+            correct: ["AWS Snowball"],
+            explanation: "AWS Snowball es un dispositivo físico para transferir grandes volúmenes de datos (terabytes a petabytes) fuera de banda (por correo)."
+        },
+        {
+            q: "En Amazon EC2 Auto Scaling, ¿qué sucede si la capacidad deseada se establece en 4, pero actualmente solo hay 3 instancias funcionando debido a un fallo?",
+            options: ["El sistema envía un correo al administrador", "Auto Scaling lanza automáticamente 1 instancia adicional para alcanzar la capacidad deseada", "El sistema reduce la capacidad deseada a 3 automáticamente", "Las otras 3 instancias se apagan por seguridad"],
+            correct: ["Auto Scaling lanza automáticamente 1 instancia adicional para alcanzar la capacidad deseada"],
+            explanation: "Auto Scaling siempre intenta mantener el número de instancias igual a la 'Capacidad Deseada'."
+        },
+        {
+            q: "¿Cuál de los siguientes es un ejemplo de 'Escalado Dinámico'?",
             options: [
-                "EC2 e IAM",
-                "CloudWatch y Auto Scaling",
-                "S3 y CloudFront",
-                "VPC y Security Groups"
+                "Programar el encendido de servidores a las 9 AM todos los días.",
+                "Añadir instancias automáticamente cuando el uso de CPU supera el 70% durante 5 minutos.",
+                "Predecir que habrá mucho tráfico el próximo mes usando IA.",
+                "Cambiar manualmente el tamaño de la instancia en la consola."
             ],
-            correct: 1,
-            explanation: "CloudWatch monitorea (el cerebro) y Auto Scaling actúa (el músculo)."
+            correct: ["Añadir instancias automáticamente cuando el uso de CPU supera el 70% durante 5 minutos."],
+            explanation: "El escalado dinámico reacciona a cambios reales en la demanda detectados por métricas de CloudWatch."
+        },
+        {
+            q: "¿Qué describe mejor el beneficio de 'Agilidad' en AWS? (CUMULATIVO)",
+            options: [
+                "Pagar menos al comprar en masa.",
+                "La rapidez para innovar reduciendo el tiempo de aprovisionamiento de recursos de semanas a minutos.",
+                "Tener servidores en todo el mundo.",
+                "Que las aplicaciones funcionen más rápido."
+            ],
+            correct: ["La rapidez para innovar reduciendo el tiempo de aprovisionamiento de recursos de semanas a minutos."],
+            explanation: "La agilidad se refiere a la velocidad para experimentar y desplegar recursos casi instantáneamente."
+        },
+        {
+            q: "¿Cuál de los siguientes servicios permite registrar toda la actividad de la API y las acciones de los usuarios en su cuenta de AWS para auditoría? (CUMULATIVO)",
+            options: ["Amazon CloudWatch", "AWS CloudTrail", "AWS Config", "Amazon GuardDuty"],
+            correct: ["AWS CloudTrail"],
+            explanation: "CloudTrail registra las llamadas a la API, permitiendo saber 'quién hizo qué y cuándo' en la cuenta."
+        },
+        {
+            q: "Usted tiene un sitio web estático alojado en S3. ¿Qué servicio debería usar para acelerar la entrega de imágenes a usuarios en todo el mundo con baja latencia? (CUMULATIVO)",
+            options: ["Amazon CloudFront", "Elastic Load Balancing", "AWS Shield", "Amazon Route 53"],
+            correct: ["Amazon CloudFront"],
+            explanation: "Amazon CloudFront es la Red de Entrega de Contenido (CDN) que cachea contenido en ubicaciones de borde para reducir la latencia."
+        },
+        {
+            q: "Elija 2 opciones: ¿Cuáles son las dos formas principales de escalar en AWS?",
+            options: ["Escalado Circular", "Escalado Horizontal", "Escalado Vertical", "Escalado Diagonal"],
+            correct: ["Escalado Horizontal", "Escalado Vertical"],
+            explanation: "El escalado horizontal (añadir nodos) y el vertical (añadir potencia a un nodo) son las dos estrategias principales."
+        },
+        {
+            q: "Elija 2 opciones: ¿Qué métricas son comúnmente usadas para activar alarmas de escalado en CloudWatch?",
+            options: ["Uso de CPU", "Nombre del usuario que inició sesión", "Número de solicitudes (Request Count)", "Color del logo de la empresa"],
+            correct: ["Uso de CPU", "Número de solicitudes (Request Count)"],
+            explanation: "El uso de CPU y el volumen de tráfico (solicitudes) son indicadores directos de la carga del sistema."
+        },
+        {
+            q: "¿Cuál es el propósito del 'Cooldown Period' (Periodo de espera) en Auto Scaling?",
+            options: ["Darle tiempo a los servidores para enfriarse físicamente.", "Permitir que las nuevas instancias se estabilicen antes de que Auto Scaling tome otra decisión de escalado.", "Reducir la factura mensual automáticamente.", "Es un periodo de vacaciones para los desarrolladores."],
+            correct: ["Permitir que las nuevas instancias se estabilicen antes de que Auto Scaling tome otra decisión de escalado."],
+            explanation: "El periodo de espera evita que el sistema escale excesivamente mientras las instancias recién creadas aún están arrancando."
+        },
+        {
+            q: "¿Qué sucede con la facturación de una instancia EC2 si Auto Scaling la detiene (Stop) debido a una baja demanda?",
+            options: ["Sigue cobrando el mismo precio.", "Se deja de cobrar por el uso de CPU/RAM, pero se sigue cobrando por el almacenamiento EBS.", "AWS devuelve el dinero de la hora completa.", "La cuenta se bloquea por inactividad."],
+            correct: ["Se deja de cobrar por el uso de CPU/RAM, pero se sigue cobrando por el almacenamiento EBS."],
+            explanation: "Al detener una instancia, dejas de pagar por cómputo, pero los datos persisten en EBS y ese almacenamiento se sigue facturando."
+        },
+        {
+            q: "¿Cuál es la relación entre Elastic Load Balancing (ELB) y Auto Scaling?",
+            options: [
+                "ELB crea las instancias y Auto Scaling las apaga.",
+                "Auto Scaling añade las instancias y ELB distribuye el tráfico equitativamente entre ellas.",
+                "Son el mismo servicio con diferentes nombres.",
+                "ELB solo funciona si el auto escalado está desactivado."
+            ],
+            correct: ["Auto Scaling añade las instancias y ELB distribuye el tráfico equitativamente entre ellas."],
+            explanation: "Trabajan juntos: Auto Scaling garantiza que el número de instancias sea el correcto y ELB se encarga de que ninguna se sobrecargue enviando tráfico a todas."
         }
     ];
 
-    let currentQuestions = [];
     let currentQuestionIndex = 0;
     let score = 0;
     let selectedOptions = [];
+    let shuffledQuestions = [];
+    let failedQuestions = [];
 
-    function shuffle(array) {
-        return array.sort(() => Math.random() - 0.5);
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
     }
 
-    function restartQuiz() {
-        currentQuestions = shuffle([...allQuestions]);
-        currentQuestionIndex = 0;
-        score = 0;
-        document.getElementById('dashboard').style.display = 'none';
-        document.getElementById('quiz-area').style.display = 'block';
-        document.getElementById('current-score').innerText = '0';
-        showQuestion();
+    function initQuiz() {
+        shuffledQuestions = JSON.parse(JSON.stringify(questions));
+        shuffleArray(shuffledQuestions);
+        renderQuestion();
     }
 
-    function showQuestion() {
-        const q = currentQuestions[currentQuestionIndex];
-        selectedOptions = [];
-        document.getElementById('question-count').innerText = `Pregunta ${currentQuestionIndex + 1} de ${currentQuestions.length}`;
-        document.getElementById('question-text').innerText = q.question;
-        
+    function renderQuestion() {
+        const qData = shuffledQuestions[currentQuestionIndex];
         const container = document.getElementById('options-container');
+        const nextBtn = document.getElementById('next-btn');
+        const multiHint = document.getElementById('multi-hint');
+        
+        selectedOptions = [];
+        nextBtn.disabled = true;
+        nextBtn.innerText = "Verificar";
+        document.getElementById('explanation-text').style.display = 'none';
         container.innerHTML = '';
         
-        q.options.forEach((opt, index) => {
-            const div = document.createElement('div');
-            div.className = 'option';
-            div.innerText = opt;
-            div.onclick = () => selectOption(index, div);
-            container.appendChild(div);
+        document.getElementById('question-meta').innerText = `Pregunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
+        document.getElementById('question-text').innerText = qData.q;
+
+        const currentOptions = [...qData.options];
+        shuffleArray(currentOptions);
+        qData.tempOptions = currentOptions;
+
+        if (qData.correct.length > 1) {
+            multiHint.classList.remove('hidden');
+            multiHint.innerText = `(Seleccione ${qData.correct.length} opciones)`;
+        } else {
+            multiHint.classList.add('hidden');
+        }
+
+        currentOptions.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => selectOption(index, btn);
+            container.appendChild(btn);
         });
 
-        document.getElementById('explanation-box').style.display = 'none';
-        document.getElementById('next-btn').disabled = true;
-        updateProgressBar();
+        updateProgress();
     }
 
-    function selectOption(index, element) {
-        const q = currentQuestions[currentQuestionIndex];
+    function selectOption(index, btn) {
+        const qData = shuffledQuestions[currentQuestionIndex];
         
-        if (q.multi) {
+        if (qData.correct.length === 1) {
+            document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            selectedOptions = [index];
+            document.getElementById('next-btn').disabled = false;
+        } else {
             if (selectedOptions.includes(index)) {
                 selectedOptions = selectedOptions.filter(i => i !== index);
-                element.classList.remove('selected');
-            } else {
+                btn.classList.remove('selected');
+            } else if (selectedOptions.length < qData.correct.length) {
                 selectedOptions.push(index);
-                element.classList.add('selected');
+                btn.classList.add('selected');
             }
-            document.getElementById('next-btn').disabled = selectedOptions.length === 0;
-        } else {
-            const options = document.querySelectorAll('.option');
-            options.forEach(opt => opt.classList.remove('selected'));
-            element.classList.add('selected');
-            selectedOptions = [index];
+            document.getElementById('next-btn').disabled = selectedOptions.length !== qData.correct.length;
+        }
+    }
+
+    function handleNext() {
+        const nextBtn = document.getElementById('next-btn');
+        if (nextBtn.innerText === "Verificar") {
             checkAnswer();
+        } else {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
         }
     }
 
     function checkAnswer() {
-        const q = currentQuestions[currentQuestionIndex];
-        const options = document.querySelectorAll('.option');
-        let isCorrect = false;
+        const qData = shuffledQuestions[currentQuestionIndex];
+        const buttons = document.querySelectorAll('.option-btn');
+        const nextBtn = document.getElementById('next-btn');
+        
+        const correctIndices = [];
+        qData.tempOptions.forEach((opt, idx) => {
+            if (qData.correct.includes(opt)) correctIndices.push(idx);
+        });
 
-        if (q.multi) {
-            isCorrect = q.correct.every(i => selectedOptions.includes(i)) && selectedOptions.length === q.correct.length;
-        } else {
-            isCorrect = selectedOptions[0] === q.correct;
-        }
+        const isCorrect = selectedOptions.length === correctIndices.length && 
+                          selectedOptions.every(val => correctIndices.includes(val));
 
-        options.forEach((opt, index) => {
-            opt.onclick = null;
-            if (q.multi) {
-                if (q.correct.includes(index)) opt.classList.add('correct');
-                else if (selectedOptions.includes(index)) opt.classList.add('incorrect');
-            } else {
-                if (index === q.correct) opt.classList.add('correct');
-                else if (selectedOptions.includes(index)) opt.classList.add('incorrect');
+        buttons.forEach((btn, index) => {
+            btn.disabled = true;
+            if (correctIndices.includes(index)) {
+                btn.classList.add('correct');
+            } else if (selectedOptions.includes(index)) {
+                btn.classList.add('incorrect');
             }
         });
 
         if (isCorrect) {
             score++;
             document.getElementById('current-score').innerText = score;
-        }
-
-        document.getElementById('explanation-text').innerText = q.explanation;
-        document.getElementById('explanation-box').style.display = 'block';
-        document.getElementById('next-btn').disabled = false;
-    }
-
-    function handleNext() {
-        if (currentQuestions[currentQuestionIndex].multi && document.getElementById('explanation-box').style.display === 'none') {
-            checkAnswer();
-            return;
-        }
-
-        currentQuestionIndex++;
-        if (currentQuestionIndex < currentQuestions.length) {
-            showQuestion();
         } else {
-            showDashboard();
+            failedQuestions.push(shuffledQuestions[currentQuestionIndex]);
         }
+
+        const exp = document.getElementById('explanation-text');
+        exp.innerText = qData.explanation;
+        exp.style.display = 'block';
+        
+        nextBtn.innerText = "Siguiente";
     }
 
-    function updateProgressBar() {
-        const progress = ((currentQuestionIndex) / currentQuestions.length) * 100;
-        document.getElementById('progress-bar').style.width = `${progress}%`;
+    function updateProgress() {
+        const progress = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+        document.getElementById('progress-fill').style.width = `${progress}%`;
     }
 
-    function showDashboard() {
-        document.getElementById('quiz-area').style.display = 'none';
-        const dashboard = document.getElementById('dashboard');
-        dashboard.style.display = 'block';
+    function showResults() {
+        document.getElementById('question-card').classList.add('hidden');
+        document.getElementById('results-card').classList.remove('hidden');
+        document.getElementById('progress-fill').style.width = `100%`;
         
-        const percent = Math.round((score / currentQuestions.length) * 100);
-        document.getElementById('final-score').innerText = `${percent}%`;
+        const finalScoreText = document.getElementById('final-score-text');
+        const resultBadge = document.getElementById('result-badge');
+        const percent = (score / shuffledQuestions.length) * 100;
         
-        let msg = "";
-        if (percent >= 70) msg = "¡Excelente! Dominas el funcionamiento de CloudWatch y Auto Scaling.";
-        else msg = "Buen intento. Repasa la diferencia entre métrica y alarma, y los tipos de capacidad de Auto Scaling.";
+        finalScoreText.innerText = `${score} / ${shuffledQuestions.length}`;
         
-        document.getElementById('result-message').innerText = msg;
+        if (percent >= 70) {
+            resultBadge.innerText = "¡APROBADO!";
+            resultBadge.className = "badge badge-pass";
+            document.getElementById('result-message').innerText = "¡Excelente! Has demostrado un dominio sólido de la elasticidad y el monitoreo en AWS.";
+        } else {
+            resultBadge.innerText = "NO APROBADO";
+            resultBadge.className = "badge badge-fail";
+            document.getElementById('result-message').innerText = "Te recomendamos repasar la diferencia entre CloudWatch y Auto Scaling, así como las estrategias de escalado.";
+        }
+
+        document.getElementById('restart-failed-btn').style.display = failedQuestions.length > 0 ? 'inline-block' : 'none';
     }
 
-    restartQuiz();
+    function restartQuiz(onlyFailed) {
+        if (onlyFailed && failedQuestions.length > 0) {
+            shuffledQuestions = [...failedQuestions];
+        } else {
+            shuffledQuestions = JSON.parse(JSON.stringify(questions));
+            shuffleArray(shuffledQuestions);
+        }
+        
+        failedQuestions = [];
+        currentQuestionIndex = 0;
+        score = 0;
+        document.getElementById('current-score').innerText = "0";
+        document.getElementById('results-card').classList.add('hidden');
+        document.getElementById('question-card').classList.remove('hidden');
+        renderQuestion();
+    }
+
+    initQuiz();
 </script>
 
 </body>

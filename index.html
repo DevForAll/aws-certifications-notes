@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,26 +8,60 @@
         :root {
             --aws-navy: #232f3e;
             --aws-orange: #ff9900;
-            --aws-light-gray: #f2f3f3;
-            --aws-white: #ffffff;
-            --text-dark: #16191f;
+            --page-bg: #f2f3f3;
+            --card-bg: #ffffff;
+            --text-primary: #16191f;
+            --text-muted: #666;
+            --text-subtle: #888;
+            --stats-bg: #1a2433;
+            --row-border: #f2f3f3;
+            --row-hover: #f8f9f9;
+            --btn-notes-bg: #eef1f5;
+            --btn-notes-border: #d5dce8;
+            --btn-notes-hover: #dde2ea;
+            --act-none-color: #ccc;
+            --footer-color: #999;
+            --soon-header: #546e7a;
+            --soon-body-color: #999;
+            --module-subtitle: #aab7b8;
+        }
+
+        [data-theme="dark"] {
+            --page-bg: #151c25;
+            --card-bg: #1e2838;
+            --text-primary: #e8eaed;
+            --text-muted: #9aabb8;
+            --text-subtle: #7a8a9a;
+            --stats-bg: #0d1420;
+            --row-border: #283848;
+            --row-hover: #243444;
+            --btn-notes-bg: #283848;
+            --btn-notes-border: #364858;
+            --btn-notes-hover: #324058;
+            --act-none-color: #506070;
+            --footer-color: #6a7a8a;
+            --soon-header: #3a4a56;
+            --soon-body-color: #6a7a8a;
+            --module-subtitle: #8a9aaa;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             font-family: 'Amazon Ember', Arial, sans-serif;
-            background-color: var(--aws-light-gray);
-            color: var(--text-dark);
+            background-color: var(--page-bg);
+            color: var(--text-primary);
             min-height: 100vh;
+            transition: background-color 0.25s, color 0.25s;
         }
 
         /* ── HEADER ── */
         header {
             background-color: var(--aws-navy);
-            color: var(--aws-white);
+            color: #fff;
             padding: 2rem 1.5rem 1.5rem;
             text-align: center;
+            position: relative;
         }
 
         .header-badge {
@@ -43,62 +77,50 @@
             letter-spacing: 1px;
         }
 
-        header h1 {
-            font-size: 1.9rem;
-            font-weight: bold;
-            margin-bottom: 0.4rem;
-        }
-
+        header h1 { font-size: 1.9rem; font-weight: bold; margin-bottom: 0.4rem; }
         header h1 span { color: var(--aws-orange); }
-
-        header p {
-            color: #aab7b8;
-            font-size: 0.9rem;
-        }
+        header p { color: #aab7b8; font-size: 0.9rem; }
 
         /* ── STATS BAR ── */
         .stats-bar {
-            background: #1a2433;
+            background: var(--stats-bg);
             padding: 0.65rem 1.5rem;
             display: flex;
             justify-content: center;
             gap: 2.5rem;
             font-size: 0.82rem;
-            color: #aab7b8;
+            color: var(--text-subtle);
             flex-wrap: wrap;
+            transition: background-color 0.25s;
         }
-
         .stats-bar strong { color: var(--aws-orange); }
 
         /* ── MAIN CONTAINER ── */
-        .container {
-            max-width: 860px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
+        .container { max-width: 860px; margin: 2rem auto; padding: 0 1rem; }
 
         .section-label {
             font-size: 0.75rem;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 1.5px;
-            color: #888;
+            color: var(--text-subtle);
             margin-bottom: 0.9rem;
             margin-top: 0.5rem;
         }
 
         /* ── MODULE CARD ── */
         .module-card {
-            background: var(--aws-white);
+            background: var(--card-bg);
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.07);
             margin-bottom: 1.25rem;
             overflow: hidden;
+            transition: background-color 0.25s;
         }
 
         .module-header {
             background: var(--aws-navy);
-            color: var(--aws-white);
+            color: #fff;
             padding: 1rem 1.5rem;
             display: flex;
             align-items: center;
@@ -118,7 +140,7 @@
 
         .module-meta { flex: 1; }
         .module-title { font-size: 0.98rem; font-weight: bold; }
-        .module-subtitle { font-size: 0.78rem; color: #aab7b8; margin-top: 2px; }
+        .module-subtitle { font-size: 0.78rem; color: var(--module-subtitle); margin-top: 2px; }
 
         /* ── LESSON ROW ── */
         .lesson-list { padding: 0.25rem 0; }
@@ -127,24 +149,24 @@
             display: flex;
             align-items: center;
             padding: 0.85rem 1.5rem;
-            border-bottom: 1px solid #f2f3f3;
+            border-bottom: 1px solid var(--row-border);
             gap: 0.9rem;
             transition: background 0.15s;
         }
-
         .lesson-row:last-child { border-bottom: none; }
-        .lesson-row:hover { background-color: #f8f9f9; }
+        .lesson-row:hover { background-color: var(--row-hover); }
 
         .lesson-icon {
             width: 36px;
             height: 36px;
-            background: var(--aws-light-gray);
+            background: var(--page-bg);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1rem;
             flex-shrink: 0;
+            transition: background-color 0.25s;
         }
 
         .lesson-info { flex: 1; min-width: 0; }
@@ -155,12 +177,12 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            color: var(--text-dark);
+            color: var(--text-primary);
         }
 
         .lesson-desc {
             font-size: 0.78rem;
-            color: #666;
+            color: var(--text-muted);
             margin-top: 2px;
             white-space: nowrap;
             overflow: hidden;
@@ -168,14 +190,10 @@
         }
 
         /* ── ACTION BUTTONS ── */
-        .item-actions {
-            display: flex;
-            gap: 0.45rem;
-            flex-shrink: 0;
-        }
+        .item-actions { display: flex; gap: 0.45rem; flex-shrink: 0; }
 
         .act-notes {
-            background: #eef1f5;
+            background: var(--btn-notes-bg);
             color: var(--aws-navy);
             padding: 0.3rem 0.75rem;
             border-radius: 5px;
@@ -183,9 +201,12 @@
             font-size: 0.8rem;
             font-weight: 600;
             white-space: nowrap;
-            border: 1px solid #d5dce8;
+            border: 1px solid var(--btn-notes-border);
+            transition: background 0.15s;
         }
-        .act-notes:hover { background: #dde2ea; }
+        .act-notes:hover { background: var(--btn-notes-hover); }
+
+        [data-theme="dark"] .act-notes { color: #c8d8e8; }
 
         .act-eval {
             background: var(--aws-orange);
@@ -196,20 +217,15 @@
             font-size: 0.8rem;
             font-weight: 700;
             white-space: nowrap;
+            transition: background 0.15s;
         }
         .act-eval:hover { background: #e68a00; }
 
-        .act-none {
-            color: #ccc;
-            font-size: 0.78rem;
-            padding: 0.3rem 0.5rem;
-            white-space: nowrap;
-        }
+        .act-none { color: var(--act-none-color); font-size: 0.78rem; padding: 0.3rem 0.5rem; white-space: nowrap; }
 
         /* ── COMING SOON ── */
         .module-card.soon { opacity: 0.55; }
-
-        .module-card.soon .module-header { background: #546e7a; }
+        .module-card.soon .module-header { background: var(--soon-header); }
 
         .soon-tag {
             background: rgba(255,255,255,0.15);
@@ -223,20 +239,42 @@
 
         .soon-body {
             padding: 0.9rem 1.5rem;
-            color: #999;
+            color: var(--soon-body-color);
             font-size: 0.85rem;
             font-style: italic;
         }
+
+        /* ── THEME TOGGLE ── */
+        .theme-toggle {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--aws-orange);
+            color: #111;
+            border: none;
+            cursor: pointer;
+            font-size: 1.25rem;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+            z-index: 1000;
+            transition: transform 0.2s, box-shadow 0.2s;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
 
         /* ── FOOTER ── */
         footer {
             text-align: center;
             padding: 2rem 1rem;
-            color: #999;
+            color: var(--footer-color);
             font-size: 0.78rem;
             line-height: 1.8;
         }
-
         footer a { color: var(--aws-orange); text-decoration: none; }
 
         /* ── RESPONSIVE ── */
@@ -250,6 +288,7 @@
             .lesson-desc { display: none; }
             .act-notes, .act-eval { font-size: 0.75rem; padding: 0.28rem 0.55rem; }
             .act-none { display: none; }
+            .theme-toggle { width: 42px; height: 42px; font-size: 1.1rem; bottom: 1rem; right: 1rem; }
         }
     </style>
 </head>
@@ -258,25 +297,25 @@
 <header>
     <div class="header-badge">Portal de Estudio</div>
     <h1>AWS <span>Cloud Practitioner</span></h1>
-    <p>CLF-C02 &nbsp;·&nbsp; Notas y evaluaciones por lección con retroalimentación inmediata</p>
+    <p>CLF-C02 &nbsp;·&nbsp; Notas y evaluaciones por leccion con retroalimentacion inmediata</p>
 </header>
 
 <div class="stats-bar">
     <span><strong>15</strong> lecciones con notas</span>
     <span><strong>12</strong> evaluaciones activas</span>
-    <span><strong>2 / 5</strong> módulos completos</span>
+    <span><strong>2 / 5</strong> modulos completos</span>
 </div>
 
 <div class="container">
 
-    <p class="section-label">Módulos activos</p>
+    <p class="section-label">Modulos activos</p>
 
-    <!-- ══ MÓDULO 1 ══ -->
+    <!-- MODULO 1 -->
     <div class="module-card">
         <div class="module-header">
-            <span class="module-num">MÓDULO 1</span>
+            <span class="module-num">MODULO 1</span>
             <div class="module-meta">
-                <div class="module-title">Introducción a la Nube</div>
+                <div class="module-title">Introduccion a la Nube</div>
                 <div class="module-subtitle">6 lecciones · 5 evaluaciones · Fundamentos, infraestructura global y responsabilidad compartida</div>
             </div>
         </div>
@@ -285,8 +324,8 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 1 — Introducción a AWS</div>
-                    <div class="lesson-desc">Modelo cliente-servidor, definición de cloud, pago por uso</div>
+                    <div class="lesson-name">Leccion 1 — Introduccion a AWS</div>
+                    <div class="lesson-desc">Modelo cliente-servidor, definicion de cloud, pago por uso</div>
                 </div>
                 <div class="item-actions">
                     <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-01-notas.html" class="act-notes">Notas</a>
@@ -297,8 +336,8 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 2 — Computación en la Nube</div>
-                    <div class="lesson-desc">6 beneficios, CapEx vs OpEx, economías de escala</div>
+                    <div class="lesson-name">Leccion 2 — Computacion en la Nube</div>
+                    <div class="lesson-desc">6 beneficios, CapEx vs OpEx, economias de escala</div>
                 </div>
                 <div class="item-actions">
                     <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-02-notas.html" class="act-notes">Notas</a>
@@ -309,7 +348,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 3 — Beneficios de la Nube</div>
+                    <div class="lesson-name">Leccion 3 — Beneficios de la Nube</div>
                     <div class="lesson-desc">Agilidad, elasticidad, alcance global, ahorro de costos</div>
                 </div>
                 <div class="item-actions">
@@ -321,8 +360,8 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 4 — Infraestructura Global</div>
-                    <div class="lesson-desc">Regiones, AZs, Edge Locations, criterios de selección</div>
+                    <div class="lesson-name">Leccion 4 — Infraestructura Global</div>
+                    <div class="lesson-desc">Regiones, AZs, Edge Locations, criterios de seleccion</div>
                 </div>
                 <div class="item-actions">
                     <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-04-notas.html" class="act-notes">Notas</a>
@@ -333,7 +372,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 5 — Responsabilidad Compartida</div>
+                    <div class="lesson-name">Leccion 5 — Responsabilidad Compartida</div>
                     <div class="lesson-desc">Security OF/IN the cloud, AWS Artifact, IAM, KMS</div>
                 </div>
                 <div class="item-actions">
@@ -345,8 +384,8 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 6 — Casos de Uso Reales</div>
-                    <div class="lesson-desc">Escenarios empresariales, repaso completo del Módulo 1</div>
+                    <div class="lesson-name">Leccion 6 — Casos de Uso Reales</div>
+                    <div class="lesson-desc">Escenarios empresariales, repaso completo del Modulo 1</div>
                 </div>
                 <div class="item-actions">
                     <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-06-notas.html" class="act-notes">Notas</a>
@@ -357,13 +396,13 @@
         </div>
     </div>
 
-    <!-- ══ MÓDULO 2 ══ -->
+    <!-- MODULO 2 -->
     <div class="module-card">
         <div class="module-header">
-            <span class="module-num">MÓDULO 2</span>
+            <span class="module-num">MODULO 2</span>
             <div class="module-meta">
-                <div class="module-title">Computación en la Nube — Amazon EC2</div>
-                <div class="module-subtitle">9 lecciones · 7 evaluaciones · Instancias, precios, escalado, ELB y mensajería</div>
+                <div class="module-title">Computacion en la Nube — Amazon EC2</div>
+                <div class="module-subtitle">9 lecciones · 7 evaluaciones · Instancias, precios, escalado, ELB y mensajeria</div>
             </div>
         </div>
         <div class="lesson-list">
@@ -371,7 +410,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 1 — Amazon EC2</div>
+                    <div class="lesson-name">Leccion 1 — Amazon EC2</div>
                     <div class="lesson-desc">Instancias virtuales, multitenencia, elasticidad, ciclo de vida</div>
                 </div>
                 <div class="item-actions">
@@ -383,7 +422,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 2 — Tipos de Instancias EC2</div>
+                    <div class="lesson-name">Leccion 2 — Tipos de Instancias EC2</div>
                     <div class="lesson-desc">General Purpose, Compute, Memory, Storage, Accelerated</div>
                 </div>
                 <div class="item-actions">
@@ -395,7 +434,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 3 — Aprovisionamiento de Recursos</div>
+                    <div class="lesson-name">Leccion 3 — Aprovisionamiento de Recursos</div>
                     <div class="lesson-desc">Consola, CLI, SDK, CloudShell, APIs de AWS</div>
                 </div>
                 <div class="item-actions">
@@ -407,7 +446,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 4 — Lanzar una Instancia EC2</div>
+                    <div class="lesson-name">Leccion 4 — Lanzar una Instancia EC2</div>
                     <div class="lesson-desc">AMI, EBS, Security Groups, User Data, Elastic IP, Tenancy</div>
                 </div>
                 <div class="item-actions">
@@ -419,7 +458,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 5 — Precios de Amazon EC2</div>
+                    <div class="lesson-name">Leccion 5 — Precios de Amazon EC2</div>
                     <div class="lesson-desc">On-Demand, Reserved, Spot, Savings Plans, Dedicated Hosts</div>
                 </div>
                 <div class="item-actions">
@@ -431,7 +470,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 6 — Escalado y Alta Disponibilidad (P1)</div>
+                    <div class="lesson-name">Leccion 6 — Escalado y Alta Disponibilidad (P1)</div>
                     <div class="lesson-desc">Escalabilidad, elasticidad, Multi-AZ, SPOF, tolerancia a fallos</div>
                 </div>
                 <div class="item-actions">
@@ -443,8 +482,8 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 6 — Auto Scaling y ELB (P2)</div>
-                    <div class="lesson-desc">EC2 Auto Scaling, Launch Templates, Load Balancer, políticas</div>
+                    <div class="lesson-name">Leccion 6 — Auto Scaling y ELB (P2)</div>
+                    <div class="lesson-desc">EC2 Auto Scaling, Launch Templates, Load Balancer, politicas</div>
                 </div>
                 <div class="item-actions">
                     <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-06-p2-notas.html" class="act-notes">Notas</a>
@@ -455,8 +494,8 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 7 — Elastic Load Balancing</div>
-                    <div class="lesson-desc">ALB, NLB, distribución de tráfico, integración con Auto Scaling</div>
+                    <div class="lesson-name">Leccion 7 — Elastic Load Balancing</div>
+                    <div class="lesson-desc">ALB, NLB, distribucion de trafico, integracion con Auto Scaling</div>
                 </div>
                 <div class="item-actions">
                     <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-07-notas.html" class="act-notes">Notas</a>
@@ -467,7 +506,7 @@
             <div class="lesson-row">
                 <div class="lesson-icon">📖</div>
                 <div class="lesson-info">
-                    <div class="lesson-name">Lección 8 — Mensajería y Colas</div>
+                    <div class="lesson-name">Leccion 8 — Mensajeria y Colas</div>
                     <div class="lesson-desc">Amazon SQS, SNS, arquitecturas desacopladas, pub/sub</div>
                 </div>
                 <div class="item-actions">
@@ -481,53 +520,76 @@
 
     <p class="section-label" style="margin-top: 1.5rem;">En desarrollo</p>
 
-    <!-- ══ MÓDULO 3 ══ -->
+    <!-- MODULO 3 -->
     <div class="module-card soon">
         <div class="module-header">
-            <span class="module-num">MÓDULO 3</span>
+            <span class="module-num">MODULO 3</span>
             <div class="module-meta">
-                <div class="module-title">Exploración de Servicios de Computación</div>
+                <div class="module-title">Exploracion de Servicios de Computacion</div>
                 <div class="module-subtitle">Lambda, Containers, ECS, EKS, Fargate</div>
             </div>
             <span class="soon-tag">En curso</span>
         </div>
-        <div class="soon-body">Las notas y evaluaciones se agregarán al completar las lecciones del módulo.</div>
+        <div class="soon-body">Las notas y evaluaciones se agregaran al completar las lecciones del modulo.</div>
     </div>
 
-    <!-- ══ MÓDULO 4 ══ -->
+    <!-- MODULO 4 -->
     <div class="module-card soon">
         <div class="module-header">
-            <span class="module-num">MÓDULO 4</span>
+            <span class="module-num">MODULO 4</span>
             <div class="module-meta">
-                <div class="module-title">Hacia la Globalización</div>
+                <div class="module-title">Hacia la Globalizacion</div>
                 <div class="module-subtitle">Route 53, CloudFront, AWS Outposts, Local Zones</div>
             </div>
             <span class="soon-tag">Pendiente</span>
         </div>
-        <div class="soon-body">Las notas y evaluaciones se agregarán al completar las lecciones del módulo.</div>
+        <div class="soon-body">Las notas y evaluaciones se agregaran al completar las lecciones del modulo.</div>
     </div>
 
-    <!-- ══ MÓDULO 5 ══ -->
+    <!-- MODULO 5 -->
     <div class="module-card soon">
         <div class="module-header">
-            <span class="module-num">MÓDULO 5</span>
+            <span class="module-num">MODULO 5</span>
             <div class="module-meta">
                 <div class="module-title">Redes en AWS</div>
                 <div class="module-subtitle">VPC, Subnets, Security Groups, NACLs, Direct Connect</div>
             </div>
             <span class="soon-tag">Pendiente</span>
         </div>
-        <div class="soon-body">Las notas y evaluaciones se agregarán al completar las lecciones del módulo.</div>
+        <div class="soon-body">Las notas y evaluaciones se agregaran al completar las lecciones del modulo.</div>
     </div>
 
 </div>
 
 <footer>
     <p>AWS Certified Cloud Practitioner (CLF-C02) · Notas de estudio personales</p>
-    <p>
-        <a href="https://github.com/DevForAll/aws-certifications-notes" target="_blank">Ver en GitHub ↗</a>
-    </p>
+    <p><a href="https://github.com/DevForAll/aws-certifications-notes" target="_blank">Ver en GitHub</a></p>
 </footer>
+
+<button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+
+<script>
+    (function() {
+        var btn = document.getElementById('theme-toggle');
+        var html = document.documentElement;
+        if (localStorage.getItem('aws-theme') === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            btn.textContent = '☀️';
+        }
+        btn.addEventListener('click', function() {
+            var isDark = html.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                html.setAttribute('data-theme', 'light');
+                btn.textContent = '🌙';
+                localStorage.setItem('aws-theme', 'light');
+            } else {
+                html.setAttribute('data-theme', 'dark');
+                btn.textContent = '☀️';
+                localStorage.setItem('aws-theme', 'dark');
+            }
+        });
+    })();
+</script>
 
 </body>
 </html>

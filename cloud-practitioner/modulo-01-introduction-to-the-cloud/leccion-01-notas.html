@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 1 - Introduccion a AWS — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root { --navy: #232f3e; --orange: #ff9900; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f6f8; color: #16191f; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: #eef1f5; padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    #md-content h3 { font-size: 1rem; color: #2a3a4a; margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: #444; margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid #dde2ea; margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: #fff9ee; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: #e4e8ef; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #e4e8ee; vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: #f5f7fa; }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 4rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 1 - Introduccion a AWS</span>
+    <a href="Lecci%C3%B3n%201%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `## [Lección 1: Introducción a AWS Cloud Practitioner Essentials]
+
+### **Resumen Ejecutivo**
+AWS nació de la necesidad de Amazon.com de estandarizar su infraestructura interna para manejar el crecimiento masivo a principios de los 2000. Lo que comenzó como herramientas de eficiencia interna evolucionó en 2006 en una plataforma pública que permite a cualquier empresa "alquilar" recursos de TI. La computación en la nube se define formalmente como la **entrega bajo demanda de potencia de cómputo, bases de datos, almacenamiento y otros recursos de TI a través de Internet con un modelo de precios de pago por uso.**
+
+---
+
+### **Conceptos Clave**
+
+*   **Modelo Cliente-Servidor (Medium):** Arquitectura básica donde un *cliente* (usuario/navegador) solicita un servicio y un *servidor* (instancia EC2) valida y responde. 
+*   **Entrega Bajo Demanda (High):** Los recursos están disponibles exactamente cuando se necesitan. No hay que esperar semanas por hardware físico; se **aprovisionan** en minutos.
+*   **Aprovisionamiento (Low):** El proceso de asignar y poner a disposición recursos de TI para su uso inmediato.
+*   **Pago por Uso (Pay-as-you-go) (High):** Modelo financiero donde se eliminan los gastos de capital (CapEx) iniciales por gastos variables (OpEx). Solo pagas por lo que consumes y dejas de pagar al **desaprovisionar**.
+*   **Infraestructura Global (Medium):** AWS atiende a más de **1,000,000 de clientes** activos y ofrece una plataforma con más de **300 servicios** integrados.
+*   **Centros de Datos (Medium):** Edificios diseñados para albergar los servidores y servicios de AWS. Cuentan con sistemas redundantes de energía, refrigeración y alta seguridad para garantizar la continuidad.
+*   **Administración Remota (Low):** La gestión a través de un navegador web permite administrar la infraestructura desde cualquier lugar del mundo con conexión a Internet.
+*   **Tipos de Implementación (High):**
+    *   **Nube (Cloud-based):** Todo se ejecuta en la nube. Ideal para startups o nuevas aplicaciones.
+    *   **On-premises (Private Cloud):** Recursos desplegados localmente usando virtualización. Se busca por latencia o seguridad estricta, pero carece de la elasticidad total de AWS.
+    *   **Híbrida:** Conecta infraestructura local con recursos de la nube. Común en migraciones o empresas con requisitos regulatorios específicos.
+
+---
+
+### **Puntos Críticos (Keywords del Examen)**
+
+*   **Elasticidad:** Capacidad de ajustar los recursos (subir o bajar) automáticamente según la demanda real.
+*   **Agilidad:** Reducción drástica del tiempo necesario para disponer de recursos de TI para los desarrolladores (de semanas a minutos).
+*   **Economías de Escala:** AWS puede lograr precios más bajos debido a que la agregación de miles de clientes permite comprar hardware a menor costo.
+*   **Eliminación de "Guessing Capacity":** Ya no es necesario predecir cuántos servidores necesitarás para el próximo año; escala según sea necesario.
+*   **Despliegue Global en Minutos:** Capacidad de lanzar aplicaciones en múltiples regiones del mundo con unos pocos clics.
+
+---
+
+### **Trampas de Examen**
+
+*   **¿Híbrido o Multinube?:** AWS considera las implementaciones multinube (usar AWS y Azure, por ejemplo) como un tipo de estrategia **híbrida**.
+*   **Bajo Demanda vs. Reservado:** No confundas la "entrega bajo demanda" (disponibilidad inmediata) con el "modelo de precios bajo demanda" (precio estándar sin compromiso).
+*   **On-premises vs. AWS:** En el examen, "On-premises" suele ser el escenario de "dolor" (costos fijos, mantenimiento manual, desperdicio de recursos) frente a la solución de AWS.
+*   **Infraestructura como Servicio (IaaS):** Aunque la lección no lo nombra directamente, EC2 y S3 son ejemplos fundamentales de IaaS que el examen espera que reconozcas como la base del cloud computing.
+
+
+
+"¿A cuántos clientes activos aproximadamente atiende AWS en la actualidad?
+Usted administra su infraestructura de AWS a través de un navegador web. ¿Qué permite esto?", "¿Cuál es el papel de los centros de datos en el contexto de AWS?", "AWS tiene una plataforma de nube con más de ________ servicios. (en este caso indica que agregue cual es el estimado o el valor fijo)", "¿Qué significa 'Aprovisionamiento'?"`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+  </script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 5 - Responsabilidad Compartida — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root { --navy: #232f3e; --orange: #ff9900; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f6f8; color: #16191f; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: #eef1f5; padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    #md-content h3 { font-size: 1rem; color: #2a3a4a; margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: #444; margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid #dde2ea; margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: #fff9ee; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: #e4e8ef; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #e4e8ee; vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: #f5f7fa; }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 4rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 5 - Responsabilidad Compartida</span>
+    <a href="Lecci%C3%B3n%205%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `
+# 📋 MÓDULO 1 - Lección 5: Modelo de Responsabilidad Compartida de AWS (Master Guide)
+
+## **Resumen Ejecutivo**
+AWS y el Cliente operan bajo un acuerdo de seguridad mutua. **AWS** protege la infraestructura física y el software base (**Seguridad "DE" la Nube**), mientras que el **Cliente** protege sus datos, aplicaciones y configuraciones (**Seguridad "EN" la Nube**). Entender dónde termina la responsabilidad de uno y empieza la del otro es la base de casi el 20% de las preguntas de seguridad del examen CLF-C02.
+
+---
+
+## **🔑 Conceptos Clave (Organizados por Prioridad)**
+
+### **PRIORIDAD ALTA: Los Pilares del Modelo** ⚡⚡⚡
+
+**1. El Mantra del Examen (Memorizar Sí o Sí):**
+*   **AWS: Security OF the Cloud** (Seguridad **DE** la nube). Infraestructura global, hardware, redes físicas y el hipervisor.
+*   **Cliente: Security IN the Cloud** (Seguridad **EN** la nube). Todo lo que el cliente pone "dentro" de AWS: datos, apps, OS e identidades.
+
+**2. La Analogía del Constructor (Contexto Transcripción):**
+*   **Constructor (AWS):** Construye paredes fuertes y puertas sólidas. No guarda copias de tus llaves (no hay "puertas traseras").
+*   **Propietario (Cliente):** Debe cerrar las puertas con llave al salir. Si el cliente deja la puerta abierta o pierde las llaves, es su responsabilidad. AWS puede notificarte si ve la puerta abierta, pero no entrará a "cerrarla" por ti.
+
+**3. Desplazamiento de Responsabilidad por Modelo de Servicio:**
+La carga de trabajo del cliente cambia según lo que use:
+*   **IaaS (Ej: EC2):** **Máxima responsabilidad del cliente.** Tú controlas el OS (Guest OS), los parches, el firewall (Security Groups) y las apps.
+*   **PaaS (Ej: RDS, Elastic Beanstalk):** **Responsabilidad compartida.** AWS parcha el Sistema Operativo y el motor de DB; tú gestionas los datos y el acceso.
+*   **SaaS / Serverless (Ej: S3, Lambda):** **Mínima responsabilidad del cliente.** AWS gestiona casi todo (OS, escalado, parches). Tú solo gestionas **Datos e IAM**.
+
+---
+
+### **PRIORIDAD MEDIA: Servicios y Herramientas** 📊
+
+**4. Matriz de Servicios Específicos:**
+| Servicio | ¿Quién parcha el OS? | ¿Quién parcha la App/DB? | ¿Quién gestiona el Firewall? |
+| :--- | :--- | :--- | :--- |
+| **Amazon EC2** | **Cliente** | **Cliente** | **Cliente** (Security Groups) |
+| **Amazon RDS** | **AWS** | **AWS** (Motor DB) | **Cliente** (Reglas de acceso) |
+| **AWS Lambda** | **AWS** | **Cliente** (El código) | **AWS** (Infraestructura) |
+| **Amazon S3** | **AWS** | **N/A** | **Cliente** (Permisos de Bucket) |
+
+| Servicio       | ¿Quién parcha el OS? | ¿Quién parcha la App/DB? | ¿Quién gestiona el Firewall?     |
+| -------------- | -------------------- | ------------------------ | -------------------------------- |
+| **Amazon EC2** | **Cliente**          | **Cliente**              | **Cliente** (Security Groups)    |
+| **Amazon RDS** | **AWS**              | **AWS** (Motor DB)       | **Cliente** (Reglas de acceso)   |
+| **AWS Lambda** | **AWS**              | **Cliente** (El código)  | **AWS** (Infraestructura)        |
+| **Amazon S3**  | **AWS**              | **N/A**                  | **Cliente** (Permisos de Bucket) |
+
+**5. La "Prueba" de Seguridad: AWS Artifact:**
+*   Es el portal gratuito para descargar los informes de auditoría (ISO, PCI, SOC). 
+*   **Uso en examen:** Si preguntan cómo demostrar que los centros de datos de AWS son seguros para una auditoría externa, la respuesta es **AWS Artifact**.
+
+**6. Cifrado de Datos (Decisión y Herramienta):**
+*   **Cliente decide:** Qué cifrar y cuándo.
+*   **AWS proporciona:** La herramienta (**AWS KMS**). 
+*   *Nota:* Aunque AWS dé la herramienta, el cliente es responsable de habilitarla y gestionar las llaves.
+
+---
+
+### **PRIORIDAD BAJA: Categorías de Controles** 📝
+
+**7. Clasificación de Controles:**
+*   **Heredados (Inherited):** El cliente los recibe de AWS (Seguridad física, edificios).
+*   **Compartidos (Shared):** Ambos participan (Gestión de parches, configuración de red, entrenamiento).
+*   **Específicos:** Responsabilidad total del cliente (IAM, clasificación de datos).
+
+---
+
+## **🎯 Puntos Críticos para el Examen (Keywords)**
+
+*   **Guest Operating System:** Palabra clave para **Cliente** (en EC2).
+*   **Physical Security / Disposal:** Palabra clave para **AWS** (eliminación física de discos).
+*   **Least Privilege (Menor Privilegio):** La mejor práctica del cliente en IAM (solo dar los permisos mínimos necesarios).
+*   **Data Residency:** El cliente es responsable de elegir la **Región** correcta para cumplir con leyes locales. AWS no mueve datos entre regiones por sí solo.
+*   **No Backdoor (Puerta Trasera):** AWS no tiene acceso a tu sistema operativo (EC2) porque no tiene tus llaves de acceso.
+
+---
+
+## **⚠️ Trampas de Examen (Diferencias Cruciales)**
+
+1.  **⚠️ "AWS configura mis firewalls":** FALSO. AWS proporciona el servicio (Security Group), pero el cliente define las **reglas** de tráfico.
+2.  **⚠️ "En RDS, AWS es dueño de mis datos":** FALSO. El cliente siempre es dueño y responsable de sus datos en **cualquier** servicio.
+3.  **⚠️ "AWS parcha mi aplicación personalizada":** FALSO. AWS nunca parcha el código del cliente.
+4.  **⚠️ "Security OF the Cloud vs IN the Cloud":** Cuidado con la preposición. Si dice **OF** es AWS; si dice **IN** es Cliente.
+
+---
+
+## **💡 Regla de Oro del Instructor**
+> **"Si puedes entrar por SSH o RDP al servidor (como en EC2), tú eres responsable del Sistema Operativo. Si el servicio es administrado o sin servidor (como Lambda o S3), AWS es responsable del Sistema Operativo."**
+
+---
+
+## **🛠️ Herramientas de Apoyo (Responsabilidad del Cliente)**
+Para que el cliente cumpla con su parte "IN the Cloud", AWS ofrece:
+*   **IAM:** Gestión de identidades y MFA.
+*   **AWS Trusted Advisor:** Te avisa si tienes configuraciones de seguridad débiles (puertas abiertas).
+*   **AWS CloudTrail:** Registra quién hizo qué (auditoría).
+*   **AWS WAF / Shield:** Protección contra ataques web y DDoS.
+`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+  </script>
+</body>
+</html>

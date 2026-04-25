@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 2 - Tipos de Instancias EC2 — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root { --navy: #232f3e; --orange: #ff9900; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f6f8; color: #16191f; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: #eef1f5; padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    #md-content h3 { font-size: 1rem; color: #2a3a4a; margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: #444; margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid #dde2ea; margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: #fff9ee; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: #e4e8ef; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #e4e8ee; vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: #f5f7fa; }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 4rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 2 - Tipos de Instancias EC2</span>
+    <a href="Lecci%C3%B3n%202%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `## Resumen Ejecutivo
+Amazon EC2 no es una solución de "talla única". AWS ofrece diversas familias de instancias optimizadas para diferentes recursos (CPU, Memoria, Almacenamiento, Red). La clave del éxito en el examen es saber emparejar un **escenario de negocio** con la **familia de instancia** correcta, equilibrando siempre el rendimiento y el costo.
+
+---
+
+## ☕ Analogía de la Vida Real: La Cafetería de AWS
+Imagina que EC2 es una cafetería. Para operar eficientemente, necesitas diferentes máquinas según el pedido:
+*   **Máquina de Espresso de alta potencia:** Para shots rápidos y lattes (Optimizada para **Cómputo**).
+*   **Máquina de Goteo Clásica:** Para el café básico balanceado (Uso **General**).
+*   **Máquina de Vapor:** Para chocolate caliente especializado (Computación **Acelerada**).
+*   Si usas la máquina incorrecta para el pedido, desperdicias energía o haces esperar al cliente. En AWS, elegir mal significa **pagar de más** o tener un **rendimiento pobre**.
+
+---
+
+## Conceptos Clave (Definiciones Simples)
+
+### 1. Uso General (General Purpose)
+*   **Definición:** Equilibrio perfecto entre cómputo, memoria y red.
+*   **Uso:** Servidores web, repositorios de código, microservicios.
+*   **Tip de Examen:** Es el **punto de partida recomendado** cuando no conoces el comportamiento de tu carga de trabajo.
+
+### 2. Optimizadas para Cómputo (Compute Optimized)
+*   **Definición:** Fuerte presencia de procesadores de alto rendimiento (CPU).
+*   **Uso:** Servidores de juegos (Gaming), Computación de Alto Rendimiento (HPC), Modelado Científico, Batch Processing.
+*   **Keyword:** "Intensivo en CPU".
+
+### 3. Optimizadas para Memoria (Memory Optimized)
+*   **Definición:** Diseñadas para procesar grandes conjuntos de datos directamente en la RAM.
+*   **Uso:** Bases de datos de alto rendimiento (SAP HANA), Cachés en memoria (Redis), Análisis de datos en tiempo real.
+*   **Keyword:** "Grandes datasets en memoria".
+
+### 4. Computación Acelerada (Accelerated Computing)
+*   **Definición:** Utilizan **aceleradores de hardware** (GPUs o FPGAs) en lugar de solo CPUs de software.
+*   **Uso:** Renderizado de gráficos, Machine Learning profundo, Cálculos de punto flotante complejos.
+*   **Keyword:** "Coprocesadores", "Gráficos", "Pattern matching".
+
+### 5. Optimizadas para Almacenamiento (Storage Optimized)
+*   **Definición:** Diseñadas para cargas de trabajo que requieren acceso rápido de lectura/escritura a datos en el **almacenamiento local**.
+*   **Uso:** Sistemas de archivos distribuidos, Data warehousing, Bases de datos NoSQL.
+*   **Keyword:** "Alto IOPS local", "Baja latencia de almacenamiento".
+
+---
+
+## Puntos Críticos (Keywords del Examen)
+
+| Nivel de Probabilidad | Concepto | Keyword / Acción |
+| :--- | :--- | :--- |
+| **ALTA (High)** | **Flexibilidad** | Puedes cambiar el tipo o tamaño de instancia en **cualquier momento**. |
+| **ALTA (High)** | **Costo vs Rendimiento** | Instancias grandes = Más potencia = Más costo. Busca el balance. |
+| **ALTA (High)** | **Uso General** | "Equilibrio", "Punto de partida", "Carga incierta". |
+| **MEDIA (Medium)** | **Nomenclatura** | Ej: \`t3.micro\`. El prefijo (\`t\`) indica la familia, el sufijo (\`micro\`) el tamaño. |
+| **MEDIA (Medium)** | **Coprocesadores** | Asociar directamente con **Computación Acelerada**. |
+
+---
+
+## Trampas de Examen (Diferencias Cruciales)
+
+*   ❌ **Trampa:** "Si mi aplicación va lenta, siempre debo elegir la instancia más cara/grande".
+    *   ✅ **Realidad:** Debes identificar **qué recurso** falta. Si es RAM, ir a una "Memory Optimized", no necesariamente a una más grande de "Uso General".
+*   ❌ **Trampa:** Confundir "Storage Optimized" con "S3".
+    *   ✅ **Realidad:** Storage Optimized es para alto rendimiento **local** (dentro del servidor). S3 es almacenamiento de objetos externo.
+*   ❌ **Trampa:** Creer que estás "atrapado" con la instancia elegida al inicio.
+    *   ✅ **Realidad:** Una de las mayores ventajas de la nube es la capacidad de **redimensionar** rápidamente.
+*   ❌ **Trampa:** "Computación Acelerada es solo para juegos".
+    *   ✅ **Realidad:** Se usa mucho más para **Machine Learning** y análisis de patrones complejos en el entorno AWS.
+
+---
+
+## 📋 Tabla de Referencia Rápida para Casos de Uso
+
+| Familia            | Si el examen dice...                           | Elige...   |
+| :----------------- | :--------------------------------------------- | :--------- |
+| **Uso General**    | "Servidor web balanceado" / "No sé mi tráfico" | **T3, M5** |
+| **Cómputo**        | "Gaming" / "HPC" / "Codificación de video"     | **C5, C6** |
+| **Memoria**        | "Base de datos SQL/NoSQL en RAM" / "Big Data"  | **R5, X1** |
+| **Acelerada**      | "GPU" / "Machine Learning" / "Renderizado 3D"  | **P3, G4** |
+| **Almacenamiento** | "Data Warehouse" / "IOPS masivos locales"      | **I3, D2** |
+`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+  </script>
+</body>
+</html>

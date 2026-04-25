@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 1 - Introduccion a Amazon EC2 — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root { --navy: #232f3e; --orange: #ff9900; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f6f8; color: #16191f; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: #eef1f5; padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    #md-content h3 { font-size: 1rem; color: #2a3a4a; margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: #444; margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid #dde2ea; margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: #fff9ee; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: #e4e8ef; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #e4e8ee; vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: #f5f7fa; }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 4rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 1 - Introduccion a Amazon EC2</span>
+    <a href="Lecci%C3%B3n%201%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `### **Resumen Ejecutivo**
+Amazon Elastic Compute Cloud (EC2) es el servicio fundamental de cómputo de AWS que proporciona capacidad de servidor virtual (instancias) segura y redimensionable en la nube. Permite a las empresas obtener capacidad de cómputo masiva en minutos, eliminando la necesidad de inversiones iniciales en hardware físico (CAPEX) y permitiendo un modelo de gastos operativos (OPEX) basado en el uso real.
+
+---
+
+### **Conceptos Clave**
+- **Instancia EC2:** Es el término que AWS utiliza para referirse a un **servidor virtual**. Evita usar "máquina virtual" en el contexto del examen, aunque técnicamente lo sean.
+- **Multitenencia (Multi-tenancy):** Concepto donde varias instancias (de diferentes clientes) comparten el mismo hardware físico subyacente.
+- **Hipervisor:** Software especializado que se ejecuta en el host físico encargado de repartir los recursos y, lo más importante, **garantizar el aislamiento** total entre instancias. AWS administra el hipervisor por completo.
+- **Elasticidad:** La "E" de EC2. Se refiere a la capacidad de redimensionar recursos (hacer la instancia más grande o pequeña en términos de **CPU y RAM**) según la demanda.
+- **Escalamiento Vertical:** Aumentar o disminuir la potencia (CPU, Memoria) de una instancia existente cambiando su **Tipo de Instancia** para ajustarse a las necesidades de la aplicación.
+- **Modelo de Pago por Uso:** AWS solo cobra por las instancias que están en estado **Running (En ejecución)**. No se cobra por el cómputo de instancias detenidas o terminadas.
+
+---
+
+### **Puntos Críticos (Keywords del Examen)**
+- **Agilidad (High):** Reducción del tiempo de aprovisionamiento de semanas/meses (on-premises) a **minutos** (nube).
+- **Control Total (High):** El usuario tiene control administrativo absoluto sobre el sistema operativo (Linux/Windows) y el software instalado (bases de datos, apps empresariales, etc.).
+- **Responsabilidad Compartida (High):** AWS gestiona la seguridad del host físico, la red física y el hipervisor. El usuario es responsable de parchar el sistema operativo y configurar firewalls (Security Groups).
+- **Networking (Medium):** El usuario controla si la instancia es pública (accesible desde internet) o privada.
+- **Flexibilidad (Medium):** Capacidad de elegir entre diversos sistemas operativos y configuraciones de software.
+
+---
+
+### **Trampas de Examen (Diferencias Cruciales)**
+- **❌ Error:** Creer que "detenido" (Stopped) significa costo cero total.
+  - **✅ Realidad:** No pagas por **cómputo** (CPU/RAM), pero sigues pagando por el **almacenamiento EBS** (Amazon Elastic Block Store), que es el disco duro virtual de tu instancia.
+- **❌ Error:** Pensar que otros clientes pueden ver tus datos por compartir hardware.
+  - **✅ Realidad:** El **Hipervisor** garantiza aislamiento lógico total a pesar de la multitenencia.
+- **❌ Error:** Confundir Escalamiento Vertical con Horizontal.
+  - **✅ Realidad:** **Vertical** es cambiar el **tamaño/tipo** de una sola instancia (añadir más potencia a la misma máquina). **Horizontal** es añadir **más instancias** idénticas (Auto Scaling).
+- **❌ Error:** Creer que debes gestionar el hardware o el hipervisor.
+  - **✅ Realidad:** AWS mantiene el hardware y el aislamiento; tú solo administras tu instancia y lo que corre dentro.
+
+---
+
+### **📌 Información Adicional Valiosa (Bonus de Examen)**
+- **Control vs. Abstracción:** Si el examen pregunta por un servicio que ofrezca **"Control total a nivel de Sistema Operativo"**, la respuesta es **Amazon EC2**.
+- **Familias de Instancias:** Aunque se profundiza después, recuerda que existen instancias optimizadas para: **Uso General, Cómputo, Memoria, Almacenamiento y Cómputo Acelerado**.
+- **Modelos de Compra:** On-Demand (flexible), Reserved (ahorro con compromiso), Spot (capacidad sobrante con gran descuento).
+`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+  </script>
+</body>
+</html>

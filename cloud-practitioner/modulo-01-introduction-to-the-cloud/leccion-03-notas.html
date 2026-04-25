@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 3 - Beneficios de la Nube — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root { --navy: #232f3e; --orange: #ff9900; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f6f8; color: #16191f; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: #eef1f5; padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    #md-content h3 { font-size: 1rem; color: #2a3a4a; margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: #444; margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid #dde2ea; margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: #fff9ee; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: #e4e8ef; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #e4e8ee; vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: #f5f7fa; }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 4rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 3 - Beneficios de la Nube</span>
+    <span class="btn-no-eval">Sin evaluacion aun</span>
+  </header>
+  <main><div id="md-content"></div></main>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `## 📋 **MÓDULO 1: Introducción a la nube - Beneficios de la nube de AWS**
+
+### **Resumen General**
+
+Este módulo cubre los **6 beneficios principales de AWS Cloud Computing** que constituyen el núcleo de la propuesta de valor de AWS. Estos conceptos son fundamentales para el examen y aparecen frecuentemente en preguntas sobre por qué las empresas migran a la nube.
+
+---
+
+## **🔑 Conceptos Clave (Organizados por Prioridad para el Examen)**
+
+### **PRIORIDAD ALTA** ⚡
+
+**1. Pago por uso (Pay-as-you-go) / Cambiar gastos fijos por gastos variables**
+
+- Elimina la necesidad de grandes inversiones iniciales (CAPEX)
+- Convierte costos fijos en costos variables basados en consumo real
+- Solo pagas por los recursos que realmente utilizas
+- Permite comenzar pequeño sin inversión masiva inicial
+
+**2. Economías de escala masiva**
+
+- AWS compra hardware en volumen masivo → precios más bajos
+- Esos ahorros se trasladan a los clientes
+- Los clientes se benefician del poder de compra de AWS
+
+**3. Dejar de adivinar la capacidad (Stop guessing capacity)**
+
+- **Problema tradicional**: Comprar hardware basado en estimaciones que pueden ser incorrectas
+    - Sobrestimación → recursos desperdiciados y dinero perdido
+    - Subestimación → experiencia degradada o pérdida de clientes
+- **Solución AWS**: Escalamiento rápido (minutos vs semanas/meses)
+- Aprovisionar según necesidad actual y escalar según demanda
+
+**4. Aumentar velocidad y agilidad**
+
+- Crear/eliminar entornos de prueba rápidamente
+- Experimentar sin compromiso de largo plazo
+- Menos tiempo en aprovisionamiento, más tiempo en innovación
+- Reducir tiempo de lanzamiento al mercado
+
+**5. Dejar de gastar dinero en ejecutar y mantener centros de datos**
+
+- Eliminar costos de operación y mantenimiento de infraestructura física
+- AWS gestiona hardware, energía, refrigeración, seguridad física
+- Enfocarse en clientes y aplicaciones, no en infraestructura
+
+**6. Globalizarse en minutos (Go global in minutes)**
+
+- Desplegar aplicaciones en múltiples regiones AWS globalmente
+- **Tradicional**: meses/años para expandirse internacionalmente
+- **AWS**: minutos para implementar en regiones globales
+- AWS gestiona la infraestructura global
+
+---
+
+### **PRIORIDAD MEDIA** 📊
+
+- **CAPEX vs OPEX**:
+    - CAPEX (Capital Expenditure): Gastos de capital inicial (hardware, instalaciones)
+    - OPEX (Operating Expenditure): Gastos operativos variables (modelo AWS)
+- **Escalabilidad**:
+    - Capacidad de aumentar/disminuir recursos según demanda
+    - Escalamiento vertical y horizontal (concepto complementario)
+
+---
+
+## **🎯 Puntos Críticos para el Examen Cloud Practitioner**
+
+### **Lo que AWS SIEMPRE evalúa:**
+
+1. **Modelo de precios**: Entender que AWS = pago por uso, sin contratos largos ni inversión inicial masiva
+2. **Ventajas económicas**:
+    - Cambio de CAPEX a OPEX
+    - Economías de escala
+    - Costos predecibles vs impredecibles
+3. **Agilidad empresarial**:
+    - Experimentación rápida y económica
+    - Tiempo de comercialización reducido (time-to-market)
+    - Innovación sin barreras de entrada
+4. **Elasticidad vs Escalabilidad** (complemento importante):
+    - **Elasticidad**: Capacidad de escalar automáticamente hacia arriba Y hacia abajo
+    - **Escalabilidad**: Capacidad de crecer según demanda
+5. **Alcance global**:
+    - Infraestructura distribuida globalmente
+    - Baja latencia para usuarios finales
+    - Redundancia y alta disponibilidad
+
+---
+
+## **⚠️ Conceptos que Suelen Confundir en el Examen**
+
+### **1. Elasticidad vs Escalabilidad vs Agilidad**
+
+- **Elasticidad**: Auto-scaling bidireccional (arriba Y abajo automáticamente)
+- **Escalabilidad**: Capacidad de crecer (usualmente manual o planificado)
+- **Agilidad**: Velocidad para implementar y experimentar
+
+### **2. CAPEX vs OPEX**
+
+- **Error común**: Pensar que AWS reduce costos totales siempre
+- **Realidad**: AWS cambia CÓMO gastas (variable vs fijo), no necesariamente reduce el total
+- El beneficio es la **flexibilidad financiera**, no siempre el costo más bajo
+
+### **3. "Economías de escala" - De quién son**
+
+- **Error**: Pensar que es MI economía de escala
+- **Correcto**: Son las economías de escala de AWS trasladadas al cliente
+
+### **4. "Global en minutos" ≠ "Gratis globalmente"**
+
+- Implementar globalmente es rápido, pero cada región tiene costos
+- Transferencia de datos entre regiones tiene costos adicionales
+
+### **5. "Dejar de adivinar capacidad" ≠ "Capacidad infinita instantánea"**
+
+- Aunque AWS es rápido, hay límites de servicio (service quotas) que pueden requerir solicitudes
+
+---
+
+## **📚 Información Adicional Valiosa (Complemento para el Examen)**
+
+### **Otros beneficios de AWS frecuentemente evaluados:**
+
+**7. Alta disponibilidad y tolerancia a fallos** (complemento)
+
+- Infraestructura distribuida en múltiples zonas de disponibilidad
+- Diseño para fallos sin impacto en servicio
+
+**8. Seguridad** (complemento)
+
+- Modelo de responsabilidad compartida
+- AWS gestiona seguridad "DE" la nube
+- Cliente gestiona seguridad "EN" la nube
+
+**9. Confiabilidad** (complemento)
+
+- Capacidad de recuperarse de fallos
+- Backups automatizados
+- Disaster recovery simplificado
+
+---
+
+## **💡 Palabras Clave que Aparecen Textualmente en Exámenes**
+
+- Pay-as-you-go / Pay for what you use
+- Variable expenses vs Fixed expenses
+- CAPEX vs OPEX
+- Economies of scale
+- Stop guessing capacity
+- Elasticity
+- Agility
+- Go global in minutes
+- Trade CAPEX for variable expense
+- Undifferentiated heavy lifting (trabajo pesado indiferenciado)`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+  </script>
+</body>
+</html>

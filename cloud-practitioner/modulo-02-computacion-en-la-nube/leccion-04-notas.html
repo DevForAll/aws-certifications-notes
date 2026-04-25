@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 4 - Lanzar una Instancia EC2 — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root { --navy: #232f3e; --orange: #ff9900; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: #f4f6f8; color: #16191f; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: #eef1f5; padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    #md-content h3 { font-size: 1rem; color: #2a3a4a; margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: #444; margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid #dde2ea; margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: #fff9ee; padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: #e4e8ef; padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid #e4e8ee; vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: #f5f7fa; }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 4rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 4 - Lanzar una Instancia EC2</span>
+    <a href="Lecci%C3%B3n%204%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `## Resumen Ejecutivo
+Esta lección detalla el proceso técnico de aprovisionamiento de una instancia **Amazon EC2**. Cubre desde la selección de la imagen base (AMI) hasta la automatización del primer arranque (Bootstrapping). Se incluyen conceptos avanzados de seguridad, tenencia y persistencia de datos fundamentales para el examen CLF-C02.
+
+## Conceptos Clave
+- **AMI (Amazon Machine Image):** Plantilla con el sistema operativo (Linux/Windows) y software. Determina el "punto de partida" de la instancia.
+- **Instance Type (Tipo de Instancia):** Define el hardware (CPU, RAM). Ejemplo: \`t2.micro\` (Capa Gratuita).
+- **Key Pair (Par de claves):** Clave pública (AWS) y privada (Usuario). Indispensable para SSH/RDP.
+- **Security Groups:** Firewall a nivel de instancia. Por defecto, deniega todo el tráfico entrante.
+- **EBS (Elastic Block Store):** Disco virtual persistente.
+- **User Data (Bootstrapping):** Script que se ejecuta **una sola vez** al inicio para instalar software automáticamente.
+- **IAM Role (Instance Profile):** La forma más segura de otorgar permisos a la instancia para acceder a otros servicios de AWS sin usar llaves de acceso.
+
+## Puntos Críticos (Keywords para el examen)
+### ⚠️ ALTA PROBABILIDAD
+- **User Data:** Automatización de la configuración inicial.
+- **Security Group:** Firewall de instancia (Stateful, **stateful** (con estado) se refiere a componentes, aplicaciones o reglas de red que **recuerdan la información, las interacciones o el contexto previo** de una conexión o sesión de usuario).
+- **IAM Role:** Siempre preferir Roles sobre llaves de acceso (Access Keys) dentro de EC2.
+- **T2.micro:** Instancia estándar de la Capa Gratuita.
+- **Public IP vs Elastic IP:** La IP pública es dinámica; la Elastic IP es estática y persistente.
+
+### ⚠️ MEDIA PROBABILIDAD
+- **Tenancy (Tenencia):** Shared (Compartido), Dedicated Instance (Hardware dedicado) y Dedicated Host (Control total físico).
+- **Termination Protection:** Evita el borrado accidental de la instancia.
+- **Delete on Termination:** Atributo de EBS que decide si el disco se borra o sobrevive cuando la instancia es eliminada.
+
+### ⚠️ BAJA PROBABILIDAD
+- **Hibernación:** Guarda el estado de la RAM en el EBS raíz para un inicio mucho más rápido.
+- **GP3 vs GP2:** Evolución de los discos SSD de propósito general.
+
+## Trampas de Examen
+- **¿IAM User o IAM Role?:** AWS te preguntará cómo dar permiso a una EC2 para entrar a S3. La respuesta **SIEMPRE** es **IAM Role**.
+- **¿Cada cuánto se ejecuta User Data?:** Solo en el **primer arranque**. No se ejecuta en cada reinicio (Reboot).
+- **Seguridad por defecto:** Recuerda que los Security Groups vienen con "Deny All" para tráfico de entrada. Si no abres el puerto 80, tu servidor web no funcionará.
+- **Costo de Hibernación:** Mientras la instancia está hibernada, no pagas por cómputo, pero **SÍ sigues pagando** por el almacenamiento del volumen EBS.
+
+## 📌 Información de Experto (Deep Dive)
+- **Shared vs Dedicated:** Usa *Dedicated Hosts* si tienes licencias de software por socket físico.
+- **Resiliencia de Datos:** Desactivar "Delete on Termination" es una práctica común para bases de datos críticas instaladas en EBS.
+- **Bootstrapping vs AMI:** Si la instalación de software vía User Data tarda mucho, es mejor crear una **AMI personalizada** (Golden Image) con todo preinstalado.
+
+---
+### Imágenes de Referencia
+`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+  </script>
+</body>
+</html>

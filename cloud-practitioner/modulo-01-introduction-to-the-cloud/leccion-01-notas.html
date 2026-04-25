@@ -142,11 +142,7 @@ AWS nació de la necesidad de Amazon.com de estandarizar su infraestructura inte
 *   **Bajo Demanda vs. Reservado:** No confundas la "entrega bajo demanda" (disponibilidad inmediata) con el "modelo de precios bajo demanda" (precio estándar sin compromiso).
 *   **On-premises vs. AWS:** En el examen, "On-premises" suele ser el escenario de "dolor" (costos fijos, mantenimiento manual, desperdicio de recursos) frente a la solución de AWS.
 *   **Infraestructura como Servicio (IaaS):** Aunque la lección no lo nombra directamente, EC2 y S3 son ejemplos fundamentales de IaaS que el examen espera que reconozcas como la base del cloud computing.
-
-
-
-"¿A cuántos clientes activos aproximadamente atiende AWS en la actualidad?
-Usted administra su infraestructura de AWS a través de un navegador web. ¿Qué permite esto?", "¿Cuál es el papel de los centros de datos en el contexto de AWS?", "AWS tiene una plataforma de nube con más de ________ servicios. (en este caso indica que agregue cual es el estimado o el valor fijo)", "¿Qué significa 'Aprovisionamiento'?"`;
+`;
     const html = marked.parse(md);
     document.getElementById('md-content').innerHTML =
       html.replace(/<table>/g, '<div class="table-wrap"><table>')

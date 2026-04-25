@@ -1,5 +1,3 @@
-## 📋 **MÓDULO 1: Introducción a la nube - Beneficios de la nube de AWS**
-
 ### **Resumen General**
 
 Este módulo cubre los **6 beneficios principales de AWS Cloud Computing** que constituyen el núcleo de la propuesta de valor de AWS. Estos conceptos son fundamentales para el examen y aparecen frecuentemente en preguntas sobre por qué las empresas migran a la nube.

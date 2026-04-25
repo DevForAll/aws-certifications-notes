@@ -1,5 +1,3 @@
-## [Lección 2: ¿Qué es la computación en la nube y sus beneficios?]
-
 ### **Resumen Ejecutivo**
 La computación en la nube es la entrega **bajo demanda** de recursos de TI a través de **Internet** con un modelo de precios de **pago por uso**. Esta lección profundiza en los **6 beneficios fundamentales** que diferencian a AWS del modelo tradicional (On-premises), permitiendo a las empresas dejar de gestionar infraestructura física para centrarse en la innovación y el cliente.
 

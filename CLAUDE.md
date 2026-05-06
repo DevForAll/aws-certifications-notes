@@ -52,7 +52,7 @@ CERTIFIED AWS CLOUD PRACTITIONER/
 | `Lección N - Título.md` | Mismo nombre exacto (se preservan tildes y espacios) |
 | `Lección N - EVALUACION.html` | Mismo nombre exacto |
 | `Lección N - EVALUACION PARTE 1.html` | Mismo nombre exacto |
-| `transcripcion_leccion_N.md` | Mismo nombre exacto |
+| `transcripcion_leccion_N.md` | **NO copiar — no se usa en la web** |
 | *(generado)* | `leccion-0N-notas.html` |
 | *(generado)* | `leccion-0N-pX-notas.html` (cuando hay Parte 1/2) |
 
@@ -77,9 +77,11 @@ Write-Host "Count: $($items.Count)"; foreach ($i in $items) { Write-Host $i.Name
 ```
 
 Buscar diferencias en:
-- Archivos nuevos (evaluaciones HTML, transcripciones, lecciones nuevas)
+- Archivos nuevos (evaluaciones HTML, lecciones nuevas)
 - Archivos que cambiaron de nombre (ej. lección split en Parte 1/Parte 2)
 - Archivos con contenido actualizado (verificar primeras líneas con `Read`)
+
+**Ignorar siempre** los archivos `transcripcion_*.md` — son material en bruto de Obsidian que no tiene uso en el portal web.
 
 ### Paso 2 — Copiar archivos nuevos o actualizados
 
@@ -90,6 +92,10 @@ $dst = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\
 # Copiar un archivo nuevo o sobreescribir uno actualizado
 Copy-Item "$src\Nombre del archivo.ext" "$dst\Nombre del archivo.ext" -Force
 ```
+
+**No copiar nunca** archivos `transcripcion_*.md`. Solo copiar:
+- Archivos `.md` de notas de lección (`Lección N - Título.md`)
+- Archivos `.html` de evaluaciones (`Lección N - EVALUACION.html`)
 
 Usar `-Force` siempre para sobreescribir sin errores.
 

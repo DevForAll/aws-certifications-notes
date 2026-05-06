@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner - Evaluación Lección 3.2 (Lambda & Acumulativo)</title>
+    <style>
+        :root {
+            --aws-navy: #232F3E;
+            --aws-orange: #FF9900;
+            --aws-light-bg: #F2F3F3;
+            --white: #FFFFFF;
+            --success-green: #D4EDDA;
+            --error-red: #F8D7DA;
+            --info-yellow: #FFF9C4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-light-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-navy);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+
+        .progress-bar {
+            background-color: #4c5a69;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: var(--aws-orange);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .score-box {
+            font-weight: bold;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            padding: 1rem;
+            border: 2px solid #DDD;
+            border-radius: 5px;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--aws-orange);
+            background-color: #FFFaf0;
+        }
+
+        .option-btn.selected {
+            border-color: var(--aws-orange);
+            background-color: #FFFaf0;
+        }
+
+        .option-btn.correct {
+            background-color: var(--success-green);
+            border-color: #28A745;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error-red);
+            border-color: #DC3545;
+        }
+
+        .feedback-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--info-yellow);
+            border-left: 5px solid var(--aws-orange);
+            display: none;
+        }
+
+        .next-btn, .submit-btn {
+            margin-top: 1.5rem;
+            padding: 0.8rem 2rem;
+            background-color: var(--aws-orange);
+            color: var(--white);
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            float: right;
+        }
+
+        .next-btn:hover {
+            background-color: #e68a00;
+        }
+
+        #results-dashboard {
+            display: none;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .secondary-btn {
+            background-color: var(--aws-navy);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim">AWS Master Tutor: Lambda & Beyond</div>
+    <div class="progress-container">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+    </div>
+    <div class="score-box">Puntuación: <span id="current-score">0</span>%</div>
+</header>
+
+<main id="quiz-container">
+    <div id="question-area">
+        <!-- Pregunta inyectada por JS -->
+    </div>
+</main>
+
+<div id="results-dashboard" class="main">
+    <div class="stat-card">
+        <h1>¡Simulacro Finalizado!</h1>
+        <p style="font-size: 2rem; font-weight: bold;" id="final-score-text"></p>
+        <p id="result-message"></p>
+    </div>
+    <div class="btn-group">
+        <button class="next-btn" onclick="restartQuiz()">Reiniciar Todo (Shuffle)</button>
+        <button class="secondary-btn" onclick="retryFailed()">Reintentar fallidas</button>
+    </div>
+</div>
+
+<script>
+    const allQuestions = [
+        // --- Módulo 3.2: AWS Lambda ---
+        {
+            q: "Usted desea ejecutar una tarea de procesamiento de imágenes que toma aproximadamente 5 minutos por archivo. ¿Qué servicio es el más rentable y requiere la menor sobrecarga operativa?",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "AWS Fargate",
+                "Amazon Lightsail"
+            ],
+            correct: 1,
+            explanation: "Lambda es ideal para procesos cortos (<15 min) basados en eventos y elimina la gestión de servidores."
+        },
+        {
+            q: "¿Cuál es el límite máximo de tiempo de ejecución permitido para una única función de AWS Lambda?",
+            options: [
+                "5 minutos",
+                "10 minutos",
+                "15 minutos",
+                "Ilimitado"
+            ],
+            correct: 2,
+            explanation: "Las funciones Lambda tienen un tiempo de espera máximo (timeout) de 15 minutos."
+        },
+        {
+            q: "¿Cómo se factura el uso de AWS Lambda? (Elija 2)",
+            options: [
+                "Por el número de servidores aprovisionados.",
+                "Por el número total de solicitudes (invocaciones).",
+                "Por la duración de la ejecución (en milisegundos).",
+                "Por la cantidad de código almacenado en S3.",
+                "Por el ancho de banda de red utilizado."
+            ],
+            correct: [1, 2],
+            explanation: "Lambda cobra por el número de invocaciones y la duración del cómputo consumido."
+        },
+        {
+            q: "Usted necesita que su función Lambda pueda escribir registros (logs) en Amazon CloudWatch. ¿Qué debe configurar?",
+            options: [
+                "Un Security Group con salida al puerto 443.",
+                "Un Rol de IAM (Execution Role) con los permisos necesarios.",
+                "Una clave de acceso (Access Key) incrustada en el código.",
+                "Un Bucket de S3 para almacenar los logs temporalmente."
+            ],
+            correct: 1,
+            explanation: "Lambda requiere un Execution Role (IAM) para otorgarle permisos sobre otros servicios de AWS."
+        },
+        {
+            q: "¿Qué sucede con los recursos de infraestructura subyacentes una vez que una función Lambda termina su ejecución?",
+            options: [
+                "Permanecen activos para que el cliente los administre.",
+                "Se liberan automáticamente por AWS.",
+                "Se cobran como capacidad ociosa.",
+                "Se convierten en una instancia EC2."
+            ],
+            correct: 1,
+            explanation: "Lambda es efímero; AWS aprovisiona y libera los recursos automáticamente tras la ejecución."
+        },
+        // --- Módulo 3.1: Serverless/SQS/Decoupling ---
+        {
+            q: "Una aplicación utiliza Amazon SQS para enviar mensajes a una función Lambda. ¿Cómo se describe este patrón arquitectónico?",
+            options: [
+                "Monolítico",
+                "Acoplamiento fuerte (Tight coupling)",
+                "Desacoplamiento (Decoupling)",
+                "Procesamiento síncrono"
+            ],
+            correct: 2,
+            explanation: "SQS permite desacoplar componentes para que escalen y fallen de forma independiente."
+        },
+        {
+            q: "En el Modelo de Responsabilidad Compartida para AWS Lambda, ¿de qué es responsable el cliente?",
+            options: [
+                "Actualizar el sistema operativo subyacente.",
+                "Gestionar el escalado de la infraestructura.",
+                "Escribir y mantener el código de la función.",
+                "Garantizar la alta disponibilidad de las AZs."
+            ],
+            correct: 2,
+            explanation: "En Lambda (Serverless), el cliente solo es responsable de su código y configuración de seguridad (IAM)."
+        },
+        {
+            q: "¿Qué servicio se usa para visualizar métricas como el número de errores o el tiempo de ejecución de Lambda en gráficos de rendimiento?",
+            options: [
+                "AWS CloudTrail",
+                "Amazon CloudWatch Metrics",
+                "AWS Config",
+                "Amazon Inspector"
+            ],
+            correct: 1,
+            explanation: "CloudWatch Metrics proporciona datos numéricos y gráficos sobre el rendimiento de los recursos."
+        },
+        // --- Módulo 2: EC2 & Pricing ---
+        {
+            q: "Su empresa tiene una base de datos que debe ejecutarse 24/7 con una carga de trabajo constante. ¿Qué modelo de precios de EC2 ofrece el mejor descuento sin riesgo de interrupción?",
+            options: [
+                "Instancias Spot",
+                "Instancias Bajo Demanda",
+                "Instancias Reservadas o Savings Plans",
+                "Hosts Dedicados"
+            ],
+            correct: 2,
+            explanation: "Para cargas constantes (Steady-state), las Reservas o Savings Plans ofrecen los mayores ahorros sin interrupciones."
+        },
+        {
+            q: "¿Qué beneficio de la nube se refiere a la capacidad de ajustar automáticamente los recursos para que coincidan exactamente con la demanda?",
+            options: [
+                "Alta Disponibilidad",
+                "Elasticidad",
+                "Economías de escala",
+                "Agilidad"
+            ],
+            correct: 1,
+            explanation: "La elasticidad es la capacidad de crecer y contraer recursos automáticamente según el uso."
+        },
+        {
+            q: "Usted necesita ejecutar una licencia de software que está vinculada a un servidor físico específico. ¿Qué opción de EC2 es necesaria?",
+            options: [
+                "Instancias Dedicadas",
+                "Hosts Dedicados",
+                "Instancias Reservadas",
+                "Fleet de Spot"
+            ],
+            correct: 1,
+            explanation: "Los Hosts Dedicados dan visibilidad y control sobre los sockets y núcleos físicos para temas de licencia (BYOL)."
+        },
+        {
+            q: "Un administrador desea comparar el costo de ejecutar una carga de trabajo en sus centros de datos locales frente a ejecutarla en AWS. ¿Qué herramienta debe usar?",
+            options: [
+                "AWS Budgets",
+                "AWS Pricing Calculator",
+                "AWS Trusted Advisor",
+                "AWS Cost Explorer"
+            ],
+            correct: 1,
+            explanation: "La Calculadora de Precios ayuda a estimar costos antes de desplegar recursos."
+        },
+        // --- Módulo 1: Fundamentos & Infraestructura ---
+        {
+            q: "¿Qué característica de las Regiones de AWS garantiza que un desastre natural en una ubicación no afecte a toda la aplicación?",
+            options: [
+                "Las regiones están compuestas por múltiples Zonas de Disponibilidad (AZs) físicamente separadas.",
+                "Todas las regiones están conectadas por cables submarinos.",
+                "AWS ofrece crédito automático por desastres.",
+                "Los datos se replican automáticamente en todas las regiones del mundo."
+            ],
+            correct: 0,
+            explanation: "Las AZs están separadas físicamente por kilómetros para aislamiento de fallos."
+        },
+        {
+            q: "¿Cuál es el beneficio de las 'Economías de Escala Masivas' en AWS?",
+            options: [
+                "Los clientes pueden construir sus propios centros de datos.",
+                "AWS puede comprar hardware en volumen y trasladar los ahorros a los clientes.",
+                "Los clientes pagan más a medida que AWS crece.",
+                "Permite a los clientes usar hardware usado."
+            ],
+            correct: 1,
+            explanation: "AWS reduce sus precios a medida que crece su volumen de operación."
+        },
+        {
+            q: "¿Qué servicio permite entregar contenido estático (imágenes, videos) con baja latencia a nivel mundial utilizando Ubicaciones de Borde?",
+            options: [
+                "Amazon S3",
+                "Amazon CloudFront",
+                "AWS Direct Connect",
+                "Amazon Route 53"
+            ],
+            correct: 1,
+            explanation: "CloudFront es la CDN de AWS que usa Edge Locations para latencia mínima."
+        },
+        // --- CLF-C02 Updates (GenAI, Well-Architected, Governance) ---
+        {
+            q: "¿Qué servicio serverless de AWS permite construir aplicaciones de IA Generativa utilizando modelos base (Foundation Models) de proveedores como Anthropic o Meta?",
+            options: [
+                "Amazon SageMaker",
+                "Amazon Bedrock",
+                "Amazon Rekognition",
+                "Amazon Polly"
+            ],
+            correct: 1,
+            explanation: "Amazon Bedrock es el servicio serverless clave para IA Generativa en el examen CLF-C02."
+        },
+        {
+            q: "¿Qué pilar del Well-Architected Framework se añadió recientemente para enfocarse en minimizar el impacto ambiental de las cargas de trabajo?",
+            options: [
+                "Excelencia Operativa",
+                "Sostenibilidad",
+                "Optimización de Costos",
+                "Rendimiento"
+            ],
+            correct: 1,
+            explanation: "La Sostenibilidad es el 6to pilar del framework enfocado en el impacto ambiental."
+        },
+        {
+            q: "Su empresa tiene 50 cuentas de AWS y desea aplicar una política de seguridad que prohíba el uso de ciertas regiones en todas las cuentas. ¿Qué servicio debe usar?",
+            options: [
+                "AWS IAM",
+                "AWS Organizations (con SCPs)",
+                "AWS Control Tower",
+                "AWS Shield Advanced"
+            ],
+            correct: 1,
+            explanation: "AWS Organizations permite aplicar Service Control Policies (SCPs) para gobernanza multi-cuenta."
+        },
+        {
+            q: "¿Qué servicio proporciona recomendaciones en tiempo real sobre cómo mejorar la seguridad, reducir costos y aumentar la tolerancia a fallos?",
+            options: [
+                "AWS Trusted Advisor",
+                "Amazon Inspector",
+                "AWS Security Hub",
+                "AWS Artifact"
+            ],
+            correct: 0,
+            explanation: "Trusted Advisor analiza tu cuenta y da recomendaciones basadas en mejores prácticas."
+        },
+        // --- Preguntas de Escenario & Mixtas ---
+        {
+            q: "Una startup quiere probar una idea de negocio rápidamente sin invertir en hardware físico. ¿Qué beneficio de la nube están aprovechando principalmente?",
+            options: [
+                "Capacidad infinita",
+                "Agilidad y velocidad",
+                "Fiabilidad",
+                "Seguridad heredada"
+            ],
+            correct: 1,
+            explanation: "La agilidad permite experimentar y fallar (o tener éxito) rápido y barato."
+        },
+        {
+            q: "¿Quién es responsable de la seguridad física de los centros de datos de AWS?",
+            options: [
+                "El cliente",
+                "AWS",
+                "Un tercero independiente",
+                "El gobierno local"
+            ],
+            correct: 1,
+            explanation: "Seguridad DE la nube (infraestructura física) es responsabilidad total de AWS."
+        },
+        {
+            q: "¿Cuál de los siguientes servicios es puramente SERVERLESS? (Elija 2)",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "Amazon Fargate",
+                "Amazon RDS",
+                "Amazon Redshift"
+            ],
+            correct: [1, 2],
+            explanation: "Lambda y Fargate no requieren gestión de servidores por parte del usuario."
+        },
+        {
+            q: "Usted quiere recibir una notificación SMS cada vez que el uso de su CPU en EC2 supere el 80%. ¿Qué combinación de servicios debe usar?",
+            options: [
+                "CloudTrail + IAM",
+                "CloudWatch Alarms + SNS",
+                "Inspector + SQS",
+                "Trusted Advisor + SES"
+            ],
+            correct: 1,
+            explanation: "CloudWatch detecta el umbral (Alarm) y SNS envía la notificación (SMS/Email)."
+        },
+        {
+            q: "¿Qué tipo de almacenamiento es Amazon S3?",
+            options: [
+                "Almacenamiento de bloques (Block Storage)",
+                "Almacenamiento de archivos (File Storage)",
+                "Almacenamiento de objetos (Object Storage)",
+                "Almacenamiento en cintas"
+            ],
+            correct: 2,
+            explanation: "S3 es un servicio de almacenamiento de objetos escalable."
+        },
+        {
+            q: "Usted tiene una aplicación de servidor web instalada en una instancia EC2. ¿Quién es responsable de instalar los parches de seguridad del sistema operativo?",
+            options: [
+                "AWS",
+                "El cliente",
+                "El desarrollador del software",
+                "Amazon Inspector"
+            ],
+            correct: 1,
+            explanation: "En IaaS (EC2), el cliente es responsable del SO y superiores."
+        },
+        {
+            q: "¿Qué servicio de AWS se usa para registrar las acciones realizadas por los usuarios en su cuenta (auditoría)?",
+            options: [
+                "Amazon CloudWatch",
+                "AWS CloudTrail",
+                "AWS Config",
+                "Amazon GuardDuty"
+            ],
+            correct: 1,
+            explanation: "CloudTrail registra las llamadas a la API para gobernanza y cumplimiento."
+        },
+        {
+            q: "¿Cuál es el tiempo de retención máximo de un mensaje en una cola de Amazon SQS?",
+            options: [
+                "24 horas",
+                "7 días",
+                "14 días",
+                "Ilimitado"
+            ],
+            correct: 2,
+            explanation: "Los mensajes en SQS pueden retenerse hasta por 14 días."
+        },
+        {
+            q: "Su empresa necesita mover 100 TB de datos de sus servidores locales a AWS de forma segura y física debido a limitaciones de ancho de banda. ¿Qué servicio debe usar?",
+            options: [
+                "AWS Direct Connect",
+                "AWS Snowball Edge",
+                "AWS DataSync",
+                "Amazon S3 Transfer Acceleration"
+            ],
+            correct: 1,
+            explanation: "Snowball es un dispositivo físico para transferencia masiva de datos sin internet."
+        },
+        {
+            q: "¿Qué servicio ayuda a proteger aplicaciones web contra ataques comunes como SQL Injection o Cross-Site Scripting (XSS)?",
+            options: [
+                "AWS Shield",
+                "AWS WAF (Web Application Firewall)",
+                "Amazon GuardDuty",
+                "AWS IAM"
+            ],
+            correct: 1,
+            explanation: "WAF filtra el tráfico malicioso en la capa de aplicación (Capa 7)."
+        },
+        {
+            q: "Usted desea crear una arquitectura que no tenga puntos únicos de fallo (Single Point of Failure). ¿Cuál es la mejor práctica?",
+            options: [
+                "Usar la instancia EC2 más grande posible.",
+                "Desplegar recursos en múltiples Zonas de Disponibilidad.",
+                "Usar solo una región para reducir latencia.",
+                "Habilitar el cifrado de datos."
+            ],
+            correct: 1,
+            explanation: "La redundancia en múltiples AZs garantiza la alta disponibilidad y elimina el SPOF."
+        }
+    ];
+
+    let currentQuestions = [];
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let failedQuestions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+    }
+
+    function initQuiz(questions) {
+        currentQuestions = [...questions];
+        shuffle(currentQuestions);
+        currentQuestionIndex = 0;
+        score = 0;
+        failedQuestions = [];
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const question = currentQuestions[currentQuestionIndex];
+        const container = document.getElementById('question-area');
+        
+        let optionsHTML = '';
+        const isMultiple = Array.isArray(question.correct);
+
+        question.options.forEach((opt, idx) => {
+            optionsHTML += `
+                <button class="option-btn" onclick="handleOptionClick(${idx}, this)">
+                    ${opt}
+                </button>
+            `;
+        });
+
+        container.innerHTML = `
+            <div class="question-card">
+                <div class="question-text">${currentQuestionIndex + 1}. ${question.q} ${isMultiple ? '<strong>(Elija múltiples)</strong>' : ''}</div>
+                <div class="options-container" id="options-group">
+                    ${optionsHTML}
+                </div>
+                <div class="feedback-box" id="feedback">
+                    <p id="feedback-text"></p>
+                    <small><strong>Explicación Técnica:</strong> ${question.explanation}</small>
+                </div>
+                <button id="action-btn" class="submit-btn" onclick="validateAnswer()" ${isMultiple ? '' : 'style="display:none"'}>Validar Selección</button>
+            </div>
+        `;
+
+        updateProgress();
+    }
+
+    let selectedIndices = [];
+
+    function handleOptionClick(index, btn) {
+        const question = currentQuestions[currentQuestionIndex];
+        const isMultiple = Array.isArray(question.correct);
+
+        if (!isMultiple) {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+            
+            if (index === question.correct) {
+                btn.classList.add('correct');
+                score++;
+            } else {
+                btn.classList.add('wrong');
+                allBtns[question.correct].classList.add('correct');
+                failedQuestions.push(question);
+            }
+            showFeedback(index === question.correct);
+        } else {
+            if (selectedIndices.includes(index)) {
+                selectedIndices = selectedIndices.filter(i => i !== index);
+                btn.classList.remove('selected');
+            } else {
+                if (selectedIndices.length < question.correct.length) {
+                    selectedIndices.push(index);
+                    btn.classList.add('selected');
+                }
+            }
+        }
+    }
+
+    function validateAnswer() {
+        const question = currentQuestions[currentQuestionIndex];
+        const allBtns = document.querySelectorAll('.option-btn');
+        allBtns.forEach(b => b.disabled = true);
+
+        const isCorrect = selectedIndices.length === question.correct.length && 
+                          selectedIndices.every(val => question.correct.includes(val));
+
+        question.correct.forEach(idx => allBtns[idx].classList.add('correct'));
+        selectedIndices.forEach(idx => {
+            if (!question.correct.includes(idx)) allBtns[idx].classList.add('wrong');
+        });
+
+        if (isCorrect) score++;
+        else failedQuestions.push(question);
+
+        showFeedback(isCorrect);
+        document.getElementById('action-btn').style.display = 'none';
+        selectedIndices = [];
+    }
+
+    function showFeedback(correct) {
+        const feedback = document.getElementById('feedback');
+        const text = document.getElementById('feedback-text');
+        feedback.style.display = 'block';
+        text.innerHTML = correct ? '✅ <strong>¡Correcto!</strong>' : '❌ <strong>Incorrecto</strong>';
+        text.style.color = correct ? '#28A745' : '#DC3545';
+
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'next-btn';
+        nextBtn.innerText = currentQuestionIndex < currentQuestions.length - 1 ? 'Siguiente Pregunta' : 'Finalizar Simulacro';
+        nextBtn.onclick = nextQuestion;
+        feedback.appendChild(nextBtn);
+        
+        document.getElementById('current-score').innerText = Math.round((score / currentQuestions.length) * 100);
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < currentQuestions.length) {
+            showQuestion();
+        } else {
+            showDashboard();
+        }
+    }
+
+    function updateProgress() {
+        const fill = document.getElementById('progress-fill');
+        const percent = ((currentQuestionIndex) / currentQuestions.length) * 100;
+        fill.style.width = percent + '%';
+    }
+
+    function showDashboard() {
+        document.getElementById('quiz-container').style.display = 'none';
+        document.getElementById('results-dashboard').style.display = 'block';
+        const finalScore = Math.round((score / currentQuestions.length) * 100);
+        document.getElementById('final-score-text').innerText = finalScore + '%';
+        
+        const msg = document.getElementById('result-message');
+        if (finalScore >= 70) {
+            msg.innerHTML = "🎯 ¡Excelente trabajo! Estás listo para dominar el examen real.";
+            msg.style.color = "#28A745";
+        } else {
+            msg.innerHTML = "📚 Necesitas repasar un poco más. El examen CLF-C02 requiere un puntaje alto.";
+            msg.style.color = "#DC3545";
+        }
+    }
+
+    function restartQuiz() {
+        document.getElementById('quiz-container').style.display = 'block';
+        document.getElementById('results-dashboard').style.display = 'none';
+        initQuiz(allQuestions);
+    }
+
+    function retryFailed() {
+        if (failedQuestions.length === 0) {
+            alert("¡No hay preguntas fallidas! Reiniciando simulacro completo...");
+            restartQuiz();
+            return;
+        }
+        document.getElementById('quiz-container').style.display = 'block';
+        document.getElementById('results-dashboard').style.display = 'none';
+        initQuiz(failedQuestions);
+    }
+
+    // Inicializar
+    initQuiz(allQuestions);
+
+</script>
+
+</body>
+</html>

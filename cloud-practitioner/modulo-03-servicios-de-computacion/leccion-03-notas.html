@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 3 - Contenedores y Orquestacion — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root {
+      --navy: #232f3e;
+      --orange: #ff9900;
+      --page-bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --text: #16191f;
+      --text-muted: #555;
+      --h2-bg: #eef1f5;
+      --quote-bg: #fff9ee;
+      --code-bg: #e4e8ef;
+      --row-even: #f5f7fa;
+      --row-border: #e4e8ee;
+      --btn-notes-bg: #eef1f5;
+      --btn-notes-border: #d5dce8;
+      --btn-notes-hover: #dde2ea;
+    }
+    [data-theme="dark"] {
+      --page-bg: #151c25;
+      --card-bg: #1e2838;
+      --text: #e8eaed;
+      --text-muted: #9aabb8;
+      --h2-bg: #1e2838;
+      --quote-bg: #1e2830;
+      --code-bg: #283848;
+      --row-even: #253545;
+      --row-border: #2a3a4a;
+      --btn-notes-bg: #283848;
+      --btn-notes-border: #364858;
+      --btn-notes-hover: #324058;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: var(--page-bg); color: var(--text); transition: background-color 0.25s, color 0.25s; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 5rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    [data-theme="dark"] #md-content h1 { color: #c8d8ff; }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: var(--h2-bg); padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    [data-theme="dark"] #md-content h2 { color: #c8d8ff; border-color: var(--orange); }
+    #md-content h3 { font-size: 1rem; color: var(--text); margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: var(--text-muted); margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    [data-theme="dark"] #md-content strong { color: #c8d8ff; }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid var(--row-border); margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: var(--quote-bg); padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--row-border); vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: var(--row-even); }
+    .theme-toggle {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--orange); color: #111; border: none; cursor: pointer;
+      font-size: 1.25rem; box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+      z-index: 1000; transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 5rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+      .theme-toggle { width: 42px; height: 42px; font-size: 1.1rem; bottom: 1rem; right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 3 - Contenedores y Orquestacion</span>
+    <a href="Lecci%C3%B3n%203%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `### [Lección 3 - Contenedores y orquestación en AWS]
+
+**Resumen Ejecutivo**
+Los contenedores permiten la **portabilidad** total de aplicaciones al empaquetar código y dependencias en un entorno aislado. AWS elimina la complejidad operativa mediante servicios de **orquestación** (ECS/EKS) y cómputo **Serverless** (Fargate), permitiendo que las empresas se enfoquen en la **Agilidad** y en reducir el "Time-to-Market".
+
+---
+
+### **1. ¿Qué son los Contenedores? (La Analogía del Barco)**
+**Analogía:** Imagina un barco de carga. Antiguamente, cargar sacos de grano, barriles y cajas era lento y propenso a errores. El **Contenedor de Envío** estandarizó esto: no importa qué haya dentro, el barco y la grúa saben cómo mover el contenedor. 
+- En AWS, el **Contenedor** es esa caja estándar que incluye: Código, Runtime, Herramientas del sistema y Configuración.
+
+
+- **Beneficios clave para el examen:**
+    - **Portabilidad:** Se ejecuta igual en tu laptop, en un servidor on-premise o en AWS.
+    - **Velocidad:** Se inician en milisegundos (mucho más rápido que una VM/EC2).
+    - **Aislamiento:** Permite microservicios donde cada parte de la app es independiente.
+
+---
+
+### **2. El Ciclo de Vida del Contenedor en AWS**
+Para el examen, memoriza este flujo de 3 pasos:
+1. **Build (Construir):** Creas la imagen (Docker).
+2. **Store (Almacenar):** Guardas la imagen en **Amazon ECR** (Elastic Container Registry).
+3. **Run (Ejecutar):** Usas un orquestador (**ECS/EKS**) para lanzarlo en un motor de cómputo (**EC2/Fargate**).
+
+
+---
+
+### **3. Orquestación: ECS vs EKS (¿Quién manda?)**
+La orquestación es el "Director de Orquesta" que decide qué contenedor vive, cuál muere y cómo se comunican.
+
+| Servicio | Keyword de Examen | Caso de Uso |
+| :--- | :--- | :--- |
+| **Amazon ECS** | "Nativo", "Simplicidad", "Integración AWS". | Aplicaciones que solo viven en AWS y quieren rapidez. |
+| **Amazon EKS** | "**Kubernetes**", "Open Source", "Híbrido". | Migraciones desde on-premise o apps que requieren portabilidad total. |
+
+**Dato Extra (Nivel Experto):**
+- **ECS** usa "**Task Definitions**" (recetas de configuración).
+- **EKS** usa "**Pods**" (la unidad más pequeña de Kubernetes).
+- **Hybrid Cloud:** Si la pregunta menciona "ejecutar contenedores en mis propios servidores locales usando la consola de AWS", la respuesta es **ECS Anywhere** o **EKS Anywhere**.
+
+---
+
+### **4. Cómputo: EC2 vs Fargate (¿Quién mantiene el motor?)**
+
+
+- **Amazon EC2:** Tienes el control. Tú parches el SO. Pagas por la instancia (esté llena de contenedores o no).
+- **AWS Fargate:** **Serverless**. No hay servidores que gestionar. Pagas solo por los recursos que consume el contenedor mientras está activo. Es la opción con **menor sobrecarga operativa**.
+
+---
+
+### **5. Modelo de Responsabilidad Compartida**
+Crucial para no fallar preguntas de seguridad:
+
+
+- **Con EC2:** **CLIENTE** es responsable del parcheo del SO de la instancia y la configuración de red.
+- **Con Fargate:** **AWS** es responsable del parcheo del SO. El **CLIENTE** solo se encarga de la seguridad de su aplicación y sus datos.
+
+---
+
+### **6. Otros Servicios Relacionados (Probabilidad Media)**
+- **AWS App Runner:** Si la pregunta dice "un desarrollador quiere desplegar una aplicación web en contenedores de la forma más sencilla posible **sin aprender orquestación**", la respuesta es App Runner.
+
+---
+
+**Puntos Críticos y Trampas de Examen**
+- **¿SQS o Contenedores?** Si la pregunta habla de "desacoplar mensajes", es SQS. Si habla de "empaquetar aplicaciones", son contenedores.
+- **¿Fargate o Lambda?** Ambos son serverless. 
+    - **Lambda:** Eventos rápidos (<15 min).
+    - **Fargate:** Aplicaciones de larga duración (servicios web).
+- **Escalabilidad:** Los contenedores permiten una **Elasticidad** mucho más granular que las instancias EC2 solas.
+
+---
+
+> **Nota del Instructor:** Dominar la diferencia entre **ECS**, **EKS** y **Fargate** te asegura al menos 3-4 preguntas del examen. Recuerda: Kubernetes = EKS; Serverless = Fargate.
+`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+    (function() {
+      var btn = document.getElementById('theme-toggle');
+      var root = document.documentElement;
+      if (localStorage.getItem('aws-theme') === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        btn.textContent = '☀️';
+      }
+      btn.addEventListener('click', function() {
+        var isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          root.setAttribute('data-theme', 'light');
+          btn.textContent = '🌙';
+          localStorage.setItem('aws-theme', 'light');
+        } else {
+          root.setAttribute('data-theme', 'dark');
+          btn.textContent = '☀️';
+          localStorage.setItem('aws-theme', 'dark');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

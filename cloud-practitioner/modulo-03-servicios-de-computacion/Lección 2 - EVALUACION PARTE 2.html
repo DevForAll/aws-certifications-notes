@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner - Evaluación Módulo 3 Lección 2</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-white: #ffffff;
+            --aws-bg: #f2f3f3;
+            --aws-gray: #545b64;
+            --success: #d4edda;
+            --error: #f8d7da;
+            --info: #fff9c4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-navy);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--aws-white);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #444;
+            height: 10px;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--aws-orange);
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 1.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .option-btn {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option-btn.correct {
+            background-color: var(--success);
+            border-color: #c3e6cb;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--error);
+            border-color: #f5c6cb;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--info);
+            border-left: 5px solid var(--aws-orange);
+            border-radius: 4px;
+            display: none;
+        }
+
+        .dashboard {
+            text-align: center;
+        }
+
+        .score-box {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--aws-orange);
+            margin: 1rem 0;
+        }
+
+        .btn-action {
+            background-color: var(--aws-orange);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            margin: 10px;
+        }
+
+        .btn-action:hover {
+            background-color: #e68a00;
+        }
+
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div><strong>AWS Simulator</strong> | Módulo 3: Serverless & Integración</div>
+        <div id="score-display">Puntos: 0</div>
+    </div>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+</header>
+
+<main>
+    <div id="quiz-container">
+        <div id="question-card" class="card">
+            <div id="question-num" style="color: var(--aws-gray); margin-bottom: 5px;"></div>
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options"></div>
+            <div id="feedback-box" class="feedback"></div>
+            <button id="next-btn" class="btn-action hidden" onclick="nextQuestion()">Siguiente Pregunta</button>
+        </div>
+    </div>
+
+    <div id="results-card" class="card hidden dashboard">
+        <h2>Resultado del Examen</h2>
+        <div class="score-box" id="final-score">0%</div>
+        <p id="result-message"></p>
+        <button class="btn-action" onclick="restartQuiz()">Reiniciar Todo (Shuffle)</button>
+    </div>
+</main>
+
+<script>
+    const questions = [
+        {
+            q: "Una empresa quiere desacoplar su aplicación de toma de pedidos de su backend de procesamiento. ¿Qué servicio es el más adecuado para actuar como búfer de mensajes?",
+            options: ["Amazon EC2", "Amazon SQS", "AWS Lambda", "Amazon CloudWatch"],
+            correct: 1,
+            feedback: "Amazon SQS (Simple Queue Service) es el servicio de cola de mensajes diseñado específicamente para desacoplar componentes y actuar como búfer."
+        },
+        {
+            q: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable del parcheo del sistema operativo subyacente de AWS Lambda?",
+            options: ["El cliente", "AWS", "Ambos comparten la responsabilidad", "El equipo de seguridad de IAM"],
+            correct: 1,
+            feedback: "AWS gestiona la infraestructura subyacente, incluido el sistema operativo, el runtime y el parcheo en servicios Serverless como Lambda."
+        },
+        {
+            q: "¿Cuál es el tiempo máximo de persistencia de un mensaje en una cola de Amazon SQS?",
+            options: ["24 horas", "7 días", "14 días", "Indefinidamente"],
+            correct: 2,
+            feedback: "Los mensajes en SQS pueden persistir hasta por un máximo de 14 días."
+        },
+        {
+            q: "Una empresa necesita ejecutar código solo cuando se carga un archivo en Amazon S3. No desean administrar servidores. ¿Qué servicio deberían usar?",
+            options: ["Amazon EC2", "AWS Lambda", "Amazon ECS", "AWS Batch"],
+            correct: 1,
+            feedback: "AWS Lambda es un servicio de cómputo serverless que permite ejecutar código basado en eventos (triggers) como cargas en S3."
+        },
+        {
+            q: "Según el Modelo de Responsabilidad Compartida, ¿cuál es una responsabilidad del CLIENTE en Amazon EC2?",
+            options: ["Mantenimiento físico de los servidores", "Parcheo del sistema operativo de la instancia", "Gestión de la infraestructura de red global", "Eliminación de discos duros defectuosos"],
+            correct: 1,
+            feedback: "En EC2 (IaaS), el cliente es responsable del sistema operativo invitado, aplicaciones y datos."
+        },
+        {
+            q: "¿Cuál de los siguientes es un beneficio principal de usar arquitecturas Serverless?",
+            options: ["Control total sobre el hardware", "No hay necesidad de configurar firewalls", "Escalado automático y pago por uso real", "Soporte exclusivo para lenguajes compilados"],
+            correct: 2,
+            feedback: "Serverless permite escalado automático sin intervención y un modelo de precios basado en ejecuciones y duración (pago por uso)."
+        },
+        {
+            q: "¿Qué componente de IAM permite que una función Lambda acceda a otros servicios como CloudWatch Logs?",
+            options: ["IAM User", "IAM Group", "IAM Execution Role", "IAM Password Policy"],
+            correct: 2,
+            feedback: "Un Execution Role es un rol de IAM que otorga a la función Lambda permisos para interactuar con otros servicios de AWS."
+        },
+        {
+            q: "Una empresa desea comparar el costo de ejecutar cargas de trabajo en sus servidores locales frente a la nube de AWS. ¿Qué herramienta deberían usar?",
+            options: ["AWS Trusted Advisor", "AWS Pricing Calculator", "AWS Budgets", "Amazon CloudWatch"],
+            correct: 1,
+            feedback: "AWS Pricing Calculator ayuda a estimar y comparar costos de servicios antes de implementarlos."
+        },
+        {
+            q: "¿Qué tipo de instancia de EC2 es más rentable para cargas de trabajo que pueden tolerar interrupciones?",
+            options: ["Instancias On-Demand", "Instancias Reservadas", "Instancias Spot", "Instancias Dedicadas"],
+            correct: 2,
+            feedback: "Las instancias Spot ofrecen hasta un 90% de descuento y son ideales para cargas de trabajo tolerantes a fallos."
+        },
+        {
+            q: "¿Cuál de los siguientes es un servicio de IA Generativa de AWS que permite acceder a modelos fundacionales a través de una API? (CLF-C02)",
+            options: ["Amazon SageMaker", "Amazon Bedrock", "Amazon Lex", "AWS Lambda"],
+            correct: 1,
+            feedback: "Amazon Bedrock es el servicio administrado que facilita la creación y escalado de aplicaciones de IA generativa mediante modelos fundacionales (FMs)."
+        },
+        {
+            q: "Usted desea monitorear el número de veces que se invoca su función Lambda. ¿Qué servicio proporciona estas métricas por defecto?",
+            options: ["AWS CloudTrail", "Amazon CloudWatch", "AWS Config", "Amazon Inspector"],
+            correct: 1,
+            feedback: "CloudWatch monitorea el rendimiento y las métricas de los recursos de AWS, como las invocaciones de Lambda."
+        },
+        {
+            q: "En una arquitectura basada en eventos, ¿cómo se entera Lambda de que hay un nuevo mensaje en SQS?",
+            options: ["El cliente debe llamar a la API de Lambda manualmente", "Lambda realiza un sondeo (polling) automático de la cola", "SQS envía un correo electrónico a Lambda", "Se debe reiniciar la función Lambda"],
+            correct: 1,
+            feedback: "Lambda realiza un sondeo automático (polling) de la cola SQS e invoca la función cuando detecta mensajes."
+        },
+        {
+            q: "¿Cuál es el pilar del Well-Architected Framework que se enfoca en evitar costos innecesarios?",
+            options: ["Excelencia Operativa", "Seguridad", "Optimización de Costos", "Eficiencia de Rendimiento"],
+            correct: 2,
+            feedback: "El pilar de Optimización de Costos se enfoca en ejecutar sistemas para entregar valor de negocio al precio más bajo."
+        },
+        {
+            q: "Usted necesita una solución de almacenamiento para una instancia EC2 que se comporte como un disco duro físico. ¿Qué servicio elige?",
+            options: ["Amazon S3", "Amazon EBS", "Amazon EFS", "AWS Snowball"],
+            correct: 1,
+            feedback: "Amazon EBS (Elastic Block Store) proporciona volúmenes de almacenamiento a nivel de bloque para usar con instancias EC2."
+        },
+        {
+            q: "¿Cuál es la principal diferencia entre Amazon SQS y Amazon SNS? (Elija 2)",
+            options: [
+                "SQS es para mensajería de tipo Pull (extracción)",
+                "SNS es para mensajería de tipo Push (notificación)",
+                "SQS solo admite correos electrónicos",
+                "SNS almacena mensajes por 14 días"
+            ],
+            multiple: true,
+            correct: [0, 1],
+            feedback: "SQS usa un modelo pull donde el consumidor extrae mensajes; SNS usa un modelo push para enviar notificaciones a múltiples suscriptores."
+        },
+        {
+            q: "¿Qué beneficio de la nube se refiere a la capacidad de adquirir recursos en milisegundos y eliminarlos cuando ya no se necesitan?",
+            options: ["Economías de escala", "Agilidad", "Alcance Global", "Alta disponibilidad"],
+            correct: 1,
+            feedback: "La Agilidad permite a las empresas reducir el tiempo de comercialización al aprovisionar recursos casi instantáneamente."
+        },
+        {
+            q: "Una empresa tiene 10 cuentas de AWS y desea consolidar la facturación para obtener descuentos por volumen. ¿Qué servicio deberían usar?",
+            options: ["AWS Organizations", "AWS Control Tower", "AWS Budgets", "AWS Identity and Access Management"],
+            correct: 0,
+            feedback: "AWS Organizations permite la facturación consolidada y la gestión centralizada de múltiples cuentas."
+        },
+        {
+            q: "¿Qué servicio de AWS le ayuda a cumplir con las normas de cumplimiento al registrar todas las llamadas a la API realizadas en su cuenta?",
+            options: ["Amazon CloudWatch", "AWS CloudTrail", "AWS Shield", "Amazon GuardDuty"],
+            correct: 1,
+            feedback: "CloudTrail registra la actividad de la cuenta y las llamadas a la API para auditoría y cumplimiento."
+        },
+        {
+            q: "Usted está configurando un firewall virtual para su instancia de Amazon EC2 para controlar el tráfico entrante y saliente. ¿Qué está utilizando?",
+            options: ["Network ACL", "Security Group", "Internet Gateway", "IAM Policy"],
+            correct: 1,
+            feedback: "Los Security Groups actúan como firewalls virtuales a nivel de instancia."
+        },
+        {
+            q: "¿Qué ocurre con el costo de una función Lambda si nadie la invoca durante un mes entero?",
+            options: ["Se paga una tarifa base de $5", "Se paga por el almacenamiento del código", "El costo es de $0 por cómputo", "AWS suspende la cuenta"],
+            correct: 2,
+            feedback: "Con Lambda, solo pagas por las solicitudes y la duración de la ejecución. Si no hay invocaciones, el costo de cómputo es cero."
+        },
+        {
+            q: "¿Cuál de estos servicios es un ejemplo de cómputo basado en contenedores en AWS? (Elija 2)",
+            options: ["Amazon ECS", "Amazon EKS", "Amazon EC2", "AWS Lambda"],
+            multiple: true,
+            correct: [0, 1],
+            feedback: "Amazon ECS (Elastic Container Service) y Amazon EKS (Elastic Kubernetes Service) son servicios de orquestación de contenedores."
+        },
+        {
+            q: "Un desarrollador quiere asegurarse de que su código Lambda se ejecute con el menor privilegio posible. ¿Dónde debe configurar esto?",
+            options: ["En el código Python/Node.js", "En el IAM Execution Role", "En la configuración de VPC", "En el SQS Access Policy"],
+            correct: 1,
+            feedback: "El IAM Execution Role define exactamente qué permisos tiene la función, siguiendo el principio de menor privilegio."
+        },
+        {
+            q: "¿Cuál es la principal ventaja de la infraestructura global de AWS en términos de desastres?",
+            options: ["Uso de cables de fibra óptica", "Disponibilidad de múltiples Zonas de Disponibilidad (AZs)", "Consolas en múltiples idiomas", "Servidores más rápidos"],
+            correct: 1,
+            feedback: "Las AZs permiten diseñar aplicaciones con alta disponibilidad y tolerancia a fallos en caso de desastres en un centro de datos."
+        },
+        {
+            q: "Usted necesita enviar una notificación de alerta a miles de usuarios móviles simultáneamente. ¿Qué servicio es el más eficiente?",
+            options: ["Amazon SQS", "Amazon SNS", "AWS Direct Connect", "Amazon VPC"],
+            correct: 1,
+            feedback: "Amazon SNS (Simple Notification Service) es un servicio de mensajería pub/sub diseñado para enviar notificaciones masivas (Push)."
+        },
+        {
+            q: "¿Qué servicio le proporciona recomendaciones en tiempo real para optimizar su infraestructura de AWS en 5 categorías (costo, rendimiento, seguridad, tolerancia a fallos y límites de servicio)?",
+            options: ["AWS Artifact", "AWS Trusted Advisor", "AWS Shield", "AWS X-Ray"],
+            correct: 1,
+            feedback: "AWS Trusted Advisor ofrece recomendaciones automáticas para optimizar la cuenta de AWS."
+        },
+        {
+            q: "Usted quiere alojar una base de datos relacional (SQL) pero no quiere gestionar el parcheo del motor de la base de datos ni las copias de seguridad. ¿Qué servicio elige?",
+            options: ["Amazon EC2", "Amazon RDS", "Amazon DynamoDB", "Amazon Redshift"],
+            correct: 1,
+            feedback: "Amazon RDS es un servicio administrado para bases de datos relacionales que automatiza tareas como parches y respaldos."
+        },
+        {
+            q: "En el contexto de SQS, ¿qué significa 'Desacoplamiento'?",
+            options: ["Borrar la base de datos", "Que los componentes no dependan directamente entre sí", "Aumentar el tamaño de la instancia", "Dividir la cuenta en dos"],
+            correct: 1,
+            feedback: "El desacoplamiento permite que si un componente falla o está lento, el resto del sistema pueda seguir funcionando o reteniendo datos."
+        },
+        {
+            q: "¿Cuál es el modelo de precios de AWS que se asemeja a pagar la factura del agua o la luz?",
+            options: ["Pago por adelantado", "Pago por uso (Pay-as-you-go)", "Tarifa plana mensual", "Licenciamiento perpetuo"],
+            correct: 1,
+            feedback: "AWS utiliza un modelo de pago por uso, donde solo pagas por lo que consumes."
+        },
+        {
+            q: "Usted necesita ejecutar una tarea de procesamiento de datos que dura 20 minutos. ¿Es AWS Lambda una buena opción?",
+            options: ["Sí, Lambda no tiene límite de tiempo", "No, el tiempo máximo de ejecución de Lambda es de 15 minutos", "Sí, si se paga el nivel Premium", "No, Lambda solo sirve para microsegundos"],
+            correct: 1,
+            feedback: "AWS Lambda tiene un límite de tiempo de ejecución (timeout) máximo de 15 minutos (900 segundos)."
+        },
+        {
+            q: "¿Cuál es la diferencia entre 'Seguridad EN la nube' y 'Seguridad DE la nube'?",
+            options: [
+                "No hay diferencia",
+                "DE es responsabilidad de AWS; EN es responsabilidad del cliente",
+                "EN es responsabilidad de AWS; DE es responsabilidad del cliente",
+                "Ambas son responsabilidad exclusiva de AWS"
+            ],
+            correct: 1,
+            feedback: "AWS es responsable de la seguridad 'DE' la nube (infraestructura); el cliente es responsable de la seguridad 'EN' la nube (datos, configuración)."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let shuffledQuestions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz() {
+        shuffledQuestions = shuffle([...questions]);
+        currentQuestionIndex = 0;
+        score = 0;
+        updateUI();
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const qData = shuffledQuestions[currentQuestionIndex];
+        const container = document.getElementById('options-container');
+        const feedbackBox = document.getElementById('feedback-box');
+        const nextBtn = document.getElementById('next-btn');
+        
+        document.getElementById('question-num').innerText = `Pregunta ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
+        document.getElementById('question-text').innerText = qData.q;
+        container.innerHTML = '';
+        feedbackBox.style.display = 'none';
+        nextBtn.classList.add('hidden');
+
+        qData.options.forEach((opt, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = opt;
+            btn.onclick = () => checkAnswer(index, btn);
+            container.appendChild(btn);
+        });
+    }
+
+    function checkAnswer(selectedIndex, clickedBtn) {
+        const qData = shuffledQuestions[currentQuestionIndex];
+        const buttons = document.querySelectorAll('.option-btn');
+        const feedbackBox = document.getElementById('feedback-box');
+        const nextBtn = document.getElementById('next-btn');
+
+        // Deshabilitar botones
+        buttons.forEach(btn => btn.disabled = true);
+
+        const isCorrect = Array.isArray(qData.correct) 
+            ? qData.correct.includes(selectedIndex) 
+            : selectedIndex === qData.correct;
+
+        if (isCorrect) {
+            clickedBtn.classList.add('correct');
+            score++;
+        } else {
+            clickedBtn.classList.add('wrong');
+            // Mostrar la correcta
+            if (!Array.isArray(qData.correct)) {
+                buttons[qData.correct].classList.add('correct');
+            } else {
+                qData.correct.forEach(idx => buttons[idx].classList.add('correct'));
+            }
+        }
+
+        feedbackBox.innerHTML = `<strong>Explicación Técnica:</strong><br>${qData.feedback}`;
+        feedbackBox.style.display = 'block';
+        nextBtn.classList.remove('hidden');
+        updateUI();
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            showQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function updateUI() {
+        const progress = (currentQuestionIndex / shuffledQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = `${progress}%`;
+        document.getElementById('score-display').innerText = `Puntos: ${score}`;
+    }
+
+    function showResults() {
+        document.getElementById('quiz-container').classList.add('hidden');
+        document.getElementById('results-card').classList.remove('hidden');
+        const percentage = Math.round((score / shuffledQuestions.length) * 100);
+        document.getElementById('final-score').innerText = `${percentage}%`;
+        
+        let msg = "";
+        if (percentage >= 70) msg = "¡Excelente! Estás listo para dominar AWS.";
+        else if (percentage >= 50) msg = "Buen progreso, pero repasa los conceptos clave.";
+        else msg = "Sigue estudiando. El éxito requiere práctica.";
+        
+        document.getElementById('result-message').innerText = msg;
+    }
+
+    function restartQuiz() {
+        document.getElementById('results-card').classList.add('hidden');
+        document.getElementById('quiz-container').classList.remove('hidden');
+        initQuiz();
+    }
+
+    // Iniciar
+    initQuiz();
+</script>
+
+</body>
+</html>

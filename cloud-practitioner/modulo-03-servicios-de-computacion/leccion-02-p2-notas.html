@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 2 - AWS Lambda (Parte 2) — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root {
+      --navy: #232f3e;
+      --orange: #ff9900;
+      --page-bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --text: #16191f;
+      --text-muted: #555;
+      --h2-bg: #eef1f5;
+      --quote-bg: #fff9ee;
+      --code-bg: #e4e8ef;
+      --row-even: #f5f7fa;
+      --row-border: #e4e8ee;
+      --btn-notes-bg: #eef1f5;
+      --btn-notes-border: #d5dce8;
+      --btn-notes-hover: #dde2ea;
+    }
+    [data-theme="dark"] {
+      --page-bg: #151c25;
+      --card-bg: #1e2838;
+      --text: #e8eaed;
+      --text-muted: #9aabb8;
+      --h2-bg: #1e2838;
+      --quote-bg: #1e2830;
+      --code-bg: #283848;
+      --row-even: #253545;
+      --row-border: #2a3a4a;
+      --btn-notes-bg: #283848;
+      --btn-notes-border: #364858;
+      --btn-notes-hover: #324058;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: var(--page-bg); color: var(--text); transition: background-color 0.25s, color 0.25s; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 5rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    [data-theme="dark"] #md-content h1 { color: #c8d8ff; }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: var(--h2-bg); padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    [data-theme="dark"] #md-content h2 { color: #c8d8ff; border-color: var(--orange); }
+    #md-content h3 { font-size: 1rem; color: var(--text); margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: var(--text-muted); margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    [data-theme="dark"] #md-content strong { color: #c8d8ff; }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid var(--row-border); margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: var(--quote-bg); padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--row-border); vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: var(--row-even); }
+    .theme-toggle {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--orange); color: #111; border: none; cursor: pointer;
+      font-size: 1.25rem; box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+      z-index: 1000; transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 5rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+      .theme-toggle { width: 42px; height: 42px; font-size: 1.1rem; bottom: 1rem; right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 2 - AWS Lambda (Parte 2)</span>
+    <a href="Lecci%C3%B3n%202%20-%20EVALUACION%20PARTE%202.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `### [Lección 2 - AWS Lambda - Parte 2: Integración y Demostración]
+
+**Resumen Ejecutivo**
+Esta lección presenta una demostración práctica de una arquitectura **Serverless Event-Driven** (basada en eventos). Utiliza **Amazon SQS** como un búfer de mensajes para desacoplar el front-end (la toma de pedidos) del back-end (el procesamiento). **AWS Lambda** actúa como el "consumidor" automático que escala bajo demanda para procesar mensajes sin intervención manual ni administración de servidores, permitiendo una arquitectura altamente elástica y rentable (cost-effective).
+
+**Conceptos Clave**
+- **Amazon SQS (Simple Queue Service):** Cola de mensajes que permite el **desacoplamiento**. En esta demo, los pedidos de la cafetería se almacenan aquí de forma segura hasta por 14 días.
+- **Sondeo Automático (Auto-polling):** Lambda monitorea la cola SQS constantemente. Al detectar un mensaje, se invoca automáticamente, procesa el dato y elimina el mensaje de la cola para evitar duplicidad.
+- **IAM Execution Role:** Es la identidad de la función. Lambda **necesita permisos explícitos** para leer de SQS (\`sqs:ReceiveMessage\`) y escribir registros en CloudWatch (\`logs:CreateLogStream\`).
+- **CloudWatch Logs:** Destino crítico para la observabilidad. Aquí se almacenan los logs de ejecución ("Pedido recibido") para auditoría y resolución de errores.
+
+**Tabla Comparativa Rápida: Desacoplamiento vs. Acoplamiento**
+
+| Característica | Arquitectura Acoplada (Directa) | Arquitectura Desacoplada (SQS + Lambda) |
+| :--- | :--- | :--- |
+| **Resiliencia** | Si el servidor falla, el pedido se pierde. | Si el procesador falla, el pedido sigue en SQS. |
+| **Escalabilidad** | Limitada por la capacidad del receptor. | Lambda escala instantáneamente según el volumen. |
+| **Costo** | Se paga por servidores activos 24/7. | Solo se paga por el tiempo de ejecución (ms). |
+
+**Puntos Críticos (Keywords para el Examen)**
+- **Desacoplamiento (Decoupling):** Palabra clave técnica para SQS. Permite que los componentes funcionen de forma independiente.
+- **Escala a Cero:** Cuando no hay mensajes en SQS, no hay funciones Lambda ejecutándose, lo que significa **cero costo de cómputo**.
+- **Blueprint (Plantilla):** AWS ofrece configuraciones predefinidas para integrar servicios comunes (como SQS a Lambda) rápidamente.
+
+**Trampas de Examen**
+- **Permisos (IAM):** Una causa común de falla es olvidar que Lambda es "denegado por defecto". Sin el rol de ejecución correcto, no puede "ver" la cola.
+- **Persistencia vs. Computación:** Recuerda que SQS **almacena** el mensaje (persistencia) pero no lo **procesa**; Lambda **procesa** el mensaje pero no lo **almacena**.
+- **Modelo de Responsabilidad Compartida:**
+    - **AWS:** Gestiona la infraestructura, el parcheo del sistema operativo y el escalado del runtime.
+    - **Cliente:** Gestiona el **código** de la función, la configuración del **trigger** y la seguridad de los **datos** (vía IAM).
+
+**Actualización CLF-C02: IA Generativa y Gobernanza**
+- **IA Generativa (Amazon Bedrock):** En un flujo real, la función Lambda podría enviar el texto del pedido ("Quiero 10 chocolates calientes") a **Amazon Bedrock** para realizar un análisis de sentimiento o para traducir automáticamente pedidos en diferentes idiomas antes de enviarlos al barista.
+- **Monitoreo de Costos:** Al usar arquitecturas Serverless, es vital usar **AWS Budgets** para evitar sorpresas si hay un pico inesperado de mensajes que dispare las invocaciones de Lambda.
+
+---
+
+> **Nota del Instructor:** Esta arquitectura representa el pilar de **Eficiencia de Rendimiento** y **Fiabilidad** del Well-Architected Framework. Dominar cómo SQS y Lambda trabajan juntos es fundamental para responder preguntas sobre "Escalabilidad" y "Tolerancia a fallos".
+`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+    (function() {
+      var btn = document.getElementById('theme-toggle');
+      var root = document.documentElement;
+      if (localStorage.getItem('aws-theme') === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        btn.textContent = '☀️';
+      }
+      btn.addEventListener('click', function() {
+        var isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          root.setAttribute('data-theme', 'light');
+          btn.textContent = '🌙';
+          localStorage.setItem('aws-theme', 'light');
+        } else {
+          root.setAttribute('data-theme', 'dark');
+          btn.textContent = '☀️';
+          localStorage.setItem('aws-theme', 'dark');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

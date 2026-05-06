@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS CLF-C02: Evaluación Lección 8 - Mensajería y Colas</title>
+    <style>
+        :root {
+            --aws-navy: #232F3E;
+            --aws-orange: #FF9900;
+            --aws-light-gray: #f2f3f3;
+            --aws-white: #ffffff;
+            --success-green: #e7f4e4;
+            --error-red: #fdf0f0;
+            --info-yellow: #fff9c4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-light-gray);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-navy);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--aws-white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+
+        .progress-bar {
+            background-color: #4a5568;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: var(--aws-orange);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            font-size: 0.9rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background-color: var(--aws-white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 1.5rem;
+        }
+
+        .option {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+        }
+
+        .option:hover {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+            font-weight: bold;
+        }
+
+        .option.correct {
+            background-color: var(--success-green);
+            border-color: #2e7d32;
+        }
+
+        .option.incorrect {
+            background-color: var(--error-red);
+            border-color: #d32f2f;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--info-yellow);
+            border-left: 4px solid var(--aws-orange);
+            border-radius: 4px;
+            display: none;
+        }
+
+        button {
+            background-color: var(--aws-orange);
+            color: var(--aws-navy);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #result-screen {
+            display: none;
+            text-align: center;
+        }
+
+        .score-big {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--aws-orange);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-sim">AWS Academy Exam Hub</div>
+        <div class="progress-container">
+            <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+        </div>
+        <div class="stats">Pregunta: <span id="current-idx">1</span>/35 | Score: <span id="score">0</span></div>
+    </header>
+
+    <main>
+        <div id="quiz-container">
+            <div class="card">
+                <h2 id="question-text">Cargando preguntas...</h2>
+                <div id="options-container" class="options"></div>
+                <div id="feedback-box" class="feedback"></div>
+                <button id="next-btn" onclick="nextQuestion()" disabled>Siguiente</button>
+            </div>
+        </div>
+
+        <div id="result-screen" class="card">
+            <h1>¡Examen Completado!</h1>
+            <p>Tu puntuación final es:</p>
+            <div class="score-big"><span id="final-score">0</span>%</div>
+            <p id="result-message"></p>
+            <button onclick="restartQuiz()">Reiniciar (Shuffle)</button>
+        </div>
+    </main>
+
+    <script>
+        const questions = [
+            {
+                q: "¿Qué servicio de AWS se utiliza para enviar notificaciones push, SMS y correos electrónicos a suscriptores de manera inmediata?",
+                o: ["Amazon SQS", "Amazon SNS", "Amazon EventBridge", "AWS Lambda"],
+                a: 1,
+                e: "Amazon SNS es un servicio de publicación/suscripción (push) diseñado para notificaciones inmediatas a múltiples destinos."
+            },
+            {
+                q: "Un arquitecto busca desacoplar los componentes de una aplicación para que los mensajes se procesen de forma asíncrona incluso si el receptor está fuera de línea. ¿Qué servicio debe usar?",
+                o: ["Amazon SNS", "Amazon SQS", "Amazon EventBridge", "AWS CloudTrail"],
+                a: 1,
+                e: "Amazon SQS es un servicio de colas que permite el desacoplamiento mediante un buffer (pull) donde los mensajes se almacenan hasta ser procesados."
+            },
+            {
+                q: "¿Cuál es el beneficio principal de una arquitectura 'débilmente acoplada' (Loosely Coupled)?",
+                o: ["Menor latencia de red", "Los componentes pueden fallar independientemente sin detener todo el sistema", "Elimina la necesidad de seguridad en la nube", "Reduce el costo de almacenamiento de S3"],
+                a: 1,
+                e: "El desacoplamiento permite que los componentes sean independientes, aumentando la resiliencia y escalabilidad."
+            },
+            {
+                q: "¿Qué servicio permite conectar aplicaciones de terceros (SaaS) como Salesforce directamente con AWS mediante un bus de eventos?",
+                o: ["Amazon SNS", "Amazon SQS", "Amazon EventBridge", "AWS Step Functions"],
+                a: 2,
+                e: "Amazon EventBridge es un bus de eventos serverless que facilita la integración de aplicaciones propias, de AWS y SaaS de terceros."
+            },
+            {
+                q: "En el Modelo de Responsabilidad Compartida, ¿cuál de los siguientes es responsabilidad de AWS?",
+                o: ["Configuración de grupos de seguridad de EC2", "Cifrado de datos del cliente", "Mantenimiento físico de los centros de datos", "Gestión de parches del SO de la instancia"],
+                a: 2,
+                e: "AWS es responsable de la seguridad 'DE' la nube, lo que incluye la infraestructura física."
+            },
+            {
+                q: "Un desarrollador necesita que los mensajes de su cola se procesen exactamente una vez y en el orden en que llegaron. ¿Qué tipo de cola SQS debe elegir?",
+                o: ["Standard Queue", "FIFO Queue", "Dead-Letter Queue", "Priority Queue"],
+                a: 1,
+                e: "Las colas FIFO (First-In-First-Out) garantizan el orden estricto y el procesamiento 'exactamente una vez'."
+            },
+            {
+                q: "¿Qué término describe el envío de un solo mensaje de SNS a múltiples colas SQS para procesamiento paralelo?",
+                o: ["Pull-out", "Fanout", "Routing", "Buffering"],
+                a: 1,
+                e: "Fanout es el patrón donde un mensaje de un tema SNS se replica a múltiples suscriptores (como colas SQS)."
+            },
+            {
+                q: "¿Cuál de estos servicios es 'Serverless' por definición? (Seleccione 2)",
+                o: ["Amazon EC2", "AWS Lambda", "Amazon SQS", "Amazon RDS"],
+                a: [1, 2],
+                multi: true,
+                e: "Lambda y SQS son serverless; EC2 y RDS requieren gestión de servidores (aunque RDS sea administrado)."
+            },
+            {
+                q: "¿Qué concepto de la nube permite aumentar o disminuir los recursos automáticamente según la demanda?",
+                o: ["Alta disponibilidad", "Elasticidad", "Tolerancia a fallos", "Economía de escala"],
+                a: 1,
+                e: "La elasticidad es la capacidad de ajustar recursos dinámicamente según la carga de trabajo."
+            },
+            {
+                q: "¿Qué tipo de instancia EC2 es más rentable para cargas de trabajo con interrupciones aceptables y grandes descuentos?",
+                o: ["On-Demand", "Reserved Instances", "Spot Instances", "Dedicated Hosts"],
+                a: 2,
+                e: "Las Spot Instances ofrecen hasta un 90% de descuento pero AWS puede reclamarlas con 2 min de aviso."
+            },
+            {
+                q: "¿Quién es responsable de la seguridad 'EN' la nube?",
+                o: ["Solo AWS", "Solo el Cliente", "AWS y el Cliente", "Nadie"],
+                a: 1,
+                e: "La seguridad 'EN' la nube es responsabilidad del cliente (datos, configuración de SO, red)."
+            },
+            {
+                q: "Desea recibir una alerta de facturación si sus costos mensuales superan los $50. ¿Qué servicio usa?",
+                o: ["AWS Trusted Advisor", "AWS Cost Explorer", "AWS Budgets", "AWS Pricing Calculator"],
+                a: 2,
+                e: "AWS Budgets permite crear alertas personalizadas basadas en umbrales de costos."
+            },
+            {
+                q: "¿Qué servicio proporciona recomendaciones sobre seguridad, optimización de costos y límites de servicio?",
+                o: ["AWS Inspector", "AWS Shield", "AWS Trusted Advisor", "AWS Config"],
+                a: 2,
+                e: "Trusted Advisor ofrece una visión holística de las mejores prácticas de AWS."
+            },
+            {
+                q: "¿Qué hace el 'Visibility Timeout' en Amazon SQS?",
+                o: ["Elimina el mensaje de la cola", "Evita que otros consumidores procesen el mismo mensaje temporalmente", "Cifra el mensaje", "Mueve el mensaje a una Dead-Letter Queue"],
+                a: 1,
+                e: "Es el tiempo que el mensaje permanece invisible tras ser recogido, para evitar duplicados si el primer consumidor falla."
+            },
+            {
+                q: "Su empresa quiere reducir el tiempo de comercialización (Time-to-market) y no preocuparse por la infraestructura. ¿Qué beneficio de la nube destaca?",
+                o: ["Ir global en minutos", "Agilidad", "Eliminar gastos de capital", "Economías de escala"],
+                a: 1,
+                e: "La agilidad permite experimentar y desplegar recursos rápidamente."
+            },
+            {
+                q: "¿Cuál es la analogía correcta para Amazon SQS según la lección?",
+                o: ["El barista gritando 'Café listo'", "El tablero de órdenes de una cafetería", "El disco duro de tu laptop", "El portero de un edificio"],
+                a: 1,
+                e: "SQS es como el tablero donde se guardan los pedidos hasta que el barista los toma (buffer)."
+            },
+            {
+                q: "Un cliente necesita una arquitectura que reaccione automáticamente cuando se sube una imagen a S3 para generar una miniatura. ¿Qué servicio es el mejor activador?",
+                o: ["Amazon SQS", "Amazon EventBridge", "AWS CloudTrail", "AWS Identity and Access Management"],
+                a: 1,
+                e: "EventBridge (o S3 Events) es ideal para arquitecturas orientadas a eventos."
+            },
+            {
+                q: "¿Qué servicio de AWS ayuda a organizar y gobernar centralmente múltiples cuentas de AWS?",
+                o: ["AWS Control Tower", "AWS Organizations", "AWS IAM", "AWS Resource Groups"],
+                a: 1,
+                e: "AWS Organizations permite la gestión centralizada y la facturación consolidada."
+            },
+            {
+                q: "Usted necesita migrar una base de datos local a AWS con un tiempo de inactividad mínimo. ¿Qué servicio usaría?",
+                o: ["AWS Snowball", "AWS DMS (Database Migration Service)", "AWS DataSync", "AWS Storage Gateway"],
+                a: 1,
+                e: "AWS DMS está diseñado específicamente para migraciones de bases de datos."
+            },
+            {
+                q: "En Amazon EC2, ¿qué componente actúa como un firewall virtual a nivel de instancia?",
+                o: ["Network ACL", "Security Group", "IAM Role", "VPC Flow Logs"],
+                a: 1,
+                e: "Los Security Groups controlan el tráfico entrante y saliente a nivel de instancia (con estado)."
+            },
+            {
+                q: "¿Qué pilar del Well-Architected Framework se centra en evitar errores humanos mediante la automatización?",
+                o: ["Excelencia Operativa", "Seguridad", "Fiabilidad", "Eficiencia de Rendimiento"],
+                a: 0,
+                e: "La Excelencia Operativa prioriza la automatización de cambios y respuestas a eventos."
+            },
+            {
+                q: "¿Qué sucede con los mensajes de SNS si no hay suscriptores activos al momento de la publicación?",
+                o: ["Se guardan en una cola automáticamente", "Se pierden (a menos que haya reintentos configurados)", "Se mueven a S3", "Se detiene la aplicación publicadora"],
+                a: 1,
+                e: "SNS es push/instantáneo. Si no hay nadie escuchando, el mensaje se pierde."
+            },
+            {
+                q: "¿Cuál es el propósito de una Dead-Letter Queue (DLQ)?",
+                o: ["Almacenar correos basura", "Aislar mensajes que no pueden procesarse con éxito", "Aumentar la velocidad de entrega", "Eliminar mensajes duplicados"],
+                a: 1,
+                e: "Las DLQ capturan mensajes que fallan repetidamente para su posterior análisis."
+            },
+            {
+                q: "¿Qué servicio es un ejemplo de 'Base de Datos NoSQL' en AWS?",
+                o: ["Amazon RDS", "Amazon Aurora", "Amazon DynamoDB", "Amazon Redshift"],
+                a: 2,
+                e: "DynamoDB es el servicio NoSQL clave de AWS."
+            },
+            {
+                q: "¿Cuál es el nivel de soporte mínimo que incluye acceso telefónico 24x7 a ingenieros de soporte?",
+                o: ["Developer", "Business", "Enterprise", "Basic"],
+                a: 1,
+                e: "El plan Business es el primero en ofrecer acceso 24x7 a ingenieros por teléfono/chat."
+            },
+            {
+                q: "Usted quiere estimar el costo de una nueva arquitectura en AWS antes de construirla. ¿Qué herramienta usa?",
+                o: ["AWS Pricing Calculator", "AWS Cost Explorer", "AWS Trusted Advisor", "AWS Marketplace"],
+                a: 0,
+                e: "AWS Pricing Calculator es para estimaciones preventivas."
+            },
+            {
+                q: "¿Qué servicio proporciona acceso bajo demanda a informes de cumplimiento de AWS (ej. SOC 2)?",
+                o: ["AWS Shield", "AWS Artifact", "AWS WAF", "AWS KMS"],
+                a: 1,
+                e: "AWS Artifact es el portal central para informes de cumplimiento y acuerdos."
+            },
+            {
+                q: "¿Qué característica de la infraestructura global de AWS consiste en uno o más centros de datos discretos?",
+                o: ["Región", "Zona de Disponibilidad (AZ)", "Punto de Presencia (Edge Location)", "Local Zone"],
+                a: 1,
+                e: "Una Zona de Disponibilidad es uno o más centros de datos con energía, red y conectividad redundantes."
+            },
+            {
+                q: "¿Cuál es la principal diferencia entre SQS Standard y SQS FIFO?",
+                o: ["El precio", "La garantía de orden y duplicados", "La región donde están disponibles", "El tamaño del mensaje"],
+                a: 1,
+                e: "FIFO garantiza orden estricto y entrega única, Standard prioriza el rendimiento."
+            },
+            {
+                q: "¿Qué servicio de IA de AWS permite crear aplicaciones de IA Generativa mediante modelos fundacionales?",
+                o: ["Amazon SageMaker", "Amazon Bedrock", "Amazon Lex", "Amazon Rekognition"],
+                a: 1,
+                e: "Amazon Bedrock es el servicio serverless para IA Generativa en AWS."
+            },
+            {
+                q: "¿Qué modelo de precios de EC2 es mejor para una base de datos con uso constante durante 1 año?",
+                o: ["On-Demand", "Reserved Instances", "Spot Instances", "Dedicated Hosts"],
+                a: 1,
+                e: "Las Instancias Reservadas ofrecen ahorros significativos para compromisos de 1 o 3 años."
+            },
+            {
+                q: "¿Qué servicio se usa para gestionar claves de cifrado en AWS?",
+                o: ["AWS CloudHSM", "AWS KMS (Key Management Service)", "AWS Secrets Manager", "AWS Certificate Manager"],
+                a: 1,
+                e: "KMS es el servicio administrado para crear y controlar claves de cifrado."
+            },
+            {
+                q: "¿Cuál es el límite de tamaño por defecto de un mensaje en SQS?",
+                o: ["64 KB", "256 KB", "1 MB", "5 MB"],
+                a: 1,
+                e: "El tamaño máximo estándar de un mensaje SQS es 256 KB."
+            },
+            {
+                q: "¿Qué servicio es ideal para arquitecturas 'Event-Driven' que conectan microservicios?",
+                o: ["Amazon EventBridge", "AWS Direct Connect", "AWS VPN", "Amazon VPC"],
+                a: 0,
+                e: "EventBridge es el bus de eventos diseñado para arquitecturas desacopladas basadas en eventos."
+            },
+            {
+                q: "¿Qué herramienta permite automatizar la infraestructura como código en AWS?",
+                o: ["AWS CloudFormation", "AWS OpsWorks", "AWS Elastic Beanstalk", "AWS Systems Manager"],
+                a: 0,
+                e: "CloudFormation permite modelar y configurar recursos de AWS mediante JSON o YAML."
+            }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let selectedIndices = [];
+        let shuffledQuestions = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            shuffledQuestions = shuffle([...questions]);
+            currentIdx = 0;
+            score = 0;
+            updateUI();
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const q = shuffledQuestions[currentIdx];
+            document.getElementById('question-text').innerText = q.q;
+            const container = document.getElementById('options-container');
+            container.innerHTML = '';
+            selectedIndices = [];
+            
+            q.o.forEach((opt, idx) => {
+                const div = document.createElement('div');
+                div.className = 'option';
+                div.innerText = opt;
+                div.onclick = () => selectOption(idx, div);
+                container.appendChild(div);
+            });
+
+            document.getElementById('feedback-box').style.display = 'none';
+            document.getElementById('next-btn').disabled = true;
+            document.getElementById('next-btn').innerText = q.multi ? "Validar Selección" : "Siguiente";
+        }
+
+        function selectOption(idx, el) {
+            const q = shuffledQuestions[currentIdx];
+            if (q.multi) {
+                if (selectedIndices.includes(idx)) {
+                    selectedIndices = selectedIndices.filter(i => i !== idx);
+                    el.classList.remove('selected');
+                } else {
+                    selectedIndices.push(idx);
+                    el.classList.add('selected');
+                }
+                document.getElementById('next-btn').disabled = selectedIndices.length === 0;
+            } else {
+                if (document.getElementById('next-btn').disabled === false) return; // Prevent re-click
+                selectedIndices = [idx];
+                validateAnswer();
+            }
+        }
+
+        function validateAnswer() {
+            const q = shuffledQuestions[currentIdx];
+            const container = document.getElementById('options-container');
+            const options = container.getElementsByClassName('option');
+            
+            let isCorrect = false;
+            if (q.multi) {
+                isCorrect = q.a.length === selectedIndices.length && q.a.every(v => selectedIndices.includes(v));
+            } else {
+                isCorrect = q.a === selectedIndices[0];
+            }
+
+            if (isCorrect) {
+                score++;
+                selectedIndices.forEach(idx => options[idx].classList.add('correct'));
+            } else {
+                selectedIndices.forEach(idx => options[idx].classList.add('incorrect'));
+                if (Array.isArray(q.a)) {
+                    q.a.forEach(idx => options[idx].classList.add('correct'));
+                } else {
+                    options[q.a].classList.add('correct');
+                }
+            }
+
+            const feedback = document.getElementById('feedback-box');
+            feedback.innerText = q.e;
+            feedback.style.display = 'block';
+            document.getElementById('next-btn').disabled = false;
+            document.getElementById('next-btn').innerText = "Siguiente";
+            updateUI();
+        }
+
+        function nextQuestion() {
+            const q = shuffledQuestions[currentIdx];
+            if (q.multi && document.getElementById('next-btn').innerText === "Validar Selección") {
+                validateAnswer();
+                return;
+            }
+
+            currentIdx++;
+            if (currentIdx < shuffledQuestions.length) {
+                showQuestion();
+                updateUI();
+            } else {
+                showResults();
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('current-idx').innerText = currentIdx + 1;
+            document.getElementById('score').innerText = score;
+            const progress = ((currentIdx) / shuffledQuestions.length) * 100;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function showResults() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            const percent = Math.round((score / shuffledQuestions.length) * 100);
+            document.getElementById('final-score').innerText = percent;
+            
+            let msg = "";
+            if (percent >= 70) msg = "¡Excelente! Estás listo para dominar la arquitectura de AWS.";
+            else if (percent >= 50) msg = "Buen trabajo, pero te recomendamos repasar los conceptos de desacoplamiento.";
+            else msg = "Sigue estudiando. El examen CLF-C02 requiere precisión técnica.";
+            document.getElementById('result-message').innerText = msg;
+        }
+
+        function restartQuiz() {
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('result-screen').style.display = 'none';
+            initQuiz();
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>

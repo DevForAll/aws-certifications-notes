@@ -176,6 +176,6 @@ New-NoteHtml "$m3\Lección 1 - Introducción a la computación sin servidor.md" 
 New-NoteHtml "$m3\Lección 2 - AWS Lambda - Parte 1.md"                                           "$m3\leccion-02-p1-notas.html" "Leccion 2 - AWS Lambda (Parte 1)"      "Lecci%C3%B3n%202%20-%20EVALUACION%20PARTE%201.html"
 New-NoteHtml "$m3\Lección 2 - AWS Lambda - Parte 2.md"                                           "$m3\leccion-02-p2-notas.html" "Leccion 2 - AWS Lambda (Parte 2)"      "Lecci%C3%B3n%202%20-%20EVALUACION%20PARTE%202.html"
 New-NoteHtml "$m3\Lección 3 - Contenedores y orquestación en AWS.md"                             "$m3\leccion-03-notas.html" "Leccion 3 - Contenedores y Orquestacion" "Lecci%C3%B3n%203%20-%20EVALUACION.html"
-New-NoteHtml "$m3\Lección 4 - Servicios de computación adicionales.md"                           "$m3\leccion-04-notas.html" "Leccion 4 - Servicios de Computacion"    ""
+New-NoteHtml "$m3\Lección 4 - Servicios de computación adicionales.md"                           "$m3\leccion-04-notas.html" "Leccion 4 - Servicios de Computacion"    "Lecci%C3%B3n%204%20-%20EVALUACION.html"
 
 Write-Host "`nListo. 22 paginas regeneradas con dark mode."

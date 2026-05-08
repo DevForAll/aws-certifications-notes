@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Cloud Practitioner - Evaluación Módulo 3 Lección 4</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-squid-ink: #232f3e;
+            --aws-white: #ffffff;
+            --aws-gray-light: #f2f3f3;
+            --correct: #e7f4e4;
+            --incorrect: #fdf2f2;
+            --explanation: #fff9c4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-gray-light);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-squid-ink);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--aws-white);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+            background: rgba(255,255,255,0.2);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            background: var(--aws-orange);
+            width: 0%;
+            height: 100%;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            font-size: 0.9rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .option {
+            padding: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .option:hover {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+            border-width: 2px;
+        }
+
+        .option.correct {
+            background-color: var(--correct);
+            border-color: #2e7d32;
+        }
+
+        .option.incorrect {
+            background-color: var(--incorrect);
+            border-color: #d32f2f;
+        }
+
+        .explanation {
+            background-color: var(--explanation);
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+            display: none;
+            font-size: 0.9rem;
+            border-left: 4px solid var(--aws-orange);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        button {
+            background-color: var(--aws-orange);
+            color: var(--aws-white);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        button:hover {
+            background-color: #ec8b00;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #dashboard {
+            text-align: center;
+            display: none;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem auto;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .result-summary {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .multi-select-hint {
+            font-size: 0.8rem;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">AWS Exam Engine</div>
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+        <div class="stats">
+            Pregunta <span id="current-q-num">1</span>/30 | Puntos: <span id="current-score">0</span>
+        </div>
+    </header>
+
+    <main>
+        <div id="quiz-container">
+            <!-- Questions will be injected here -->
+        </div>
+
+        <div id="dashboard">
+            <h1>Evaluación Completada</h1>
+            <div class="score-circle">
+                <span id="final-score-pct">0%</span>
+            </div>
+            <div class="result-summary">
+                Has respondido correctamente <span id="correct-count">0</span> de 30 preguntas.
+            </div>
+            <div class="dashboard-buttons">
+                <button onclick="restartQuiz()">Reiniciar Todo (Shuffle)</button>
+                <button id="retry-failed-btn" onclick="retryFailed()">Reintentar Fallidas</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const allQuestions = [
+            // MODULE 3 LESSON 4 - Specialized Compute
+            {
+                question: "¿Qué servicio de AWS es una solución PaaS que permite a los desarrolladores desplegar aplicaciones rápidamente sin gestionar la infraestructura subyacente?",
+                options: ["Amazon EC2", "AWS Elastic Beanstalk", "AWS Lambda", "Amazon Lightsail"],
+                answer: [1],
+                explanation: "AWS Elastic Beanstalk es un servicio de Platform as a Service (PaaS) que maneja automáticamente el despliegue, desde el balanceo de carga hasta el auto-escalado, permitiendo que el desarrollador solo proporcione el código."
+            },
+            {
+                question: "Un hospital necesita ejecutar servicios de AWS en sus propias instalaciones físicas para cumplir con leyes de residencia de datos. ¿Qué servicio debe utilizar?",
+                options: ["AWS Direct Connect", "Amazon VPC", "AWS Outposts", "AWS Snowball"],
+                answer: [2],
+                explanation: "AWS Outposts extiende los servicios de AWS a centros de datos locales (on-premises) para satisfacer necesidades de residencia de datos o latencia ultra baja."
+            },
+            {
+                question: "Una pequeña empresa quiere lanzar un blog de WordPress con un presupuesto predecible y una gestión simplificada. ¿Qué servicio es el más adecuado?",
+                options: ["Amazon EC2", "Amazon Lightsail", "AWS Batch", "Amazon S3"],
+                answer: [1],
+                explanation: "Amazon Lightsail ofrece una solución de VPS simplificada con un precio mensual fijo y predecible, ideal para sitios web sencillos y blogs."
+            },
+            {
+                question: "¿Cuál es el principal caso de uso de AWS Batch?",
+                options: ["Ejecutar aplicaciones web de alta disponibilidad", "Procesar trabajos por lotes a gran escala utilizando flotas de instancias EC2", "Alojar bases de datos relacionales", "Proporcionar almacenamiento de objetos de baja latencia"],
+                answer: [1],
+                explanation: "AWS Batch permite ejecutar cientos o miles de trabajos de procesamiento por lotes (batch processing), escalando dinámicamente los recursos de cómputo necesarios."
+            },
+            {
+                question: "Bajo el Modelo de Responsabilidad Compartida, ¿cuál es una responsabilidad del cliente al utilizar AWS Outposts?",
+                options: ["Mantenimiento del hardware físico del rack", "Seguridad física del centro de datos donde se instala el rack", "Parcheo de la infraestructura del hipervisor", "Sustitución de componentes de hardware defectuosos"],
+                answer: [1],
+                explanation: "Aunque AWS gestiona el hardware de Outposts, el cliente es responsable de la seguridad física y el entorno (energía, refrigeración) donde se aloja el rack."
+            },
+
+            // IA GENERATIVA (CLF-C02)
+            {
+                question: "¿Qué servicio de AWS ofrece acceso a Modelos Fundacionales (FMs) a través de una API para construir aplicaciones de IA Generativa?",
+                options: ["Amazon SageMaker", "Amazon Bedrock", "AWS DeepLens", "Amazon Rekognition"],
+                answer: [1],
+                explanation: "Amazon Bedrock es un servicio totalmente gestionado que permite utilizar modelos fundacionales de las principales empresas de IA a través de una API."
+            },
+            {
+                question: "¿Cuál es el propósito principal de Amazon SageMaker?",
+                options: ["Solo generar imágenes con IA", "Construir, entrenar y desplegar modelos de machine learning rápidamente", "Actuar como un chatbot de servicio al cliente", "Gestionar infraestructuras híbridas"],
+                answer: [1],
+                explanation: "SageMaker es una plataforma completa para todo el ciclo de vida del aprendizaje automático (ML)."
+            },
+
+            // CUMULATIVE - MODULE 1 & 2 & M3 Earlier
+            {
+                question: "¿Qué pilar del Well-Architected Framework se enfoca en la capacidad de recuperarse de interrupciones de infraestructura?",
+                options: ["Excelencia Operativa", "Seguridad", "Fiabilidad (Reliability)", "Eficiencia del Rendimiento"],
+                answer: [2],
+                explanation: "El pilar de Fiabilidad se centra en asegurar que una carga de trabajo realice su función de manera correcta y consistente, incluyendo la recuperación ante fallos."
+            },
+            {
+                question: "Seleccione DOS beneficios de la computación en la nube. (Elija 2)",
+                options: ["Intercambiar gastos de capital por gastos variables", "Control total sobre la seguridad física de los servidores", "Dejar de gastar dinero en el mantenimiento de centros de datos", "Aumento de la latencia para usuarios globales"],
+                answer: [0, 2],
+                explanation: "La nube permite convertir CapEx en OpEx (gastos variables) y elimina la carga operativa de mantener centros de datos físicos."
+            },
+            {
+                question: "¿Cuál es la diferencia clave entre una Región de AWS y una Zona de Disponibilidad (AZ)?",
+                options: ["Una Región es un solo centro de datos; una AZ es un grupo de regiones", "Una Región es una ubicación geográfica que contiene múltiples AZs aisladas", "Las AZs son propiedad del cliente; las Regiones son propiedad de AWS", "No hay diferencia; son términos intercambiables"],
+                answer: [1],
+                explanation: "Una Región de AWS es un área geográfica física que contiene múltiples Zonas de Disponibilidad aisladas y separadas entre sí."
+            },
+            {
+                question: "¿Qué servicio de AWS ayuda a proteger contra ataques de denegación de servicio distribuido (DDoS) sin costo adicional en su nivel estándar?",
+                options: ["AWS WAF", "AWS Shield", "Amazon GuardDuty", "AWS IAM"],
+                answer: [1],
+                explanation: "AWS Shield Standard proporciona protección automática contra ataques DDoS comunes para todos los clientes de AWS sin cargo adicional."
+            },
+            {
+                question: "Usted desea ejecutar una función de código solo cuando se sube un archivo a Amazon S3, sin gestionar servidores. ¿Qué servicio es el más adecuado?",
+                options: ["Amazon EC2", "AWS Elastic Beanstalk", "AWS Lambda", "Amazon ECS"],
+                answer: [2],
+                explanation: "AWS Lambda es un servicio serverless que permite ejecutar código en respuesta a eventos (como una carga en S3) sin gestionar servidores."
+            },
+            {
+                question: "¿Qué tipo de instancia de EC2 ofrece los mayores descuentos (hasta un 90%) para cargas de trabajo tolerantes a fallos?",
+                options: ["Instancias On-Demand", "Instancias Reservadas", "Instancias Spot", "Instancias Dedicadas"],
+                answer: [2],
+                explanation: "Las instancias Spot utilizan capacidad de reserva de AWS a precios muy reducidos, pero pueden ser interrumpidas con un aviso de 2 minutos."
+            },
+            {
+                question: "¿Quién es responsable de la seguridad 'EN' la nube según el Modelo de Responsabilidad Compartida?",
+                options: ["AWS", "El Cliente", "Ambos por igual", "Ninguno"],
+                answer: [1],
+                explanation: "El cliente es responsable de la seguridad 'EN' la nube (datos, configuración de firewall, parches del SO invitado, IAM)."
+            },
+            {
+                question: "¿Cuál es la función principal de Amazon Route 53?",
+                options: ["Almacenamiento de archivos", "Servicio de DNS gestionado", "Distribución de contenido (CDN)", "Balanceo de carga"],
+                answer: [1],
+                explanation: "Route 53 es un servicio de Sistema de Nombres de Dominio (DNS) escalable y de alta disponibilidad."
+            },
+            {
+                question: "¿Qué herramienta permite estimar el costo de una solución antes de construirla?",
+                options: ["AWS Budgets", "AWS Cost Explorer", "AWS Pricing Calculator", "AWS Trusted Advisor"],
+                answer: [2],
+                explanation: "AWS Pricing Calculator se utiliza para estimar los costos de los servicios de AWS para sus casos de uso específicos antes de implementarlos."
+            },
+            {
+                question: "Usted necesita conectar su red local a AWS a través de una conexión de red privada y dedicada. ¿Qué servicio debe elegir?",
+                options: ["AWS VPN", "AWS Direct Connect", "Amazon VPC Peering", "AWS Outposts"],
+                answer: [1],
+                explanation: "AWS Direct Connect proporciona una conexión de red dedicada desde sus instalaciones a AWS, evitando el internet público."
+            },
+            {
+                question: "Seleccione TRES lenguajes soportados por AWS Elastic Beanstalk. (Elija 3)",
+                options: ["Java", "Python", "Go", "COBOL", "Assembler"],
+                answer: [0, 1, 2],
+                explanation: "Elastic Beanstalk soporta Java, Python, Go, Node.js, PHP, Ruby, .NET y Docker."
+            },
+            {
+                question: "¿Qué servicio de cómputo es ideal para microservicios y aplicaciones en contenedores sin gestionar servidores?",
+                options: ["Amazon EC2", "AWS Fargate", "AWS Lambda", "Amazon Lightsail"],
+                answer: [1],
+                explanation: "AWS Fargate es un motor de computación serverless para contenedores que funciona con ECS o EKS."
+            },
+            {
+                question: "Un usuario quiere recibir una alerta cuando sus costos mensuales superen los $100. ¿Qué servicio debe configurar?",
+                options: ["AWS Cost Explorer", "AWS Budgets", "AWS Trusted Advisor", "Amazon CloudWatch"],
+                answer: [1],
+                explanation: "AWS Budgets permite establecer presupuestos personalizados que le alertan cuando sus costos o uso superan (o se prevé que superen) el monto presupuestado."
+            },
+            {
+                question: "¿Cuál es el límite máximo de ejecución de una función de AWS Lambda?",
+                options: ["5 minutos", "15 minutos", "30 minutos", "1 hora"],
+                answer: [1],
+                explanation: "Las funciones de AWS Lambda tienen un tiempo de espera máximo de 900 segundos (15 minutos)."
+            },
+            {
+                question: "¿Qué servicio proporciona recomendaciones sobre seguridad, optimización de costos y tolerancia a fallos?",
+                options: ["AWS Inspector", "AWS Trusted Advisor", "Amazon GuardDuty", "AWS Artifact"],
+                answer: [1],
+                explanation: "AWS Trusted Advisor inspecciona su entorno de AWS y hace recomendaciones para seguir las mejores prácticas en 5 categorías, incluyendo costo y seguridad."
+            },
+            {
+                question: "¿Qué significa el concepto de 'Elasticidad' en la nube?",
+                options: ["Pagar solo por lo que usas", "La capacidad de ajustar automáticamente los recursos para satisfacer la demanda", "La capacidad de conectar múltiples nubes", "Tener servidores en todas las regiones"],
+                answer: [1],
+                explanation: "La elasticidad permite que la infraestructura crezca o se reduzca automáticamente según las fluctuaciones de la demanda."
+            },
+            {
+                question: "¿Qué servicio de almacenamiento es un sistema de archivos gestionado para instancias EC2 que puede ser montado por cientos de instancias simultáneamente?",
+                options: ["Amazon EBS", "Amazon S3", "Amazon EFS", "Amazon Instance Store"],
+                answer: [2],
+                explanation: "Amazon EFS (Elastic File System) es un sistema de archivos de red (NFS) que permite el acceso compartido para múltiples instancias EC2."
+            },
+            {
+                question: "¿Cuál es una ventaja de usar Amazon CloudFront?",
+                options: ["Procesamiento de datos en tiempo real", "Reducir la latencia entregando contenido a través de ubicaciones de borde (Edge Locations)", "Almacenar bases de datos relacionales", "Crear copias de seguridad de servidores locales"],
+                answer: [1],
+                explanation: "CloudFront es una red de entrega de contenido (CDN) que utiliza Edge Locations para entregar datos a los usuarios con baja latencia."
+            },
+            {
+                question: "Usted necesita una base de datos NoSQL con latencia de milisegundos de un solo dígito a cualquier escala. ¿Cuál elegiría?",
+                options: ["Amazon RDS", "Amazon Aurora", "Amazon DynamoDB", "Amazon Redshift"],
+                answer: [2],
+                explanation: "Amazon DynamoDB es el servicio de base de datos NoSQL key-value de AWS, diseñado para alto rendimiento a gran escala."
+            },
+            {
+                question: "¿Qué servicio de AWS se utiliza para gestionar múltiples cuentas de AWS de forma centralizada?",
+                options: ["AWS Control Tower", "AWS Organizations", "AWS IAM", "AWS Config"],
+                answer: [1],
+                explanation: "AWS Organizations ayuda a consolidar y gestionar múltiples cuentas de AWS desde una ubicación central, permitiendo facturación consolidada."
+            },
+            {
+                question: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable de parchear el Sistema Operativo de una instancia de Amazon EC2?",
+                options: ["AWS", "El Cliente", "El fabricante del software", "Ambos"],
+                answer: [1],
+                explanation: "En EC2 (Infraestructura como Servicio), el cliente es responsable de la gestión del sistema operativo invitado, incluyendo parches y seguridad."
+            },
+            {
+                question: "¿Cuál de los siguientes es un servicio de orquestación de contenedores en AWS? (Elija 2)",
+                options: ["Amazon ECS", "Amazon EKS", "Amazon ECR", "AWS Lambda"],
+                answer: [0, 1],
+                explanation: "ECS (Elastic Container Service) y EKS (Elastic Kubernetes Service) son los servicios de orquestación de contenedores de AWS."
+            },
+            {
+                question: "Un desarrollador quiere una forma de guardar configuraciones de infraestructura como código (IaC) para repetirlas fácilmente. ¿Qué servicio es el más directo para esto?",
+                options: ["AWS Elastic Beanstalk", "AWS CloudFormation", "AWS OpsWorks", "AWS CodeDeploy"],
+                answer: [1],
+                explanation: "CloudFormation permite modelar y configurar sus recursos de AWS mediante archivos de texto (plantillas), lo que se conoce como Infraestructura como Código."
+            }
+        ];
+
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedOptions = [];
+        let failedQuestions = [];
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            questions = shuffle([...allQuestions]);
+            currentQuestionIndex = 0;
+            score = 0;
+            failedQuestions = [];
+            showQuestion();
+            updateProgress();
+        }
+
+        function showQuestion() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+            
+            const q = questions[currentQuestionIndex];
+            const card = document.createElement('div');
+            card.className = 'question-card active';
+            
+            const title = document.createElement('h2');
+            title.textContent = q.question;
+            card.appendChild(title);
+
+            if (q.answer.length > 1) {
+                const hint = document.createElement('div');
+                hint.className = 'multi-select-hint';
+                hint.textContent = `(Seleccione ${q.answer.length} opciones)`;
+                card.appendChild(hint);
+            }
+
+            const optionsDiv = document.createElement('div');
+            optionsDiv.className = 'options';
+            
+            q.options.forEach((opt, index) => {
+                const optDiv = document.createElement('div');
+                optDiv.className = 'option';
+                optDiv.textContent = opt;
+                optDiv.onclick = () => selectOption(optDiv, index);
+                optionsDiv.appendChild(optDiv);
+            });
+            
+            card.appendChild(optionsDiv);
+
+            const explanation = document.createElement('div');
+            explanation.className = 'explanation';
+            explanation.id = 'explanation';
+            explanation.textContent = q.explanation;
+            card.appendChild(explanation);
+
+            const actions = document.createElement('div');
+            actions.className = 'actions';
+            
+            const btn = document.createElement('button');
+            btn.id = 'submit-btn';
+            btn.textContent = 'Enviar Respuesta';
+            btn.onclick = validateAnswer;
+            actions.appendChild(btn);
+            
+            card.appendChild(actions);
+            container.appendChild(card);
+            
+            selectedOptions = [];
+            document.getElementById('current-q-num').textContent = currentQuestionIndex + 1;
+        }
+
+        function selectOption(el, index) {
+            const q = questions[currentQuestionIndex];
+            if (q.answer.length === 1) {
+                document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+                el.classList.add('selected');
+                selectedOptions = [index];
+            } else {
+                if (el.classList.contains('selected')) {
+                    el.classList.remove('selected');
+                    selectedOptions = selectedOptions.filter(i => i !== index);
+                } else {
+                    if (selectedOptions.length < q.answer.length) {
+                        el.classList.add('selected');
+                        selectedOptions.push(index);
+                    }
+                }
+            }
+        }
+
+        function validateAnswer() {
+            const q = questions[currentQuestionIndex];
+            if (selectedOptions.length !== q.answer.length) {
+                alert(`Por favor selecciona ${q.answer.length} opciones.`);
+                return;
+            }
+
+            const isCorrect = selectedOptions.every(val => q.answer.includes(val)) && selectedOptions.length === q.answer.length;
+            
+            const options = document.querySelectorAll('.option');
+            options.forEach((opt, index) => {
+                opt.onclick = null;
+                if (q.answer.includes(index)) {
+                    opt.classList.add('correct');
+                } else if (selectedOptions.includes(index)) {
+                    opt.classList.add('incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+                document.getElementById('current-score').textContent = score;
+            } else {
+                failedQuestions.push(q);
+            }
+
+            document.getElementById('explanation').style.display = 'block';
+            
+            const btn = document.getElementById('submit-btn');
+            if (currentQuestionIndex < questions.length - 1) {
+                btn.textContent = 'Siguiente Pregunta';
+                btn.onclick = () => {
+                    currentQuestionIndex++;
+                    showQuestion();
+                    updateProgress();
+                };
+            } else {
+                btn.textContent = 'Ver Resultados';
+                btn.onclick = showDashboard;
+            }
+        }
+
+        function updateProgress() {
+            const pct = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progress-bar').style.width = `${pct}%`;
+        }
+
+        function showDashboard() {
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('progress-bar').style.width = '100%';
+            
+            const pct = Math.round((score / questions.length) * 100);
+            document.getElementById('final-score-pct').textContent = `${pct}%`;
+            document.getElementById('correct-count').textContent = score;
+            
+            document.getElementById('retry-failed-btn').disabled = failedQuestions.length === 0;
+        }
+
+        function restartQuiz() {
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('current-score').textContent = '0';
+            initQuiz();
+        }
+
+        function retryFailed() {
+            questions = shuffle([...failedQuestions]);
+            failedQuestions = [];
+            currentQuestionIndex = 0;
+            score = 0;
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('dashboard').style.display = 'none';
+            document.getElementById('current-score').textContent = '0';
+            showQuestion();
+            updateProgress();
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>

@@ -1,87 +1,78 @@
-## Resumen General
+## 📝 Resumen Ejecutivo
+Para competir globalmente, una aplicación no solo debe estar "en línea", sino que debe ser **resiliente** y **rápida**. El valor de negocio de profundizar en la infraestructura global radica en maximizar la **Alta Disponibilidad** (que la app no falle) y minimizar la **Latencia** (que la app sea rápida en cualquier país). Esto se logra mediante la combinación de arquitecturas Multi-AZ/Región y el uso de la Red de Entrega de Contenido (CDN) de AWS.
 
-Esta lección profundiza en las estrategias para garantizar que las aplicaciones sean **resilientes** (que no fallen) y **rápidas**. Introduce la diferencia crítica entre arquitecturas **Multi-AZ** y **Multi-Región**, y explica cómo las **Ubicaciones de Borde** (Edge Locations) a través de servicios como **Amazon CloudFront** y **Route 53** mejoran la experiencia del usuario global al reducir la latencia.
+![[Pasted image 20260510235226.png]]
+
+---
+## 💡 Conceptos Clave (High Probability)
+
+### 1. Estrategias de Disponibilidad y Resiliencia
+AWS evalúa tu capacidad para diseñar contra fallas:
+- **Multi-AZ (Alta Disponibilidad):** Desplegar en al menos 2 Zonas de Disponibilidad. Protege contra fallas de centros de datos (cortes eléctricos, inundaciones locales).
+- **Multi-Región (Recuperación ante Desastres):** Desplegar en áreas geográficas distintas. Protege contra interrupciones regionales catastróficas.
+
+### 2. Amazon CloudFront y Ubicaciones de Borde
+- **CloudFront:** Servicio de CDN que acelera la entrega de contenido estático (imágenes/JS) y dinámico (video).
+- **Ubicaciones de Borde (Edge Locations):** Puntos de presencia físicos distribuidos por el mundo donde CloudFront guarda copias (**Caché**) de los datos.
+- **Relación:** El usuario pide un dato -> CloudFront lo busca en la Edge Location más cercana -> Menor latencia.
+
+### 3. Amazon Route 53 (DNS)
+- **Función:** Sistema de nombres de dominio. Traduce `www.ejemplo.com` en una dirección IP.
+- **Valor:** Dirige el tráfico de los usuarios hacia el recurso de AWS más cercano o saludable.
 
 ---
 
-## Conceptos Clave (Priorizados por probabilidad en el examen)
+## 📊 Tabla Comparativa: AZ vs. Edge Location
 
-### 🔴 PRIORIDAD ALTA: Arquitecturas de Disponibilidad
-
-AWS evalúa si sabes cómo proteger una aplicación contra diferentes niveles de falla:
-
-- **Multi-AZ (Multi-Availability Zone):** * **Definición:** Desplegar recursos en dos o más Zonas de Disponibilidad dentro de una misma región.
-    
-    - **Propósito:** Protegerse contra fallas en un centro de datos (incendios, cortes de luz localizados). Garantiza la **Alta Disponibilidad**.
-        
-- **Multi-Región:**
-    
-    - **Definición:** Desplegar la aplicación en regiones geográficas distintas (ej. Virginia y Tokio).
-        
-    - **Propósito:** Recuperación ante desastres (Disaster Recovery) si una región entera sufre una interrupción catastrófica.
-        
-
-### 🔴 PRIORIDAD ALTA: Amazon CloudFront y Ubicaciones de Borde
-
-- **Amazon CloudFront:** Es una Red de Entrega de Contenido (CDN). Su función es acelerar la entrega de datos, videos y aplicaciones.
-    
-- **Ubicaciones de Borde (Edge Locations):** Infraestructura física separada de las Regiones. Es donde CloudFront guarda el contenido en "caché" para estar más cerca del usuario.
-    
-- **Caso de uso:** "Las imágenes se cargan lento en Latinoamérica". Solución: CloudFront.
-    
-
-### 🟡 PRIORIDAD MEDIA: Amazon Route 53
-
-- **Definición:** Servicio de DNS (Sistema de Nombres de Dominio) escalable y de alta disponibilidad.
-    
-- **Función clave:** Traduce nombres de dominio ([www.tu-cafeteria.com](https://www.google.com/search?q=https://www.tu-cafeteria.com)) en direcciones IP (192.0.2.1).
-    
-- **Dato de examen:** Route 53 dirige el tráfico de los usuarios hacia las aplicaciones.
-    
-
-### 🟡 PRIORIDAD MEDIA: AWS Outposts
-
-- **Definición:** Servicio que permite ejecutar servicios de AWS de forma nativa en el centro de datos físico (on-premises) del cliente.
-    
-- **Caso de uso:** Necesidad de latencia ultra-baja (milisegundos) o procesamiento de datos local que no puede viajar a la nube.
-    
+| Característica | Zona de Disponibilidad (AZ) | Ubicación de Borde (Edge Location) |
+| :--- | :--- | :--- |
+| **Componente de** | Una Región de AWS | Red Global de AWS (CloudFront) |
+| **Uso Principal** | Ejecutar EC2, RDS, VPCs | Almacenamiento en caché (S3, Video) |
+| **Protección contra** | Fallas de hardware/centros de datos | Alta latencia de red |
 
 ---
 
-## Puntos críticos para el examen Cloud Practitioner
-
-1. **Redundancia vs. Latencia:** * Si el objetivo es que la app **no se caiga**, la respuesta es **Multi-AZ**.
-    
-    - Si el objetivo es que la app **sea rápida** para usuarios lejanos, la respuesta es **CloudFront/Edge Locations**.
-        
-2. **Ubicaciones de Borde vs. Zonas de Disponibilidad:** Las ubicaciones de borde **NO** son centros de datos para computación general (EC2); son puntos de paso para acelerar contenido.
-    
-3. **Conmutación por error (Failover):** Es el proceso automático de cambiar a un recurso de respaldo cuando el principal falla. Multi-AZ facilita esto.
-    
+## 🎯 Puntos Críticos para el Examen (Keywords)
+- **"High Availability":** Siempre busca **Multi-AZ**.
+- **"Disaster Recovery":** Siempre busca **Multi-Región**.
+- **"Edge Locations" / "Points of Presence (PoP)":** Gatillos para **CloudFront**.
+- **"DNS Resolution":** Gatillo para **Route 53**.
 
 ---
 
-## Conceptos que suelen confundir en el examen
-
-|**Concepto**|**Lo que el estudiante suele confundir**|**La realidad para el examen**|
-|---|---|---|
-|**CloudFront vs S3**|Cree que CloudFront almacena los archivos originales.|S3 almacena los archivos; CloudFront los **distribuye** más rápido mediante copias temporales.|
-|**Route 53 vs CloudFront**|Cree que Route 53 acelera las imágenes.|Route 53 es el "mapa" (DNS); CloudFront es el "camión de reparto rápido" (CDN).|
-|**Outposts vs On-premises tradicional**|Cree que Outposts es solo comprar servidores.|Outposts es **infraestructura de AWS** dentro de tu casa; se gestiona igual que la nube.|
+## ⚠️ Trampas de Examen (Distractores)
+- **CloudFront NO es para almacenamiento:** El archivo original está en **S3**; CloudFront solo guarda una copia temporal.
+- **Edge Location NO es un centro de datos para EC2:** No puedes lanzar una instancia EC2 directamente en una Edge Location (a menos que uses servicios híbridos específicos).
+- **Route 53 vs CloudFront:** Route 53 encuentra la "dirección"; CloudFront entrega el "contenido" rápido.
 
 ---
 
-## 💡 Información adicional valiosa (Complemento de instructor)
+## 📖 Diccionario de Servicios AWS (Visualización de Distractores)
 
-- **AWS Global Accelerator:** Mencionado brevemente en la lección. En el examen, se diferencia de CloudFront porque optimiza la **ruta de red** (usando IPs estáticas) para aplicaciones que no son necesariamente web (como juegos o voz sobre IP), mientras que CloudFront se enfoca en **contenido** (imágenes/video).
-    
-- **Resiliencia:** Esta es la palabra técnica que AWS usa para describir una arquitectura que puede "recuperarse de interrupciones".
-    
-- **Puntos de Presencia (PoP):** Es otro nombre técnico que a veces se usa para referirse a las Ubicaciones de Borde.
-    
-
-**Términos clave para buscar en las preguntas:** _Failover_, _Caching_, _DNS Resolution_, _Low Latency_, _High Availability_.
+| Servicio | Definición Corta | Palabras Gatillo (Keywords) |
+| :--- | :--- | :--- |
+| **Amazon CloudFront** | Red de Entrega de Contenido (CDN). | Caching, Low Latency, Edge. |
+| **Amazon Route 53** | Servicio de DNS altamente disponible. | Domain, Routing, DNS, Failover. |
+| **AWS Outposts** | Ejecuta AWS en centros de datos locales. | Hybrid, On-premises, Local latency. |
+| **AWS Global Accelerator** | Mejora la ruta de red global. | Anycast IP, Network path optimization. |
 
 ---
 
-¿Deseas que profundicemos en algún servicio específico de estos antes de pasar a las preguntas de práctica?
+## 🤖 Conexión con IA Generativa y Responsabilidad Compartida
+- **IA Generativa (Baja Latencia):** Para aplicaciones de chat de IA en tiempo real, usar **CloudFront** para entregar la interfaz web y **Global Accelerator** para optimizar la conexión con el endpoint de inferencia de IA reduce drásticamente el "lag" percibido por el usuario.
+- **Modelo de Responsabilidad Compartida:** 
+    - **AWS es responsable de:** El mantenimiento físico de las Edge Locations y la replicación de datos entre AZs si el servicio es gestionado (Seguridad **DE** la nube).
+    - **El Cliente es responsable de:** Configurar correctamente las políticas de caché en CloudFront y diseñar su arquitectura como Multi-AZ para garantizar la disponibilidad (Seguridad **EN** la nube).
+
+> **Nota del Instructor:** Un error común es pensar que "CloudFront es solo para imágenes". También acelera APIs y contenido dinámico. Si el examen dice "acelerar entrega global", piensa en CloudFront.
+
+
+
+Te comparto el comando de nvidia:
+
+name, memory.total [MiB]
+NVIDIA GeForce RTX 4080 Laptop GPU, 12282 MiB
+
+Estuve revisando el CLAUDE.md, pero creo que no es necesario agregar un carpeta "jarvis", de mi lado lo veo innecesario en si todo el proyecto esta enfocado Jarvis, así que no le veo necesidad de agregar, podrías realizar esa corrección y modificar en base a los datos que te comparto de "nvidia"
+
+

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 1 - Introduccion a la Globalizacion — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root {
+      --navy: #232f3e;
+      --orange: #ff9900;
+      --page-bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --text: #16191f;
+      --text-muted: #555;
+      --h2-bg: #eef1f5;
+      --quote-bg: #fff9ee;
+      --code-bg: #e4e8ef;
+      --row-even: #f5f7fa;
+      --row-border: #e4e8ee;
+      --btn-notes-bg: #eef1f5;
+      --btn-notes-border: #d5dce8;
+      --btn-notes-hover: #dde2ea;
+    }
+    [data-theme="dark"] {
+      --page-bg: #151c25;
+      --card-bg: #1e2838;
+      --text: #e8eaed;
+      --text-muted: #9aabb8;
+      --h2-bg: #1e2838;
+      --quote-bg: #1e2830;
+      --code-bg: #283848;
+      --row-even: #253545;
+      --row-border: #2a3a4a;
+      --btn-notes-bg: #283848;
+      --btn-notes-border: #364858;
+      --btn-notes-hover: #324058;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: var(--page-bg); color: var(--text); transition: background-color 0.25s, color 0.25s; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 5rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    [data-theme="dark"] #md-content h1 { color: #c8d8ff; }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: var(--h2-bg); padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    [data-theme="dark"] #md-content h2 { color: #c8d8ff; border-color: var(--orange); }
+    #md-content h3 { font-size: 1rem; color: var(--text); margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: var(--text-muted); margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    [data-theme="dark"] #md-content strong { color: #c8d8ff; }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid var(--row-border); margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: var(--quote-bg); padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--row-border); vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: var(--row-even); }
+    .theme-toggle {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--orange); color: #111; border: none; cursor: pointer;
+      font-size: 1.25rem; box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+      z-index: 1000; transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 5rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+      .theme-toggle { width: 42px; height: 42px; font-size: 1.1rem; bottom: 1rem; right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 1 - Introduccion a la Globalizacion</span>
+    <a href="Lecci%C3%B3n%201%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `## 📝 Resumen Ejecutivo
+La globalización en AWS permite que una aplicación crezca de un mercado local a una audiencia mundial de forma rápida y eficiente. El valor de negocio radica en la **reducción de la latencia** (mejor experiencia de usuario), el **cumplimiento normativo** (soberanía de datos) y la **eficiencia operativa** mediante la automatización. AWS proporciona la infraestructura necesaria para que una empresa escale sin la necesidad de construir centros de datos físicos en cada país.
+
+---
+## 💡 Conceptos Clave (High/Medium Probability)
+
+### 1. Factores de Selección de Regiones (Alta Probabilidad)
+AWS no selecciona regiones al azar; tú como cliente debes elegir la región ideal basándote en cuatro pilares:
+- **Cumplimiento de datos (Compliance):** Requisito legal de que los datos no salgan de un territorio (Soberanía de Datos). **(Punto Crítico)**.
+- **Latencia:** Cercanía física a los usuarios finales para minimizar el retardo.
+- **Costo:** Los precios varían por región debido a impuestos y costos operativos locales (ej. N. Virginia suele ser más económica).
+- **Disponibilidad de servicios:** No todos los servicios nuevos están disponibles en todas las regiones simultáneamente.
+
+### 2. Ubicaciones de Borde (Edge Locations) (Alta Probabilidad)
+Son la infraestructura física detrás de **Amazon CloudFront**.
+- **Función:** Entrega de contenido con baja latencia mediante el uso de **Caché**.
+- **Analogía:** Si la Región es la "Cafetería Principal", las Ubicaciones de Borde son "Carritos de Café" en aeropuertos o mercados que solo sirven lo más pedido rápidamente.
+
+### 3. Infraestructura como Código (IaC) (Media Probabilidad)
+Uso de archivos de texto (código) para definir y desplegar recursos de AWS.
+- **AWS CloudFormation:** El servicio que permite crear plantillas (templates) para asegurar que el entorno de "Pruebas" sea idéntico al de "Producción" en cualquier parte del mundo.
+- **Valor:** Consistencia y velocidad de despliegue.
+
+---
+## 📊 Tabla Comparativa Rápida: Infraestructura Global
+
+| Característica | Región de AWS | Ubicación de Borde (Edge Location) |
+| :--- | :--- | :--- |
+| **Tamaño** | Grande (Múltiples centros de datos/AZs) | Pequeño (Puntos de Presencia - PoP) |
+| **Propósito** | Alojamiento de servicios y datos | Almacenamiento en caché de contenido |
+| **Cantidad** | Decenas (ej. 30+) | Cientos (ej. 400+) |
+| **Uso Principal** | Ejecutar aplicaciones y DBs | Reducir latencia de entrega (CloudFront) |
+
+---
+## 🎯 Puntos Críticos para el Examen (Keywords)
+- **"Caching" / "Low Latency":** Gatillo automático para **Edge Locations** o **CloudFront**.
+- **"Consistency" / "Automation" / "Templates":** Gatillo automático para **CloudFormation**.
+- **"Data Residency" / "Compliance":** Motivo principal para elegir una **Región** específica.
+- **"Point of Presence (PoP)":** Sinónimo técnico de Ubicaciones de Borde.
+
+---
+## ⚠️ Trampas de Examen (Distractores)
+- **Región vs. AZ:** Recuerda que una **Región** es un área geográfica; una **Zona de Disponibilidad (AZ)** es un grupo de centros de datos dentro de esa región. No son lo mismo.
+- **CloudFormation vs. Elastic Beanstalk:** CloudFormation "modela" infraestructura (IaC); Beanstalk "despliega" aplicaciones (PaaS) encargándose de la infraestructura automáticamente.
+- **Ubicaciones de Borde NO son para cómputo pesado:** No se usan para ejecutar bases de datos complejas, sino para entregar contenido estático/dinámico pre-almacenado.
+
+---
+## 📖 Diccionario de Servicios AWS (Visualización de Distractores)
+
+| Servicio                   | Definición Corta                               | Palabras Gatillo (Keywords)                 |
+| :------------------------- | :--------------------------------------------- | :------------------------------------------ |
+| **Amazon CloudFront**      | Red de entrega de contenido (CDN) global.      | CDN, Edge, Caching, Latency.                |
+| **AWS CloudFormation**     | Servicio de Infraestructura como Código (IaC). | Templates, JSON/YAML, Automation.           |
+| **AWS Global Accelerator** | Optimiza la ruta de red hacia aplicaciones.    | IP Estática, Anycast, Network optimization. |
+| **AWS Organizations**      | Gestión centralizada de múltiples cuentas.     | Billing, Governance, SCPs.                  |
+
+---
+## 🤖 Conexión con IA Generativa y Responsabilidad Compartida
+- **IA Generativa:** CloudFormation es vital para desplegar clústeres de inferencia de IA de manera consistente en múltiples regiones para estar cerca de los usuarios finales.
+- **Modelo de Responsabilidad Compartida:** 
+    - **AWS es responsable de:** La seguridad física de las Regiones y Ubicaciones de Borde (Seguridad **DE** la nube).
+    - **El Cliente es responsable de:** Seleccionar la Región que cumpla con las leyes de su país (Soberanía de Datos) y configurar correctamente CloudFront/CloudFormation (Seguridad **EN** la nube).
+
+> **Nota del Instructor:** AWS nunca moverá tus datos de una región a otra sin tu consentimiento explícito. Este es un punto muy preguntado sobre soberanía de datos.`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+    (function() {
+      var btn = document.getElementById('theme-toggle');
+      var root = document.documentElement;
+      if (localStorage.getItem('aws-theme') === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        btn.textContent = '☀️';
+      }
+      btn.addEventListener('click', function() {
+        var isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          root.setAttribute('data-theme', 'light');
+          btn.textContent = '🌙';
+          localStorage.setItem('aws-theme', 'light');
+        } else {
+          root.setAttribute('data-theme', 'dark');
+          btn.textContent = '☀️';
+          localStorage.setItem('aws-theme', 'dark');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

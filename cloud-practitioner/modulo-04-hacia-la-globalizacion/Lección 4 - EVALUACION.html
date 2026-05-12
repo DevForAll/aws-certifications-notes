@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner - Evaluación Módulo 4 Lección 4</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-squid-ink: #16191f;
+            --aws-bg: #f2f3f3;
+            --white: #ffffff;
+            --success: #e7f4e4;
+            --error: #fdf2f2;
+            --explanation: #fff9c4;
+            --text-dark: #232f3e;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #3a4b5b;
+            margin-top: 10px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--aws-orange);
+            transition: width 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--aws-bg);
+            padding-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 12px 16px;
+            border: 1px solid #d5dbdb;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            border-color: var(--aws-orange);
+            background-color: #f8f9f9;
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: #fff9f0;
+        }
+
+        .option.correct {
+            background-color: var(--success);
+            border-color: #2e7d32;
+        }
+
+        .option.incorrect {
+            background-color: var(--error);
+            border-color: #d32f2f;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .feedback.visible {
+            display: block;
+        }
+
+        .explanation {
+            background-color: var(--explanation);
+            border-left: 4px solid var(--aws-orange);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        button {
+            background-color: var(--aws-orange);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #e68a00;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        #score-display {
+            font-weight: bold;
+            color: var(--aws-orange);
+        }
+
+        .dashboard {
+            text-align: center;
+        }
+
+        .result-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 2rem auto;
+        }
+
+        .multi-choice-hint {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="logo-sim">AWS <span>Cloud Practitioner</span> Eval</div>
+        <div>Pregunta <span id="current-q-num">1</span>/30 | Puntos: <span id="score-display">0</span></div>
+    </div>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+</header>
+
+<div class="container">
+    <div id="quiz-container">
+        <!-- Questions will be injected here -->
+    </div>
+    
+    <div class="nav-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Enviar Respuesta</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display: none;">Siguiente Pregunta</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de AWS permite modelar, aprovisionar y gestionar infraestructuras de AWS de forma automatizada mediante el uso de plantillas en formato JSON o YAML?",
+            options: [
+                "AWS CloudTrail",
+                "AWS CloudFormation",
+                "AWS Systems Manager",
+                "AWS Organizations"
+            ],
+            answer: 1,
+            explanation: "AWS CloudFormation es el servicio de Infraestructura como Código (IaC) de AWS que permite crear y gestionar recursos mediante plantillas de texto."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una empresa quiere asegurarse de que su entorno de producción sea una réplica exacta de su entorno de desarrollo en una región distinta. ¿Qué beneficio de la infraestructura como código (IaC) facilita esto?",
+            options: [
+                "Control de costos en tiempo real",
+                "Repetibilidad y consistencia",
+                "Alta disponibilidad automática",
+                "Soberanía de datos"
+            ],
+            answer: 1,
+            explanation: "La IaC asegura la consistencia al eliminar los errores manuales y permite repetir despliegues idénticos en cualquier región o cuenta."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "Según el Modelo de Responsabilidad Compartida, ¿quién es responsable de la seguridad y la lógica contenida dentro de una plantilla de AWS CloudFormation?",
+            options: [
+                "AWS",
+                "El Cliente",
+                "El equipo de soporte técnico de AWS",
+                "El arquitecto de soluciones de AWS"
+            ],
+            answer: 1,
+            explanation: "El cliente es responsable de lo que define 'en' la nube, incluyendo la configuración de recursos dentro de sus plantillas de CloudFormation."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un cliente desea automatizar el despliegue de una aplicación web completa, incluyendo servidores, bases de datos y balanceadores de carga, sin tener que configurar cada recurso manualmente. ¿Cuál es la mejor opción?",
+            options: [
+                "Usar la Consola de Administración de AWS",
+                "Crear una plantilla de AWS CloudFormation",
+                "Usar exclusivamente la AWS CLI",
+                "Pagar por un plan de soporte Enterprise"
+            ],
+            answer: 1,
+            explanation: "CloudFormation permite definir toda la arquitectura como código y desplegarla como una sola unidad (Pila o Stack)."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Cuál es el costo por utilizar el servicio de AWS CloudFormation para gestionar infraestructuras?",
+            options: [
+                "Un cargo fijo mensual de $50 USD",
+                "El servicio es gratuito, pero se paga por los recursos que crea (ej. EC2, RDS)",
+                "Se paga una tarifa por cada línea de código en la plantilla",
+                "Solo es gratuito en la Capa Gratuita (Free Tier)"
+            ],
+            answer: 1,
+            explanation: "El motor de CloudFormation no tiene costo adicional; los clientes solo pagan por los recursos de AWS que el servicio aprovisiona."
+        },
+        {
+            type: "multi",
+            category: "Technical Definition",
+            question: "¿Qué formatos son compatibles con las plantillas de AWS CloudFormation? (Elija 2)",
+            options: [
+                "JSON",
+                "XML",
+                "YAML",
+                "HTML"
+            ],
+            answer: [0, 2],
+            explanation: "CloudFormation utiliza plantillas de texto plano en formato JSON o YAML."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un desarrollador quiere construir una aplicación de IA Generativa utilizando modelos base de terceros sin tener que entrenar su propio modelo desde cero. ¿Qué servicio serverless de AWS es el más adecuado?",
+            options: [
+                "Amazon SageMaker",
+                "Amazon Bedrock",
+                "Amazon Rekognition",
+                "Amazon Lex"
+            ],
+            answer: 1,
+            explanation: "Amazon Bedrock proporciona acceso a modelos base (FMs) a través de una API, permitiendo crear aplicaciones de IA Generativa rápidamente."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Qué pilar del Well-Architected Framework se centra en la capacidad de monitorizar y mejorar continuamente los procesos y procedimientos?",
+            options: [
+                "Seguridad",
+                "Excelencia Operativa",
+                "Fiabilidad",
+                "Sostenibilidad"
+            ],
+            answer: 1,
+            explanation: "El pilar de Excelencia Operativa se enfoca en ejecutar y monitorizar sistemas para entregar valor de negocio y mejorar los procesos."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un cliente necesita que sus datos financieros no salgan nunca de su país de origen por razones legales. ¿Cuál es el primer factor que debe considerar al elegir una región de AWS?",
+            options: [
+                "Costo",
+                "Latencia",
+                "Cumplimiento (Compliance)",
+                "Disponibilidad de servicios"
+            ],
+            answer: 2,
+            explanation: "El cumplimiento con las leyes de soberanía de datos es siempre el factor de máxima prioridad al seleccionar una región."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de AWS actúa como un sistema de nombres de dominio (DNS) escalable y altamente disponible?",
+            options: [
+                "Amazon CloudFront",
+                "Amazon Route 53",
+                "AWS Direct Connect",
+                "AWS Global Accelerator"
+            ],
+            answer: 1,
+            explanation: "Amazon Route 53 conecta las solicitudes de los usuarios a infraestructuras de AWS mediante la traducción de nombres de dominio en direcciones IP."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Para mejorar la velocidad de carga de un sitio web global con mucho contenido estático (imágenes/videos), ¿qué servicio de AWS se debería utilizar?",
+            options: [
+                "Amazon S3",
+                "Amazon CloudFront",
+                "Elastic Load Balancing",
+                "AWS Shield"
+            ],
+            answer: 1,
+            explanation: "Amazon CloudFront es una CDN que utiliza Edge Locations para almacenar contenido en caché y entregarlo con menor latencia global."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué término describe el beneficio de la nube que permite lanzar miles de servidores en minutos en lugar de esperar semanas por hardware físico?",
+            options: [
+                "Economías de escala",
+                "Velocidad y agilidad",
+                "Elasticidad",
+                "OpEx"
+            ],
+            answer: 1,
+            explanation: "La velocidad y agilidad permiten a las empresas innovar más rápido al disponer de recursos de TI en minutos."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable del mantenimiento de la infraestructura física (servidores, red, aire acondicionado) de los centros de datos?",
+            options: [
+                "El Cliente",
+                "AWS",
+                "El proveedor de servicios de Internet",
+                "Empresas de seguridad locales"
+            ],
+            answer: 1,
+            explanation: "AWS es responsable de la seguridad 'de' la nube, lo que incluye toda la infraestructura física global."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una empresa tiene una carga de trabajo constante e impredecible que no puede ser interrumpida. ¿Qué modelo de precios de EC2 es el más adecuado?",
+            options: [
+                "Instancias Spot",
+                "Instancias On-Demand (Bajo Demanda)",
+                "Dedicated Hosts",
+                "Savings Plans"
+            ],
+            answer: 1,
+            explanation: "Las instancias On-Demand son ideales para cargas que no pueden ser interrumpidas y cuyos picos son impredecibles."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Cómo se denomina a la capacidad de añadir más instancias del mismo tipo para manejar una carga creciente?",
+            options: [
+                "Escalado Vertical",
+                "Escalado Horizontal",
+                "Balanceo de Carga",
+                "Caching"
+            ],
+            answer: 1,
+            explanation: "El escalado horizontal consiste en añadir o quitar recursos (como servidores) para ajustar la capacidad."
+        },
+        {
+            type: "multi",
+            category: "Business Scenario",
+            question: "¿Cuáles son beneficios de utilizar la Infraestructura como Código (IaC) con AWS CloudFormation? (Elija 3)",
+            options: [
+                "Reducción del error humano",
+                "Aprovisionamiento manual más rápido",
+                "Posibilidad de usar control de versiones en las plantillas",
+                "Despliegues consistentes en múltiples regiones",
+                "Eliminación total del costo de EC2"
+            ],
+            answer: [0, 2, 3],
+            explanation: "CloudFormation reduce errores, permite versionar el código de infraestructura y asegura la consistencia global."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de AWS permite monitorizar el rendimiento de las aplicaciones y el estado de la infraestructura mediante métricas y alarmas?",
+            options: [
+                "AWS CloudTrail",
+                "Amazon CloudWatch",
+                "AWS Trusted Advisor",
+                "Amazon Inspector"
+            ],
+            answer: 1,
+            explanation: "Amazon CloudWatch es el servicio principal de monitorización y observabilidad de AWS."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Qué servicio proporciona una capa de defensa contra ataques DDoS de forma gratuita para todos los clientes de AWS?",
+            options: [
+                "AWS Shield Standard",
+                "AWS WAF",
+                "Amazon GuardDuty",
+                "AWS IAM"
+            ],
+            answer: 0,
+            explanation: "AWS Shield Standard protege a todos los clientes de AWS contra los ataques DDoS más comunes sin costo adicional."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un cliente necesita un servidor físico dedicado para cumplir con requisitos de licencias de software específicas (BYOL). ¿Qué opción de EC2 debería elegir?",
+            options: [
+                "Instancias Reservadas",
+                "Dedicated Hosts",
+                "Dedicated Instances",
+                "Savings Plans"
+            ],
+            answer: 1,
+            explanation: "Dedicated Hosts proporcionan un servidor físico dedicado que permite el uso de licencias de software existentes ligadas a sockets o núcleos físicos."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio permite ejecutar código en respuesta a eventos (como la subida de un archivo a S3) sin gestionar servidores?",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "Amazon ECS",
+                "AWS Batch"
+            ],
+            answer: 1,
+            explanation: "AWS Lambda es un servicio de computación serverless basado en eventos."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Cuál de los siguientes servicios permite centralizar la facturación y aplicar políticas de seguridad (SCPs) a un grupo de cuentas de AWS?",
+            options: [
+                "AWS Organizations",
+                "AWS IAM",
+                "AWS Control Tower",
+                "AWS Budgets"
+            ],
+            answer: 0,
+            explanation: "AWS Organizations centraliza la facturación y la gobernanza de múltiples cuentas."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un usuario quiere recibir una recomendación sobre cómo optimizar sus costos y mejorar la seguridad de su cuenta basándose en las mejores prácticas de AWS. ¿Qué servicio gratuito debería consultar?",
+            options: [
+                "AWS Trusted Advisor",
+                "AWS Artifact",
+                "Amazon Inspector",
+                "AWS Support Plan Manager"
+            ],
+            answer: 0,
+            explanation: "AWS Trusted Advisor ofrece recomendaciones en categorías como optimización de costos, seguridad, rendimiento y tolerancia a fallos."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué componente de la infraestructura global de AWS contiene una o más centros de datos discretos con energía, red y conectividad redundantes?",
+            options: [
+                "Región de AWS",
+                "Zona de Disponibilidad (AZ)",
+                "Ubicación de Borde",
+                "VPC"
+            ],
+            answer: 1,
+            explanation: "Una AZ es un grupo de centros de datos dentro de una Región, diseñados para aislamiento de fallos."
+        },
+        {
+            type: "multi",
+            category: "Security & Architecture",
+            question: "¿Cuáles son pilares del AWS Well-Architected Framework? (Elija 2)",
+            options: [
+                "Fiabilidad (Reliability)",
+                "Crecimiento de Ventas",
+                "Optimización de Costos",
+                "Diseño de Interfaz de Usuario"
+            ],
+            answer: [0, 2],
+            explanation: "Fiabilidad y Optimización de Costos son dos de los seis pilares del marco."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Para desacoplar dos microservicios y asegurar que si uno falla el otro pueda seguir recibiendo mensajes sin perder datos, ¿qué servicio se debería usar?",
+            options: [
+                "Amazon SNS",
+                "Amazon SQS",
+                "AWS Lambda",
+                "Amazon Route 53"
+            ],
+            answer: 1,
+            explanation: "Amazon SQS (Simple Queue Service) permite desacoplar componentes mediante colas de mensajes asíncronas."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio permite guardar documentos e imágenes en la nube como 'objetos' en cubos (buckets)?",
+            options: [
+                "Amazon EBS",
+                "Amazon S3",
+                "Amazon EFS",
+                "Amazon RDS"
+            ],
+            answer: 1,
+            explanation: "Amazon S3 es un servicio de almacenamiento de objetos altamente escalable."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Cuál es el servicio de directorio administrado que permite usar identidades de Microsoft Active Directory en AWS?",
+            options: [
+                "AWS Directory Service",
+                "AWS IAM",
+                "Amazon Cognito",
+                "AWS Secrets Manager"
+            ],
+            answer: 0,
+            explanation: "AWS Directory Service facilita la conexión de recursos de AWS con Microsoft AD."
+        },
+        {
+            type: "multi",
+            category: "Business Scenario",
+            question: "¿Qué acciones puede realizar un cliente para reducir su factura mensual de AWS? (Elija 2)",
+            options: [
+                "Usar instancias Spot para cargas de trabajo tolerantes a fallos",
+                "Migrar todas las bases de datos de RDS a EC2",
+                "Comprar Savings Plans para uso de cómputo constante",
+                "Aumentar el uso de Dedicated Hosts"
+            ],
+            answer: [0, 2],
+            explanation: "Las instancias Spot y los Savings Plans son estrategias clave de ahorro de costos."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de AWS ayuda a identificar vulnerabilidades de red y desviaciones de las mejores prácticas de seguridad en las instancias EC2?",
+            options: [
+                "Amazon GuardDuty",
+                "Amazon Inspector",
+                "AWS Shield",
+                "Amazon CloudWatch"
+            ],
+            answer: 1,
+            explanation: "Amazon Inspector automatiza las evaluaciones de seguridad para mejorar la seguridad y el cumplimiento de las aplicaciones desplegadas en AWS."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un arquitecto de soluciones desea desplegar una base de datos relacional de alto rendimiento que se escale automáticamente y sea compatible con MySQL. ¿Cuál es la mejor opción gestionada?",
+            options: [
+                "Amazon DynamoDB",
+                "Amazon Aurora",
+                "Amazon Redshift",
+                "Amazon DocumentDB"
+            ],
+            answer: 1,
+            explanation: "Amazon Aurora es una base de datos relacional nativa de AWS, compatible con MySQL y PostgreSQL, diseñada para alto rendimiento y escalabilidad automática."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOptions = [];
+    let shuffledQuestions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz() {
+        shuffledQuestions = shuffle([...questions]);
+        currentQuestionIndex = 0;
+        score = 0;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const container = document.getElementById('quiz-container');
+        document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+        document.getElementById('score-display').innerText = score;
+        
+        // Update Progress Bar
+        const progress = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = progress + "%";
+
+        let optionsHtml = '';
+        q.options.forEach((opt, index) => {
+            optionsHtml += `
+                <div class="option" onclick="selectOption(${index})" id="opt-${index}">
+                    <span class="bullet">${String.fromCharCode(65 + index)}.</span>
+                    <span>${opt}</span>
+                </div>
+            `;
+        });
+
+        const multiHint = q.type === 'multi' ? `<div class="multi-choice-hint">(Seleccione todas las que correspondan)</div>` : '';
+
+        container.innerHTML = `
+            <div class="card">
+                <div style="color: #666; font-size: 0.8rem; margin-bottom: 5px;">${q.category}</div>
+                <div class="question-text">${q.question}</div>
+                ${multiHint}
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div id="feedback-area" class="feedback">
+                    <div id="feedback-status" style="font-weight: bold; margin-bottom: 10px;"></div>
+                    <div class="explanation" id="explanation-text"></div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('submit-btn').style.display = 'block';
+        document.getElementById('submit-btn').disabled = true;
+        document.getElementById('next-btn').style.display = 'none';
+        selectedOptions = [];
+    }
+
+    function selectOption(index) {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const optElement = document.getElementById(`opt-${index}`);
+
+        if (q.type === 'single') {
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            optElement.classList.add('selected');
+            selectedOptions = [index];
+        } else {
+            if (optElement.classList.contains('selected')) {
+                optElement.classList.remove('selected');
+                selectedOptions = selectedOptions.filter(i => i !== index);
+            } else {
+                optElement.classList.add('selected');
+                selectedOptions.push(index);
+            }
+        }
+
+        document.getElementById('submit-btn').disabled = selectedOptions.length === 0;
+    }
+
+    function checkAnswer() {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const explanationText = document.getElementById('explanation-text');
+        
+        let isCorrect = false;
+
+        if (q.type === 'single') {
+            isCorrect = selectedOptions[0] === q.answer;
+        } else {
+            const sortedSelected = [...selectedOptions].sort();
+            const sortedAnswer = [...q.answer].sort();
+            isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedAnswer);
+        }
+
+        if (isCorrect) {
+            score++;
+            feedbackStatus.innerText = "¡Correcto!";
+            feedbackStatus.style.color = "#2e7d32";
+            feedbackArea.style.backgroundColor = "var(--success)";
+            
+            selectedOptions.forEach(idx => {
+                document.getElementById(`opt-${idx}`).classList.add('correct');
+            });
+        } else {
+            feedbackStatus.innerText = "Incorrecto";
+            feedbackStatus.style.color = "#d32f2f";
+            feedbackArea.style.backgroundColor = "var(--error)";
+            
+            selectedOptions.forEach(idx => {
+                document.getElementById(`opt-${idx}`).classList.add('incorrect');
+            });
+
+            if (q.type === 'single') {
+                document.getElementById(`opt-${q.answer}`).classList.add('correct');
+            } else {
+                q.answer.forEach(idx => {
+                    document.getElementById(`opt-${idx}`).classList.add('correct');
+                });
+            }
+        }
+
+        explanationText.innerText = q.explanation;
+        feedbackArea.classList.add('visible');
+        
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+        document.getElementById('score-display').innerText = score;
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            showQuestion();
+        } else {
+            showDashboard();
+        }
+    }
+
+    function showDashboard() {
+        const container = document.getElementById('quiz-container');
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('progress-bar').style.width = "100%";
+        
+        const percentage = Math.round((score / shuffledQuestions.length) * 100);
+        let message = "";
+        if (percentage >= 80) message = "¡Excelente! Estás listo para dominar la infraestructura de AWS.";
+        else if (percentage >= 60) message = "Buen trabajo, pero repasa los conceptos de CloudFormation.";
+        else message = "Te recomendamos revisar la automatización y la Infraestructura como Código.";
+
+        container.innerHTML = `
+            <div class="card dashboard">
+                <h2>Resultado Final</h2>
+                <div class="result-circle">${percentage}%</div>
+                <p>${score} de ${shuffledQuestions.length} correctas</p>
+                <p>${message}</p>
+                <button onclick="initQuiz()">Reiniciar Evaluación (Shuffle)</button>
+            </div>
+        `;
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

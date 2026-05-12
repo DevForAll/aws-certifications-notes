@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner - Evaluación Módulo 4 Lección 3</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-squid-ink: #16191f;
+            --aws-bg: #f2f3f3;
+            --white: #ffffff;
+            --success: #e7f4e4;
+            --error: #fdf2f2;
+            --explanation: #fff9c4;
+            --text-dark: #232f3e;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #3a4b5b;
+            margin-top: 10px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--aws-orange);
+            transition: width 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--aws-bg);
+            padding-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 12px 16px;
+            border: 1px solid #d5dbdb;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            border-color: var(--aws-orange);
+            background-color: #f8f9f9;
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: #fff9f0;
+        }
+
+        .option.correct {
+            background-color: var(--success);
+            border-color: #2e7d32;
+        }
+
+        .option.incorrect {
+            background-color: var(--error);
+            border-color: #d32f2f;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .feedback.visible {
+            display: block;
+        }
+
+        .explanation {
+            background-color: var(--explanation);
+            border-left: 4px solid var(--aws-orange);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        button {
+            background-color: var(--aws-orange);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #e68a00;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        #score-display {
+            font-weight: bold;
+            color: var(--aws-orange);
+        }
+
+        .dashboard {
+            text-align: center;
+        }
+
+        .result-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 2rem auto;
+        }
+
+        .multi-choice-hint {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="logo-sim">AWS <span>Cloud Practitioner</span> Eval</div>
+        <div>Pregunta <span id="current-q-num">1</span>/30 | Puntos: <span id="score-display">0</span></div>
+    </div>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+</header>
+
+<div class="container">
+    <div id="quiz-container">
+        <!-- Questions will be injected here -->
+    </div>
+    
+    <div class="nav-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Enviar Respuesta</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display: none;">Siguiente Pregunta</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de AWS se utiliza para acelerar la entrega de contenido estático y dinámico a los usuarios globales mediante el uso de una red de ubicaciones de borde?",
+            options: [
+                "Amazon Route 53",
+                "Amazon CloudFront",
+                "AWS Global Accelerator",
+                "Amazon S3"
+            ],
+            answer: 1,
+            explanation: "Amazon CloudFront es una Red de Entrega de Contenido (CDN) que utiliza Edge Locations (Ubicaciones de borde) para almacenar en caché y entregar contenido con baja latencia."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una empresa quiere asegurarse de que su aplicación web pueda seguir funcionando incluso si un centro de datos completo falla debido a una inundación local. ¿Qué estrategia de diseño debería implementar?",
+            options: [
+                "Despliegue Multi-Región",
+                "Despliegue Multi-AZ (Zonas de Disponibilidad)",
+                "Uso exclusivo de Edge Locations",
+                "Escalado vertical de instancias EC2"
+            ],
+            answer: 1,
+            explanation: "Un diseño Multi-AZ proporciona Alta Disponibilidad al distribuir los recursos en múltiples zonas aisladas dentro de una misma región, protegiendo contra fallas a nivel de centro de datos."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Cuál es la función principal de Amazon Route 53?",
+            options: [
+                "Almacenar archivos multimedia en la nube",
+                "Traducir nombres de dominio legibles por humanos en direcciones IP",
+                "Proteger aplicaciones contra ataques DDoS",
+                "Proporcionar una conexión de red dedicada a AWS"
+            ],
+            answer: 1,
+            explanation: "Amazon Route 53 es un servicio de DNS (Sistema de Nombres de Dominio) que traduce nombres como 'www.ejemplo.com' en las direcciones IP que las computadoras usan para conectarse."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable del mantenimiento físico y la seguridad de las Edge Locations (Ubicaciones de borde)?",
+            options: [
+                "El Cliente",
+                "AWS",
+                "Ambos comparten la responsabilidad mediante un acuerdo de nivel de servicio",
+                "El proveedor de telecomunicaciones local"
+            ],
+            answer: 1,
+            explanation: "AWS es responsable de la seguridad 'DE' la nube, lo que incluye toda la infraestructura física global: Regiones, AZs y Edge Locations."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una aplicación de video bajo demanda experimenta retrasos cuando los usuarios en Europa intentan acceder a contenido almacenado en una región de EE. UU. ¿Qué componente de la infraestructura global de AWS ayudaría a reducir esta latencia?",
+            options: [
+                "Zonas de Disponibilidad",
+                "Zonas Locales (Local Zones)",
+                "Ubicaciones de Borde (Edge Locations)",
+                "Puntos de acceso de VPC"
+            ],
+            answer: 2,
+            explanation: "Las Edge Locations permiten que CloudFront entregue el contenido desde una ubicación cercana al usuario, reduciendo el tiempo de viaje de los datos (latencia)."
+        },
+        {
+            type: "multi",
+            category: "Technical Definition",
+            question: "¿Cuáles son las diferencias principales entre una Zona de Disponibilidad (AZ) y una Ubicación de Borde (Edge Location)? (Elija 2)",
+            options: [
+                "Las AZs se utilizan para ejecutar cómputo (EC2); las Edge Locations para caché (CloudFront)",
+                "Las Edge Locations son siempre más grandes que las AZs",
+                "Las AZs son componentes de una Región; las Edge Locations son parte de la red global fuera de las Regiones",
+                "Las Edge Locations no pueden conectarse a Amazon S3"
+            ],
+            answer: [0, 2],
+            explanation: "Las AZs están dentro de las Regiones y ejecutan servicios principales. Las Edge Locations están distribuidas globalmente para acelerar el contenido mediante caché."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Para una recuperación ante desastres (Disaster Recovery) que proteja contra una interrupción catastrófica que afecte a todo un país o área geográfica extensa, ¿cuál es la mejor arquitectura?",
+            options: [
+                "Arquitectura Multi-AZ",
+                "Arquitectura Multi-Región",
+                "Uso de AWS Shield Advanced",
+                "Instancias EC2 de tipo 'High Memory'"
+            ],
+            answer: 1,
+            explanation: "Mientras que Multi-AZ protege contra fallas locales, Multi-Región es la estrategia para recuperación ante desastres a gran escala, asegurando que la app funcione en una parte del mundo totalmente distinta."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de AWS proporciona una ruta de red optimizada y estable utilizando la red global de AWS para mejorar la disponibilidad y el rendimiento de las aplicaciones mediante el uso de IPs Anycast?",
+            options: [
+                "Amazon CloudFront",
+                "AWS Global Accelerator",
+                "AWS Direct Connect",
+                "AWS VPN"
+            ],
+            answer: 1,
+            explanation: "AWS Global Accelerator optimiza la ruta de red hacia tus aplicaciones utilizando IPs estáticas que dirigen el tráfico a través de la red privada de AWS."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Cuál de los siguientes es un beneficio de la economía de la nube que permite a AWS reducir los precios para sus clientes a medida que la plataforma crece?",
+            options: [
+                "Agilidad",
+                "Economías de escala masivas",
+                "Elasticidad",
+                "Sostenibilidad"
+            ],
+            answer: 1,
+            explanation: "Gracias al gran volumen de clientes, AWS puede comprar recursos a menor costo y transferir esos ahorros a los usuarios en forma de reducciones de precio."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio permite ejecutar aplicaciones de IA Generativa de forma serverless, permitiendo que la interfaz web sea entregada globalmente mediante CloudFront para reducir el lag?",
+            options: [
+                "Amazon SageMaker",
+                "Amazon Bedrock",
+                "Amazon Rekognition",
+                "AWS HealthScribe"
+            ],
+            answer: 1,
+            explanation: "Amazon Bedrock es el servicio clave de IA Generativa que permite construir apps sin gestionar servidores, pudiendo combinarse con CloudFront para una entrega global eficiente."
+        },
+        {
+            type: "multi",
+            category: "Business Scenario",
+            question: "Un cliente necesita configurar una arquitectura de 'Alta Disponibilidad'. ¿Qué prácticas debería seguir? (Elija 2)",
+            options: [
+                "Distribuir las instancias EC2 en al menos dos Zonas de Disponibilidad",
+                "Poner todos los servidores en la misma AZ para mayor velocidad de conexión",
+                "Usar Elastic Load Balancing para repartir el tráfico entre las zonas",
+                "Usar exclusivamente instancias de tipo Spot"
+            ],
+            answer: [0, 2],
+            explanation: "La Alta Disponibilidad se logra mediante la redundancia física (Multi-AZ) y la distribución inteligente del tráfico (ELB)."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué pilar del Well-Architected Framework se enfoca en la capacidad de un sistema para recuperarse de interrupciones de infraestructura o servicio?",
+            options: [
+                "Seguridad",
+                "Excelencia Operativa",
+                "Fiabilidad (Reliability)",
+                "Eficiencia del Rendimiento"
+            ],
+            answer: 2,
+            explanation: "El pilar de Fiabilidad (Reliability) trata sobre la recuperación ante fallos y la mitigación de interrupciones."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un administrador de sistemas necesita restringir qué usuarios pueden crear instancias EC2 en una cuenta de AWS. ¿Qué servicio debe utilizar?",
+            options: [
+                "AWS Secrets Manager",
+                "AWS IAM (Identity and Access Management)",
+                "AWS CloudTrail",
+                "Amazon GuardDuty"
+            ],
+            answer: 1,
+            explanation: "IAM es el servicio responsable de gestionar identidades y permisos (autorización) en AWS."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Quién es responsable de proteger los datos 'EN' la nube (Encryption, Firewall config) en el Modelo de Responsabilidad Compartida?",
+            options: [
+                "AWS",
+                "El Cliente",
+                "El proveedor de Internet (ISP)",
+                "AWS Marketplace"
+            ],
+            answer: 1,
+            explanation: "El cliente es responsable de todo lo que configura y coloca 'EN' la nube, incluyendo el cifrado de datos y las reglas de los grupos de seguridad."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué característica de Amazon S3 permite guardar versiones de archivos para protegerlos contra borrados accidentales?",
+            options: [
+                "S3 Lifecycle",
+                "S3 Versioning",
+                "S3 Intelligent-Tiering",
+                "S3 Replication"
+            ],
+            answer: 1,
+            explanation: "S3 Versioning permite mantener múltiples variantes de un objeto en el mismo bucket, facilitando la recuperación de versiones anteriores."
+        },
+        {
+            type: "multi",
+            category: "Technical Definition",
+            question: "¿Cuáles son servicios de computación 'Serverless' en AWS? (Elija 3)",
+            options: [
+                "AWS Lambda",
+                "Amazon EC2",
+                "AWS Fargate",
+                "Amazon Bedrock",
+                "Amazon EBS"
+            ],
+            answer: [0, 2, 3],
+            explanation: "Lambda, Fargate y Bedrock son serverless porque el cliente no gestiona los servidores subyacentes. EC2 y EBS requieren gestión manual de infraestructura."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Para ahorrar costos en un entorno de desarrollo donde las instancias no necesitan estar encendidas 24/7 y se pueden apagar por las noches, ¿qué modelo de precios es más flexible?",
+            options: [
+                "Instancias Reservadas",
+                "Instancias On-Demand (Bajo Demanda)",
+                "Dedicated Hosts",
+                "Savings Plans"
+            ],
+            answer: 1,
+            explanation: "Las instancias On-Demand permiten pagar por segundo de uso sin compromisos a largo plazo, siendo ideales para cargas variables o temporales."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio actúa como un 'policía de tráfico' distribuyendo las solicitudes entrantes entre múltiples instancias EC2 saludables?",
+            options: [
+                "Amazon Route 53",
+                "Elastic Load Balancing (ELB)",
+                "AWS Auto Scaling",
+                "Amazon SNS"
+            ],
+            answer: 1,
+            explanation: "ELB distribuye automáticamente el tráfico de aplicaciones entrantes entre varios destinos, como instancias EC2, para mejorar la tolerancia a fallos."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Qué concepto describe la capacidad de la nube para 'estirarse' y 'encogerse' automáticamente según la demanda en tiempo real?",
+            options: [
+                "Escalabilidad vertical",
+                "Elasticidad",
+                "Agilidad",
+                "Tolerancia a fallos"
+            ],
+            answer: 1,
+            explanation: "La elasticidad es la capacidad de ajustar automáticamente los recursos para que coincidan con la demanda real, evitando el exceso o la falta de capacidad."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una empresa quiere migrar su base de datos local a AWS pero quiere mantener el control total sobre el motor de la base de datos y el sistema operativo. ¿Qué debería usar?",
+            options: [
+                "Amazon RDS",
+                "Amazon EC2 (Auto-gestionado)",
+                "Amazon Aurora",
+                "Amazon DynamoDB"
+            ],
+            answer: 1,
+            explanation: "Al ejecutar una base de datos en EC2, el cliente tiene control total sobre el SO y el software, a diferencia de RDS que es un servicio gestionado donde AWS maneja el SO."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Cómo se llama el proceso de cambiar el tipo de instancia EC2 (ej. de t3.micro a t3.large) para obtener más recursos?",
+            options: [
+                "Escalado Horizontal",
+                "Escalado Vertical",
+                "Elasticidad automática",
+                "Balanceo de carga"
+            ],
+            answer: 1,
+            explanation: "El escalado vertical consiste en aumentar o disminuir la potencia (CPU/RAM) de un recurso individual."
+        },
+        {
+            type: "multi",
+            category: "Security & Architecture",
+            question: "¿Qué servicios ayudan a proteger una aplicación contra ataques de Denegación de Servicio (DDoS)? (Elija 2)",
+            options: [
+                "AWS Shield",
+                "AWS WAF",
+                "AWS Artifact",
+                "Amazon Inspector"
+            ],
+            answer: [0, 1],
+            explanation: "AWS Shield (específicamente contra DDoS) y AWS WAF (Web Application Firewall) son las defensas principales contra ataques externos."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de mensajería utiliza el modelo 'Publicar/Suscribir' (Pub/Sub) para enviar notificaciones masivas a endpoints?",
+            options: [
+                "Amazon SQS",
+                "Amazon SNS",
+                "AWS Step Functions",
+                "Amazon SES"
+            ],
+            answer: 1,
+            explanation: "Amazon SNS (Simple Notification Service) es un servicio de mensajería Pub/Sub para notificaciones de abanico (fan-out)."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Al usar CloudFront, ¿dónde se guarda la copia temporal del archivo de S3 para que el usuario la descargue más rápido?",
+            options: [
+                "En otra Región",
+                "En una Zona de Disponibilidad secundaria",
+                "En una Ubicación de Borde (Edge Location)",
+                "En el disco duro del usuario"
+            ],
+            answer: 2,
+            explanation: "CloudFront almacena el contenido en caché en las Edge Locations, que son los puntos de presencia más cercanos a los usuarios."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Qué servicio de AWS proporciona informes de cumplimiento de terceros (como SOC o PCI) bajo demanda?",
+            options: [
+                "AWS Trust Advisor",
+                "AWS Artifact",
+                "AWS Config",
+                "AWS CloudTrail"
+            ],
+            answer: 1,
+            explanation: "AWS Artifact es el recurso central para información relacionada con el cumplimiento de AWS."
+        },
+        {
+            type: "multi",
+            category: "Business Scenario",
+            question: "¿Qué factores influyen en el precio de los servicios de AWS entre diferentes Regiones? (Elija 2)",
+            options: [
+                "Costos de energía y refrigeración locales",
+                "Distancia física al centro de soporte de AWS",
+                "Impuestos y regulaciones locales",
+                "El color de los racks de servidores"
+            ],
+            answer: [0, 2],
+            explanation: "Los precios varían por región debido a factores económicos y operativos locales como impuestos, leyes y costos de infraestructura física."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio permite agrupar y gestionar múltiples cuentas de AWS de forma centralizada?",
+            options: [
+                "AWS Control Tower",
+                "AWS Organizations",
+                "AWS IAM",
+                "AWS Directory Service"
+            ],
+            answer: 1,
+            explanation: "AWS Organizations ayuda a consolidar cuentas, centralizar la facturación y aplicar políticas de control (SCPs)."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Cuál de los siguientes servicios permite monitorizar y registrar la actividad de la cuenta (quién hizo qué y cuándo) para fines de auditoría?",
+            options: [
+                "Amazon CloudWatch",
+                "AWS CloudTrail",
+                "AWS X-Ray",
+                "AWS Trusted Advisor"
+            ],
+            answer: 1,
+            explanation: "AWS CloudTrail registra las llamadas a la API realizadas en la cuenta de AWS para auditoría y seguridad."
+        },
+        {
+            type: "multi",
+            category: "Security & Architecture",
+            question: "¿Cuáles son pilares del Well-Architected Framework actualizados en el CLF-C02? (Elija 3)",
+            options: [
+                "Sostenibilidad",
+                "Optimización de Costos",
+                "Marketing de Nube",
+                "Excelencia Operativa",
+                "Ventas Globales"
+            ],
+            answer: [0, 1, 3],
+            explanation: "Los 6 pilares son: Excelencia Operativa, Seguridad, Fiabilidad, Rendimiento, Costos y Sostenibilidad."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un cliente nota que 'Amazon CloudFront' no aparece en el selector de Regiones de la consola, sino que aparece como 'Global'. ¿Por qué?",
+            options: [
+                "Es un error de la consola",
+                "CloudFront es un servicio global que opera fuera del contexto de una sola Región",
+                "CloudFront solo funciona en N. Virginia",
+                "El cliente no tiene permisos suficientes"
+            ],
+            answer: 1,
+            explanation: "CloudFront, al igual que IAM y Route 53, es un servicio global cuya infraestructura (Edge Locations) se extiende por todo el mundo independientemente de las Regiones específicas."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOptions = [];
+    let shuffledQuestions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz() {
+        shuffledQuestions = shuffle([...questions]);
+        currentQuestionIndex = 0;
+        score = 0;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const container = document.getElementById('quiz-container');
+        document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+        document.getElementById('score-display').innerText = score;
+        
+        // Update Progress Bar
+        const progress = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = progress + "%";
+
+        let optionsHtml = '';
+        q.options.forEach((opt, index) => {
+            optionsHtml += `
+                <div class="option" onclick="selectOption(${index})" id="opt-${index}">
+                    <span class="bullet">${String.fromCharCode(65 + index)}.</span>
+                    <span>${opt}</span>
+                </div>
+            `;
+        });
+
+        const multiHint = q.type === 'multi' ? `<div class="multi-choice-hint">(Seleccione todas las que correspondan)</div>` : '';
+
+        container.innerHTML = `
+            <div class="card">
+                <div style="color: #666; font-size: 0.8rem; margin-bottom: 5px;">${q.category}</div>
+                <div class="question-text">${q.question}</div>
+                ${multiHint}
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div id="feedback-area" class="feedback">
+                    <div id="feedback-status" style="font-weight: bold; margin-bottom: 10px;"></div>
+                    <div class="explanation" id="explanation-text"></div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('submit-btn').style.display = 'block';
+        document.getElementById('submit-btn').disabled = true;
+        document.getElementById('next-btn').style.display = 'none';
+        selectedOptions = [];
+    }
+
+    function selectOption(index) {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const optElement = document.getElementById(`opt-${index}`);
+
+        if (q.type === 'single') {
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            optElement.classList.add('selected');
+            selectedOptions = [index];
+        } else {
+            if (optElement.classList.contains('selected')) {
+                optElement.classList.remove('selected');
+                selectedOptions = selectedOptions.filter(i => i !== index);
+            } else {
+                optElement.classList.add('selected');
+                selectedOptions.push(index);
+            }
+        }
+
+        document.getElementById('submit-btn').disabled = selectedOptions.length === 0;
+    }
+
+    function checkAnswer() {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const explanationText = document.getElementById('explanation-text');
+        
+        let isCorrect = false;
+
+        if (q.type === 'single') {
+            isCorrect = selectedOptions[0] === q.answer;
+        } else {
+            const sortedSelected = [...selectedOptions].sort();
+            const sortedAnswer = [...q.answer].sort();
+            isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedAnswer);
+        }
+
+        if (isCorrect) {
+            score++;
+            feedbackStatus.innerText = "¡Correcto!";
+            feedbackStatus.style.color = "#2e7d32";
+            feedbackArea.style.backgroundColor = "var(--success)";
+            
+            selectedOptions.forEach(idx => {
+                document.getElementById(`opt-${idx}`).classList.add('correct');
+            });
+        } else {
+            feedbackStatus.innerText = "Incorrecto";
+            feedbackStatus.style.color = "#d32f2f";
+            feedbackArea.style.backgroundColor = "var(--error)";
+            
+            selectedOptions.forEach(idx => {
+                document.getElementById(`opt-${idx}`).classList.add('incorrect');
+            });
+
+            if (q.type === 'single') {
+                document.getElementById(`opt-${q.answer}`).classList.add('correct');
+            } else {
+                q.answer.forEach(idx => {
+                    document.getElementById(`opt-${idx}`).classList.add('correct');
+                });
+            }
+        }
+
+        explanationText.innerText = q.explanation;
+        feedbackArea.classList.add('visible');
+        
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+        document.getElementById('score-display').innerText = score;
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            showQuestion();
+        } else {
+            showDashboard();
+        }
+    }
+
+    function showDashboard() {
+        const container = document.getElementById('quiz-container');
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('progress-bar').style.width = "100%";
+        
+        const percentage = Math.round((score / shuffledQuestions.length) * 100);
+        let message = "";
+        if (percentage >= 80) message = "¡Excelente! Dominas la infraestructura global de AWS.";
+        else if (percentage >= 60) message = "Buen trabajo, pero repasa CloudFront y Route 53.";
+        else message = "Te recomendamos revisar los conceptos de Edge Locations y Multi-AZ.";
+
+        container.innerHTML = `
+            <div class="card dashboard">
+                <h2>Resultado Final</h2>
+                <div class="result-circle">${percentage}%</div>
+                <p>${score} de ${shuffledQuestions.length} correctas</p>
+                <p>${message}</p>
+                <button onclick="initQuiz()">Reiniciar Evaluación (Shuffle)</button>
+            </div>
+        `;
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

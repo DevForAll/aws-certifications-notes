@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem *)",
+      "PowerShell(Copy-Item *)",
+      "PowerShell(Remove-Item *)",
+      "PowerShell($items*)",
+      "PowerShell(powershell *)",
+      "PowerShell(cd *)",
+      "Bash(git *)",
+      "Bash(cd *)",
+      "Bash(ls *)"
+    ]
+  }
+}

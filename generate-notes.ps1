@@ -178,4 +178,11 @@ New-NoteHtml "$m3\Lección 2 - AWS Lambda - Parte 2.md"                         
 New-NoteHtml "$m3\Lección 3 - Contenedores y orquestación en AWS.md"                             "$m3\leccion-03-notas.html" "Leccion 3 - Contenedores y Orquestacion" "Lecci%C3%B3n%203%20-%20EVALUACION.html"
 New-NoteHtml "$m3\Lección 4 - Servicios de computación adicionales.md"                           "$m3\leccion-04-notas.html" "Leccion 4 - Servicios de Computacion"    "Lecci%C3%B3n%204%20-%20EVALUACION.html"
 
-Write-Host "`nListo. 22 paginas regeneradas con dark mode."
+$m4 = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\modulo-04-hacia-la-globalizacion"
+
+New-NoteHtml "$m4\Lección 1 - Introducción a la globalización.md"                        "$m4\leccion-01-notas.html" "Leccion 1 - Introduccion a la Globalizacion"      "Lecci%C3%B3n%201%20-%20EVALUACION.html"
+New-NoteHtml "$m4\Lección 2 - Elección de las regiones de AWS.md"                        "$m4\leccion-02-notas.html" "Leccion 2 - Eleccion de Regiones de AWS"          "Lecci%C3%B3n%202%20-%20EVALUACION.html"
+New-NoteHtml "$m4\Lección 3 - Profundizar en la infraestructura global de AWS.md"        "$m4\leccion-03-notas.html" "Leccion 3 - Infraestructura Global de AWS"         "Lecci%C3%B3n%203%20-%20EVALUACION.html"
+New-NoteHtml "$m4\Lección 4 - Infraestructura y automatización.md"                       "$m4\leccion-04-notas.html" "Leccion 4 - Infraestructura y Automatizacion"      "Lecci%C3%B3n%204%20-%20EVALUACION.html"
+
+Write-Host "`nListo. 26 paginas regeneradas con dark mode."

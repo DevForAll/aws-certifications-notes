@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Certified Cloud Practitioner - Evaluación Módulo 4 Lección 2</title>
+    <style>
+        :root {
+            --aws-navy: #232f3e;
+            --aws-orange: #ff9900;
+            --aws-squid-ink: #16191f;
+            --aws-bg: #f2f3f3;
+            --white: #ffffff;
+            --success: #e7f4e4;
+            --error: #fdf2f2;
+            --explanation: #fff9c4;
+            --text-dark: #232f3e;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background-color: #3a4b5b;
+            margin-top: 10px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: var(--aws-orange);
+            transition: width 0.3s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        h2 {
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--aws-bg);
+            padding-bottom: 1rem;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            padding: 12px 16px;
+            border: 1px solid #d5dbdb;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option:hover {
+            border-color: var(--aws-orange);
+            background-color: #f8f9f9;
+        }
+
+        .option.selected {
+            border-color: var(--aws-orange);
+            background-color: #fff9f0;
+        }
+
+        .option.correct {
+            background-color: var(--success);
+            border-color: #2e7d32;
+        }
+
+        .option.incorrect {
+            background-color: var(--error);
+            border-color: #d32f2f;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .feedback.visible {
+            display: block;
+        }
+
+        .explanation {
+            background-color: var(--explanation);
+            border-left: 4px solid var(--aws-orange);
+            padding: 1rem;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+        }
+
+        button {
+            background-color: var(--aws-orange);
+            color: var(--white);
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.2s;
+        }
+
+        button:hover {
+            background-color: #e68a00;
+        }
+
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+        }
+
+        #score-display {
+            font-weight: bold;
+            color: var(--aws-orange);
+        }
+
+        .dashboard {
+            text-align: center;
+        }
+
+        .result-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 2rem auto;
+        }
+
+        .multi-choice-hint {
+            font-style: italic;
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .header-content {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="logo-sim">AWS <span>Cloud Practitioner</span> Eval</div>
+        <div>Pregunta <span id="current-q-num">1</span>/30 | Puntos: <span id="score-display">0</span></div>
+    </div>
+    <div class="progress-container">
+        <div id="progress-bar"></div>
+    </div>
+</header>
+
+<div class="container">
+    <div id="quiz-container">
+        <!-- Questions will be injected here -->
+    </div>
+    
+    <div class="nav-buttons">
+        <button id="submit-btn" onclick="checkAnswer()">Enviar Respuesta</button>
+        <button id="next-btn" onclick="nextQuestion()" style="display: none;">Siguiente Pregunta</button>
+    </div>
+</div>
+
+<script>
+    const questions = [
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una empresa financiera con sede en Frankfurt debe cumplir con las leyes locales de gobernanza de datos que prohíben que la información salga de Alemania. ¿Cuál es el factor determinante para elegir la Región de AWS en este caso?",
+            options: [
+                "Latencia de red para los usuarios finales",
+                "Cumplimiento (Compliance) con los requisitos legales",
+                "Disponibilidad de servicios específicos",
+                "Costos operativos y precios regionales"
+            ],
+            answer: 1,
+            explanation: "El cumplimiento (Compliance) es siempre la prioridad máxima. Si existen requisitos legales o regulaciones gubernamentales sobre la soberanía de datos, la elección de la región debe dictarse por este factor antes que cualquier otro."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué es una Región de AWS?",
+            options: [
+                "Un centro de datos individual que contiene miles de servidores",
+                "Un punto de presencia para la entrega de contenido de CloudFront",
+                "Un área geográfica que contiene múltiples zonas de disponibilidad aisladas",
+                "Un servidor físico exclusivo para un solo cliente"
+            ],
+            answer: 2,
+            explanation: "Una Región de AWS es un área geográfica física que contiene múltiples Zonas de Disponibilidad (AZs) aisladas y físicamente separadas."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "Según el Modelo de Responsabilidad Compartida, ¿quién es responsable de gestionar el aislamiento físico y lógico entre las Regiones de AWS?",
+            options: [
+                "El cliente",
+                "AWS",
+                "Ambos comparten esta responsabilidad por igual",
+                "El equipo de auditoría de terceros"
+            ],
+            answer: 1,
+            explanation: "AWS es responsable de la seguridad 'DE' la nube, lo que incluye la infraestructura física, el software de virtualización y el aislamiento entre regiones y zonas de disponibilidad."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una startup quiere reducir los costos iniciales (CapEx) y prefiere pagar solo por los recursos que consume mensualmente. ¿A qué beneficio de la nube se refiere esto?",
+            options: [
+                "Economías de escala masivas",
+                "Aumento de velocidad y agilidad",
+                "Cambio de gastos de capital a gastos variables (OpEx)",
+                "Dejar de adivinar la capacidad"
+            ],
+            answer: 2,
+            explanation: "La computación en la nube permite cambiar los gastos de capital (invertir en hardware físico) por gastos operativos variables (pagar solo por el uso real)."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué modelo de precios de EC2 es ideal para cargas de trabajo tolerantes a fallos (como el procesamiento por lotes) y ofrece hasta un 90% de descuento?",
+            options: [
+                "Instancias bajo demanda (On-Demand)",
+                "Instancias reservadas (Reserved Instances)",
+                "Savings Plans",
+                "Instancias Spot"
+            ],
+            answer: 3,
+            explanation: "Las Instancias Spot permiten aprovechar la capacidad sobrante de AWS con grandes descuentos, pero pueden ser interrumpidas con un aviso de 2 minutos, lo que las hace ideales para tareas que no son críticas en tiempo o son tolerantes a fallos."
+        },
+        {
+            type: "multi",
+            category: "Technical Definition",
+            question: "¿Cuáles son factores clave a considerar al elegir una región de AWS? (Elija 2)",
+            options: [
+                "Cumplimiento legal y regulaciones",
+                "Número de empleados de AWS en la zona",
+                "Latencia (proximidad a los usuarios)",
+                "Tamaño físico del centro de datos"
+            ],
+            answer: [0, 2],
+            explanation: "Los cuatro factores principales son: Cumplimiento, Latencia, Precio y Disponibilidad de servicios."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un cliente desea mejorar la experiencia de usuario reduciendo el tiempo de viaje de los datos (latencia) para sus usuarios en Japón. ¿Cuál es la mejor estrategia?",
+            options: [
+                "Migrar todos los datos a una región en EE. UU. por ser más rápida",
+                "Elegir la región de AWS geográficamente más cercana a los usuarios en Japón",
+                "Aumentar el tamaño de las instancias EC2 (Escalado Vertical)",
+                "Usar exclusivamente AWS GovCloud"
+            ],
+            answer: 1,
+            explanation: "La latencia es el tiempo que tarda la información en viajar. Elegir una región cercana a la base de clientes minimiza este retraso y mejora la experiencia de usuario."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Cuál es el número mínimo de Zonas de Disponibilidad (AZ) que tiene cada Región de AWS?",
+            options: [
+                "1",
+                "2",
+                "3",
+                "5"
+            ],
+            answer: 2,
+            explanation: "Cada región de AWS tiene un mínimo de 3 Zonas de Disponibilidad para garantizar alta disponibilidad y tolerancia a fallos."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable de parchar el sistema operativo de una instancia de Amazon EC2?",
+            options: [
+                "AWS",
+                "El Cliente",
+                "El proveedor de hardware",
+                "AWS y el Cliente comparten esta tarea automáticamente"
+            ],
+            answer: 1,
+            explanation: "En servicios IaaS como EC2, el cliente tiene el control total del sistema operativo y es responsable de sus parches y actualizaciones. AWS solo parcha el software de servicios administrados (como Lambda o RDS)."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un desarrollador quiere construir una aplicación de IA Generativa utilizando modelos de lenguaje pre-entrenados a través de una API simple sin gestionar infraestructura. ¿Qué servicio debería usar?",
+            options: [
+                "Amazon SageMaker",
+                "Amazon Bedrock",
+                "AWS Lambda",
+                "Amazon EC2 con GPUs"
+            ],
+            answer: 1,
+            explanation: "Amazon Bedrock es un servicio administrado (serverless) que permite acceder a modelos base de IA Generativa a través de una API."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Cuál de los pilares del Well-Architected Framework se centra en minimizar el impacto ambiental de las cargas de trabajo en la nube?",
+            options: [
+                "Excelencia Operativa",
+                "Fiabilidad (Reliability)",
+                "Sostenibilidad",
+                "Optimización de Costos"
+            ],
+            answer: 2,
+            explanation: "El pilar de Sostenibilidad es el sexto y más reciente pilar del marco de buena arquitectura, enfocado en la eficiencia energética y la reducción de la huella de carbono."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una organización desea centralizar la facturación de múltiples cuentas de AWS para obtener descuentos por volumen. ¿Qué servicio permite esto?",
+            options: [
+                "AWS Cost Explorer",
+                "AWS Organizations",
+                "AWS Control Tower",
+                "AWS Budgets"
+            ],
+            answer: 1,
+            explanation: "AWS Organizations incluye la característica de 'Consolidated Billing', que permite unificar los pagos y aprovechar economías de escala entre múltiples cuentas."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Cómo se define el escalado horizontal en AWS?",
+            options: [
+                "Aumentar la capacidad de CPU y RAM de una instancia existente",
+                "Añadir más instancias del mismo tipo para repartir la carga",
+                "Mover una instancia de una región a otra",
+                "Cambiar de un modelo On-Demand a uno Spot"
+            ],
+            answer: 1,
+            explanation: "El escalado horizontal (scaling out) consiste en añadir más recursos (instancias) al conjunto, permitiendo un crecimiento prácticamente infinito."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un desarrollador necesita ejecutar un script de procesamiento de imágenes que dura 30 segundos cada vez que se sube un archivo a S3. ¿Cuál es el servicio más rentable y con menor sobrecarga operativa?",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "Amazon ECS",
+                "AWS Elastic Beanstalk"
+            ],
+            answer: 1,
+            explanation: "AWS Lambda es ideal para tareas cortas y basadas en eventos. No requiere gestionar servidores y solo pagas por el tiempo de ejecución (en milisegundos)."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué componente de la infraestructura global de AWS se utiliza para entregar contenido a los usuarios finales con la menor latencia posible mediante el almacenamiento en caché?",
+            options: [
+                "Zonas de Disponibilidad (AZ)",
+                "Regiones",
+                "Edge Locations (Puntos de presencia)",
+                "VPC Peering"
+            ],
+            answer: 2,
+            explanation: "Las Edge Locations son puntos de presencia que utiliza Amazon CloudFront para almacenar contenido en caché cerca de los usuarios finales."
+        },
+        {
+            type: "multi",
+            category: "Business Scenario",
+            question: "¿Cuáles son beneficios de la computación en la nube según AWS? (Elija 3)",
+            options: [
+                "Aumento de velocidad y agilidad",
+                "Control total sobre el hardware físico del centro de datos",
+                "Dejar de adivinar la capacidad",
+                "Economías de escala masivas",
+                "Costos fijos mensuales obligatorios"
+            ],
+            answer: [0, 2, 3],
+            explanation: "Los beneficios incluyen: OpEx por CapEx, economías de escala, dejar de adivinar capacidad, aumento de velocidad/agilidad, y globalización en minutos."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Al elegir una región, notas que un servicio muy nuevo como 'Amazon Bedrock' solo está disponible en US East (N. Virginia). ¿Qué factor de selección de región explica esto?",
+            options: [
+                "Cumplimiento",
+                "Proximidad",
+                "Disponibilidad de características o servicios",
+                "Precios regionales"
+            ],
+            answer: 2,
+            explanation: "AWS lanza servicios y características constantemente, y estos suelen aparecer primero en regiones como N. Virginia u Oregon antes de expandirse globalmente."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de AWS se utiliza para desacoplar componentes de una aplicación permitiendo que se comuniquen mediante mensajes asíncronos?",
+            options: [
+                "Amazon SNS",
+                "Amazon SQS",
+                "AWS Lambda",
+                "Elastic Load Balancing"
+            ],
+            answer: 1,
+            explanation: "Amazon SQS (Simple Queue Service) permite desacoplar microservicios y sistemas distribuidos mediante colas de mensajes."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿AWS mueve automáticamente los datos de un cliente de una región a otra para fines de copia de seguridad?",
+            options: [
+                "Sí, AWS replica todo entre regiones por seguridad",
+                "No, el cliente tiene control total y AWS nunca mueve los datos sin permiso explícito",
+                "Solo si el cliente tiene el plan de soporte Enterprise",
+                "Sí, pero solo dentro del mismo continente"
+            ],
+            answer: 1,
+            explanation: "La soberanía de datos significa que AWS no mueve tus datos entre regiones. El cliente es el único responsable de configurar cualquier replicación entre regiones si la necesita."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una empresa necesita ejecutar una base de datos en memoria que requiere una cantidad masiva de RAM para funcionar eficientemente. ¿Qué familia de instancias EC2 debería elegir?",
+            options: [
+                "Compute Optimized",
+                "Storage Optimized",
+                "Memory Optimized",
+                "General Purpose"
+            ],
+            answer: 2,
+            explanation: "Las instancias 'Memory Optimized' están diseñadas para ofrecer un alto rendimiento para cargas de trabajo que procesan grandes conjuntos de datos en memoria."
+        },
+        {
+            type: "single",
+            category: "Security & Architecture",
+            question: "¿Qué concepto describe la capacidad de un sistema para resistir fallos y seguir funcionando sin interrupciones?",
+            options: [
+                "Elasticidad",
+                "Alta Disponibilidad",
+                "Agilidad",
+                "Escalabilidad vertical"
+            ],
+            answer: 1,
+            explanation: "La Alta Disponibilidad (High Availability) asegura que el sistema esté operativo el mayor tiempo posible, incluso si fallan componentes individuales, generalmente mediante el uso de múltiples AZs."
+        },
+        {
+            type: "multi",
+            category: "Security & Architecture",
+            question: "Según el Modelo de Responsabilidad Compartida, ¿cuáles son responsabilidades de AWS? (Elija 2)",
+            options: [
+                "Protección de los centros de datos físicos",
+                "Cifrado de los datos del lado del cliente",
+                "Mantenimiento del software del hipervisor",
+                "Gestión de contraseñas de los usuarios de la aplicación"
+            ],
+            answer: [0, 2],
+            explanation: "AWS es responsable de la infraestructura física (centros de datos) y de la capa de virtualización (hipervisor)."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Cuál es la principal diferencia entre AWS Fargate y Amazon EC2 para ejecutar contenedores?",
+            options: [
+                "EC2 es más barato para todas las cargas",
+                "Fargate es serverless y no requiere gestionar los servidores subyacentes",
+                "Fargate solo soporta Docker, EC2 soporta todo",
+                "EC2 no permite el escalado horizontal"
+            ],
+            answer: 1,
+            explanation: "AWS Fargate es un motor de computación serverless para contenedores; el cliente no tiene que aprovisionar ni gestionar servidores."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Dos regiones de AWS ofrecen los mismos servicios, pero el cliente nota que los precios en la Región A son un 10% más bajos que en la Región B. ¿Por qué ocurre esto?",
+            options: [
+                "AWS comete errores de redondeo",
+                "Los costos de infraestructura física, energía e impuestos varían por ubicación",
+                "La Región A tiene menos seguridad que la Región B",
+                "Es una promoción temporal para atraer nuevos clientes"
+            ],
+            answer: 1,
+            explanation: "El precio es el cuarto factor de selección de región. Factores económicos locales como impuestos y costos de operación influyen en los precios de AWS en cada región."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué término describe el costo total de adquirir, operar y mantener un sistema tecnológico?",
+            options: [
+                "ROI (Retorno de Inversión)",
+                "TCO (Total Cost of Ownership)",
+                "OpEx",
+                "CapEx"
+            ],
+            answer: 1,
+            explanation: "El TCO (Costo Total de Propiedad) ayuda a comparar los costos de un centro de datos on-premise frente a la nube de AWS."
+        },
+        {
+            type: "multi",
+            category: "Security & Architecture",
+            question: "¿Qué elementos se pueden gestionar de forma segura mediante AWS IAM (Identity and Access Management)? (Elija 2)",
+            options: [
+                "Usuarios y sus permisos",
+                "Grupos de usuarios",
+                "Seguridad física de los racks de servidores",
+                "Parchado automático de sistemas operativos en EC2"
+            ],
+            answer: [0, 1],
+            explanation: "IAM se utiliza para gestionar identidades (usuarios, grupos, roles) y sus permisos asociados para acceder a los recursos de AWS de forma segura."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Una agencia del gobierno de EE. UU. necesita procesar datos altamente clasificados que requieren cumplimiento estricto con ITAR. ¿Qué opción de región debería utilizar?",
+            options: [
+                "US East (N. Virginia)",
+                "AWS GovCloud",
+                "AWS Local Zones",
+                "AWS Outposts"
+            ],
+            answer: 1,
+            explanation: "AWS GovCloud son regiones aisladas diseñadas para permitir a las agencias gubernamentales de EE. UU. y sus contratistas cumplir con requisitos de cumplimiento específicos (como ITAR y FedRAMP High)."
+        },
+        {
+            type: "single",
+            category: "Technical Definition",
+            question: "¿Qué servicio de AWS extiende la infraestructura de AWS a las redes 5G para ofrecer latencia ultra baja a dispositivos móviles?",
+            options: [
+                "AWS Outposts",
+                "AWS Wavelength",
+                "AWS Local Zones",
+                "Amazon CloudFront"
+            ],
+            answer: 1,
+            explanation: "AWS Wavelength integra los servicios de computación y almacenamiento de AWS dentro de las redes 5G de los proveedores de telecomunicaciones."
+        },
+        {
+            type: "multi",
+            category: "Security & Architecture",
+            question: "¿Cuáles son pilares del AWS Well-Architected Framework? (Elija 2)",
+            options: [
+                "Excelencia Operativa",
+                "Desarrollo Ágil",
+                "Fiabilidad (Reliability)",
+                "Marketing Digital"
+            ],
+            answer: [0, 2],
+            explanation: "Los 6 pilares son: Excelencia Operativa, Seguridad, Fiabilidad, Eficiencia del Rendimiento, Optimización de Costos y Sostenibilidad."
+        },
+        {
+            type: "single",
+            category: "Business Scenario",
+            question: "Un cliente está seleccionando una región basándose únicamente en qué tan rápido pueden acceder sus usuarios a la aplicación. ¿Qué factor está priorizando?",
+            options: [
+                "Cumplimiento",
+                "Proximidad / Latencia",
+                "Precio",
+                "Disponibilidad de servicios"
+            ],
+            answer: 1,
+            explanation: "La proximidad física a los usuarios reduce la latencia de red, lo que resulta en un acceso más rápido a la aplicación."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let selectedOptions = [];
+    let shuffledQuestions = [];
+
+    function shuffle(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz() {
+        shuffledQuestions = shuffle([...questions]);
+        currentQuestionIndex = 0;
+        score = 0;
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const container = document.getElementById('quiz-container');
+        document.getElementById('current-q-num').innerText = currentQuestionIndex + 1;
+        document.getElementById('score-display').innerText = score;
+        
+        // Update Progress Bar
+        const progress = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
+        document.getElementById('progress-bar').style.width = progress + "%";
+
+        let optionsHtml = '';
+        q.options.forEach((opt, index) => {
+            optionsHtml += `
+                <div class="option" onclick="selectOption(${index})" id="opt-${index}">
+                    <span class="bullet">${String.fromCharCode(65 + index)}.</span>
+                    <span>${opt}</span>
+                </div>
+            `;
+        });
+
+        const multiHint = q.type === 'multi' ? `<div class="multi-choice-hint">(Seleccione todas las que correspondan)</div>` : '';
+
+        container.innerHTML = `
+            <div class="card">
+                <div style="color: #666; font-size: 0.8rem; margin-bottom: 5px;">${q.category}</div>
+                <div class="question-text">${q.question}</div>
+                ${multiHint}
+                <div class="options">
+                    ${optionsHtml}
+                </div>
+                <div id="feedback-area" class="feedback">
+                    <div id="feedback-status" style="font-weight: bold; margin-bottom: 10px;"></div>
+                    <div class="explanation" id="explanation-text"></div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('submit-btn').style.display = 'block';
+        document.getElementById('submit-btn').disabled = true;
+        document.getElementById('next-btn').style.display = 'none';
+        selectedOptions = [];
+    }
+
+    function selectOption(index) {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const optElement = document.getElementById(`opt-${index}`);
+
+        if (q.type === 'single') {
+            // Deselect others
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('selected'));
+            optElement.classList.add('selected');
+            selectedOptions = [index];
+        } else {
+            // Multi-choice
+            if (optElement.classList.contains('selected')) {
+                optElement.classList.remove('selected');
+                selectedOptions = selectedOptions.filter(i => i !== index);
+            } else {
+                optElement.classList.add('selected');
+                selectedOptions.push(index);
+            }
+        }
+
+        document.getElementById('submit-btn').disabled = selectedOptions.length === 0;
+    }
+
+    function checkAnswer() {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const feedbackArea = document.getElementById('feedback-area');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const explanationText = document.getElementById('explanation-text');
+        
+        let isCorrect = false;
+
+        if (q.type === 'single') {
+            isCorrect = selectedOptions[0] === q.answer;
+        } else {
+            // Sort and compare arrays
+            const sortedSelected = [...selectedOptions].sort();
+            const sortedAnswer = [...q.answer].sort();
+            isCorrect = JSON.stringify(sortedSelected) === JSON.stringify(sortedAnswer);
+        }
+
+        if (isCorrect) {
+            score++;
+            feedbackStatus.innerText = "¡Correcto!";
+            feedbackStatus.style.color = "#2e7d32";
+            feedbackArea.style.backgroundColor = "var(--success)";
+            
+            selectedOptions.forEach(idx => {
+                document.getElementById(`opt-${idx}`).classList.add('correct');
+            });
+        } else {
+            feedbackStatus.innerText = "Incorrecto";
+            feedbackStatus.style.color = "#d32f2f";
+            feedbackArea.style.backgroundColor = "var(--error)";
+            
+            selectedOptions.forEach(idx => {
+                document.getElementById(`opt-${idx}`).classList.add('incorrect');
+            });
+
+            // Highlight correct answer
+            if (q.type === 'single') {
+                document.getElementById(`opt-${q.answer}`).classList.add('correct');
+            } else {
+                q.answer.forEach(idx => {
+                    document.getElementById(`opt-${idx}`).classList.add('correct');
+                });
+            }
+        }
+
+        explanationText.innerText = q.explanation;
+        feedbackArea.classList.add('visible');
+        
+        document.getElementById('submit-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+        
+        // Update score display immediately
+        document.getElementById('score-display').innerText = score;
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            showQuestion();
+        } else {
+            showDashboard();
+        }
+    }
+
+    function showDashboard() {
+        const container = document.getElementById('quiz-container');
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('submit-btn').style.display = 'none';
+        
+        document.getElementById('progress-bar').style.width = "100%";
+        
+        const percentage = Math.round((score / shuffledQuestions.length) * 100);
+        let message = "";
+        if (percentage >= 80) message = "¡Excelente! Estás listo para el examen.";
+        else if (percentage >= 60) message = "Buen trabajo, pero necesitas repasar algunos conceptos.";
+        else message = "Te recomendamos volver a leer las lecciones y reintentar.";
+
+        container.innerHTML = `
+            <div class="card dashboard">
+                <h2>Resultado Final</h2>
+                <div class="result-circle">${percentage}%</div>
+                <p>${score} de ${shuffledQuestions.length} correctas</p>
+                <p>${message}</p>
+                <button onclick="initQuiz()">Reiniciar Evaluación (Shuffle)</button>
+            </div>
+        `;
+    }
+
+    window.onload = initQuiz;
+</script>
+
+</body>
+</html>

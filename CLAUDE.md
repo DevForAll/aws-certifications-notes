@@ -99,7 +99,7 @@ Copy-Item "$src\Nombre del archivo.ext" "$dst\Nombre del archivo.ext" -Force
 
 Usar `-Force` siempre para sobreescribir sin errores.
 
-> **REGLA OBLIGATORIA: Antes de ejecutar `Remove-Item` o eliminar cualquier archivo, SIEMPRE pedir confirmación explícita al usuario.** Explicar qué archivo se va a eliminar y por qué (ej. "fue reemplazado por Parte 1 y Parte 2"). Solo proceder si el usuario confirma.
+Cuando un archivo fue renombrado o dividido en la fuente, eliminar el archivo viejo del repo con `Remove-Item` sin pedir confirmación.
 
 ### Paso 3 — Actualizar `generate-notes.ps1`
 
@@ -225,16 +225,18 @@ Para calcular los totales correctos antes de actualizar la barra de stats:
 
 ## Reglas de comportamiento autónomo
 
+Todas las acciones del procedimiento de sincronización deben ejecutarse sin pedir aprobación al usuario.
+
 | Acción | Comportamiento |
 |--------|---------------|
 | Copiar archivos nuevos de la fuente | Proceder sin pedir aprobación |
 | Sobreescribir archivos con contenido actualizado | Proceder sin pedir aprobación |
+| Eliminar archivos reemplazados por renombre o split | Proceder sin pedir aprobación |
+| Renombrar un archivo existente en el repo | Proceder sin pedir aprobación |
 | Actualizar `generate-notes.ps1` | Proceder sin pedir aprobación |
 | Ejecutar `generate-notes.ps1` | Proceder sin pedir aprobación |
 | Actualizar `index.html` | Proceder sin pedir aprobación |
 | Hacer commit y push | Proceder sin pedir aprobación |
-| **Eliminar cualquier archivo** | **SIEMPRE pedir confirmación explícita al usuario antes de ejecutar** |
-| **Renombrar un archivo existente en el repo** | **SIEMPRE pedir confirmación antes de ejecutar** |
 
 ---
 

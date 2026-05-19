@@ -27,7 +27,8 @@ aws-certifications-notes/
     ├── modulo-02-computacion-en-la-nube/
     ├── modulo-03-servicios-de-computacion/
     ├── modulo-04-hacia-la-globalizacion/
-    └── modulo-05-redes/
+    ├── modulo-05-redes/
+    └── repaso-general/               ← Resúmenes maestros y evaluaciones simuladas
 ```
 
 ### Estructura de carpetas de la fuente
@@ -55,6 +56,9 @@ CERTIFIED AWS CLOUD PRACTITIONER/
 | `transcripcion_leccion_N.md` | **NO copiar — no se usa en la web** |
 | *(generado)* | `leccion-0N-notas.html` |
 | *(generado)* | `leccion-0N-pX-notas.html` (cuando hay Parte 1/2) |
+| `Resumen_Maestro_Modulos_N_y_M.md` | Mismo nombre exacto (en `repaso-general/`) |
+| `Evaluacion_Simulada_*.html` | Mismo nombre exacto (en `repaso-general/`) |
+| *(generado)* | `resumen-mNmM-notas.html` (en `repaso-general/`) |
 
 ---
 
@@ -79,7 +83,21 @@ Write-Host "Count: $($items.Count)"; foreach ($i in $items) { Write-Host $i.Name
 Buscar diferencias en:
 - Archivos nuevos (evaluaciones HTML, lecciones nuevas)
 - Archivos que cambiaron de nombre (ej. lección split en Parte 1/Parte 2)
-- Archivos con contenido actualizado (verificar primeras líneas con `Read`)
+- Archivos con contenido actualizado (verificar por fecha de modificación, ver abajo)
+
+**Comparar por fecha de modificación** (detecta archivos actualizados sin abrir uno a uno):
+
+```powershell
+$src = "C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\MODULO N - Nombre"
+$dst = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\modulo-0N-nombre"
+$files = @("Lección 1 - Titulo.md", "Lección 1 - EVALUACION.html")  # lista de archivos a comparar
+foreach ($f in $files) {
+    $s = (Get-Item "$src\$f").LastWriteTime
+    $d = (Get-Item "$dst\$f").LastWriteTime
+    $match = if ($s -le $d) { "OK" } else { "DESACTUALIZADO" }
+    Write-Host "$match  $f  (fuente: $s | repo: $d)"
+}
+```
 
 **Ignorar siempre** los archivos `transcripcion_*.md` — son material en bruto de Obsidian que no tiene uso en el portal web.
 
@@ -96,8 +114,22 @@ Copy-Item "$src\Nombre del archivo.ext" "$dst\Nombre del archivo.ext" -Force
 **No copiar nunca** archivos `transcripcion_*.md`. Solo copiar:
 - Archivos `.md` de notas de lección (`Lección N - Título.md`)
 - Archivos `.html` de evaluaciones (`Lección N - EVALUACION.html`)
+- Para `REPASO_GENERAL`: `Resumen_Maestro_*.md` y `Evaluacion_Simulada_*.html`
 
 Usar `-Force` siempre para sobreescribir sin errores.
+
+**Copiar archivos de REPASO_GENERAL** (si la carpeta no existe en el repo, crearla primero):
+
+```powershell
+# Crear carpeta si no existe
+New-Item -ItemType Directory -Force "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\repaso-general" | Out-Null
+
+$src = "C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\REPASO_GENERAL"
+$dst = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\repaso-general"
+Copy-Item "$src\Resumen_Maestro_Modulos_1_y_2.md"        "$dst\Resumen_Maestro_Modulos_1_y_2.md"        -Force
+Copy-Item "$src\Resumen_Maestro_Modulos_3_y_4.md"        "$dst\Resumen_Maestro_Modulos_3_y_4.md"        -Force
+Copy-Item "$src\Evaluacion_Simulada_Modulos_3_y_4.html"  "$dst\Evaluacion_Simulada_Modulos_3_y_4.html"  -Force
+```
 
 Cuando un archivo fue renombrado o dividido en la fuente, eliminar el archivo viejo del repo con `Remove-Item` sin pedir confirmación.
 
@@ -120,6 +152,17 @@ New-NoteHtml "$mN\Lección 4 - Sin eval.md" "$mN\leccion-04-notas.html" "Titulo"
 - `Lección 2 - EVALUACION PARTE 1.html` → `Lecci%C3%B3n%202%20-%20EVALUACION%20PARTE%201.html`
 
 Actualizar también el mensaje final del script (`Write-Host "Listo. N paginas regeneradas..."`) con el nuevo total.
+
+**Entradas de `repaso-general` en `generate-notes.ps1`** (ya incluidas desde la sincronización de M4/Repaso):
+
+```powershell
+$rg = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\repaso-general"
+
+New-NoteHtml "$rg\Resumen_Maestro_Modulos_1_y_2.md"  "$rg\resumen-m1m2-notas.html" "Resumen Maestro - Modulos 1 y 2" ""
+New-NoteHtml "$rg\Resumen_Maestro_Modulos_3_y_4.md"  "$rg\resumen-m3m4-notas.html" "Resumen Maestro - Modulos 3 y 4" "Evaluacion_Simulada_Modulos_3_y_4.html"
+```
+
+> Nota: las eval URLs del repaso no llevan encoding porque no tienen tildes ni espacios.
 
 ### Paso 4 — Ejecutar el script para regenerar HTMLs
 
@@ -175,6 +218,36 @@ El portal `index.html` tiene tres secciones que pueden necesitar actualización:
     </div>
     <div class="lesson-list">
         <!-- filas de lección aquí -->
+    </div>
+</div>
+```
+
+**Sección Repaso General en `index.html`** — ya existe en el portal. Si se agregan nuevos resúmenes o evaluaciones simuladas, agregar filas dentro del `<div class="lesson-list">` de esa tarjeta:
+
+```html
+<!-- Fila sin evaluacion -->
+<div class="lesson-row">
+    <div class="lesson-icon">📖</div>
+    <div class="lesson-info">
+        <div class="lesson-name">Resumen Maestro — Modulos N y M</div>
+        <div class="lesson-desc">descripcion breve</div>
+    </div>
+    <div class="item-actions">
+        <a href="cloud-practitioner/repaso-general/resumen-mNmM-notas.html" class="act-notes">Notas</a>
+        <span class="act-none">Sin eval</span>
+    </div>
+</div>
+
+<!-- Fila con evaluacion simulada -->
+<div class="lesson-row">
+    <div class="lesson-icon">📖</div>
+    <div class="lesson-info">
+        <div class="lesson-name">Resumen Maestro — Modulos N y M</div>
+        <div class="lesson-desc">descripcion breve</div>
+    </div>
+    <div class="item-actions">
+        <a href="cloud-practitioner/repaso-general/resumen-mNmM-notas.html" class="act-notes">Notas</a>
+        <a href="cloud-practitioner/repaso-general/Evaluacion_Simulada_Modulos_N_y_M.html" class="act-eval">Eval</a>
     </div>
 </div>
 ```

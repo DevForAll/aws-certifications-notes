@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación AWS CLF-C02 - Módulo 5, Lección 1 (Acumulativo)</title>
+    <style>
+        :root {
+            --aws-navy: #232F3E;
+            --aws-orange: #FF9900;
+            --aws-squid-ink: #16191f;
+            --aws-light-grey: #f2f3f3;
+            --white: #ffffff;
+            --success: #e7f4e4;
+            --error: #fdf0ef;
+            --explanation: #FFF9C4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', 'Helvetica Neue', Roboto, Arial, sans-serif;
+            background-color: var(--aws-light-grey);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-squid-ink);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--white);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-sim span {
+            color: var(--aws-orange);
+            margin-left: 5px;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+
+        .progress-bar {
+            background-color: #414d5c;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: var(--aws-orange);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .stats {
+            font-size: 0.9rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background-color: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .question-meta {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .question-text {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option-item {
+            margin-bottom: 0.75rem;
+        }
+
+        .option-button {
+            width: 100%;
+            text-align: left;
+            padding: 1rem;
+            border: 1px solid #d5dbdb;
+            border-radius: 4px;
+            background-color: var(--white);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .option-button:hover:not(:disabled) {
+            border-color: var(--aws-orange);
+            background-color: #faffff;
+        }
+
+        .option-button.selected {
+            border-color: var(--aws-orange);
+            border-width: 2px;
+        }
+
+        .option-button:disabled {
+            cursor: default;
+        }
+
+        .option-button.correct {
+            background-color: var(--success);
+            border-color: #2e7d32;
+        }
+
+        .option-button.wrong {
+            background-color: var(--error);
+            border-color: #d32f2f;
+        }
+
+        .feedback {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .feedback.visible {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; height: 0; }
+            to { opacity: 1; height: auto; }
+        }
+
+        .feedback-title {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .explanation-box {
+            background-color: var(--explanation);
+            padding: 1rem;
+            border-left: 4px solid var(--aws-orange);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+
+        .btn-next {
+            background-color: var(--aws-orange);
+            color: var(--white);
+        }
+
+        .btn-next:hover {
+            background-color: #ec8b00;
+        }
+
+        .btn-submit {
+            background-color: var(--aws-orange);
+            color: var(--white);
+            margin-top: 1rem;
+        }
+
+        #dashboard {
+            background-color: var(--white);
+            padding: 3rem;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 10px solid var(--aws-orange);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem auto;
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn-retry {
+            background-color: var(--aws-navy);
+            color: var(--white);
+        }
+
+        .multi-choice-hint {
+            font-style: italic;
+            color: #d32f2f;
+            margin-bottom: 1rem;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-content">
+        <div class="logo-sim">AWS <span>Cloud Practitioner</span></div>
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div id="progressFill" class="progress-fill"></div>
+            </div>
+        </div>
+        <div class="stats">
+            <span id="currentCount">1</span> / <span id="totalCount">35</span> | 
+            Puntos: <span id="currentScore">0</span>
+        </div>
+    </div>
+</header>
+
+<main>
+    <div id="quizContainer">
+        <!-- Preguntas se inyectarán aquí -->
+    </div>
+
+    <div id="dashboard">
+        <h1>¡Evaluación Completada!</h1>
+        <div class="score-circle">
+            <span id="finalScore">0</span>%
+            <div class="score-label">Puntaje</div>
+        </div>
+        <p id="resultMessage"></p>
+        <div class="actions">
+            <button class="btn btn-retry" onclick="restartQuiz()">Reiniciar (Shuffle)</button>
+            <button class="btn btn-next" onclick="retryFailed()">Reintentar fallidas</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    const questions = [
+        {
+            type: "single",
+            category: "Conceptos de Nube",
+            question: "¿Cuál de los siguientes beneficios de la nube permite a las empresas dejar de adivinar la capacidad necesaria y escalar según la demanda real?",
+            options: [
+                "Agilidad",
+                "Elasticidad",
+                "Economías de escala",
+                "Gasto de capital (CapEx)"
+            ],
+            answer: 1,
+            explanation: "La **Elasticidad** es la capacidad de adquirir recursos según se necesiten y liberarlos cuando no, eliminando la necesidad de predecir la capacidad máxima necesaria."
+        },
+        {
+            type: "single",
+            category: "Seguridad",
+            question: "Según el Modelo de Responsabilidad Compartida, ¿quién es responsable de la seguridad física de los centros de datos de AWS?",
+            options: [
+                "El cliente",
+                "AWS",
+                "Ambos comparten la responsabilidad física",
+                "El proveedor de servicios de internet"
+            ],
+            answer: 1,
+            explanation: "AWS es responsable de la seguridad **DE** la nube, lo cual incluye la infraestructura física (centros de datos, hardware, redes físicas, refrigeración)."
+        },
+        {
+            type: "single",
+            category: "Redes",
+            question: "¿Cuál es el componente de AWS que actúa como un firewall virtual para controlar el tráfico entrante y saliente a nivel de INSTANCIA EC2?",
+            options: [
+                "Network ACL (NACL)",
+                "Internet Gateway",
+                "Security Group",
+                "Route Table"
+            ],
+            answer: 2,
+            explanation: "Los **Security Groups** operan a nivel de instancia y son 'Stateful' (con estado), lo que significa que si permites el tráfico de entrada, el de salida se permite automáticamente."
+        },
+        {
+            type: "single",
+            category: "Computación",
+            question: "Un desarrollador quiere ejecutar un script de Python de forma asíncrona sin tener que aprovisionar ni gestionar servidores. ¿Qué servicio es el más adecuado?",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "Amazon Lightsail",
+                "AWS Batch"
+            ],
+            answer: 1,
+            explanation: "**AWS Lambda** es un servicio 'Serverless' (sin servidor) que te permite ejecutar código sin gestionar la infraestructura subyacente."
+        },
+        {
+            type: "single",
+            category: "Arquitectura",
+            question: "¿Cuál de los pilares del AWS Well-Architected Framework se centra en la capacidad de un sistema para recuperarse de interrupciones de infraestructura o de servicio?",
+            options: [
+                "Excelencia Operativa",
+                "Seguridad",
+                "Fiabilidad (Reliability)",
+                "Eficiencia del Rendimiento"
+            ],
+            answer: 2,
+            explanation: "El pilar de **Fiabilidad** se enfoca en que los sistemas funcionen correctamente y se recuperen rápidamente de fallos."
+        },
+        {
+            type: "multi",
+            category: "Conceptos de Nube",
+            question: "¿Cuáles son dos ventajas de la computación en la nube de AWS? (Elija 2)",
+            options: [
+                "Cambiar gasto de capital por gasto variable",
+                "Aumentar la latencia para usuarios globales",
+                "Dejar de gastar dinero en el mantenimiento de centros de datos",
+                "Adivinar la capacidad para asegurar el rendimiento"
+            ],
+            answer: [0, 2],
+            explanation: "AWS permite **cambiar CapEx por OpEx** (gasto variable) y permite a las empresas enfocarse en su negocio en lugar de mantener la infraestructura física."
+        },
+        {
+            type: "single",
+            category: "Precios",
+            question: "Deseas recibir una alerta por correo electrónico cuando tus costos mensuales estimados superen los $100 USD. ¿Qué servicio debes configurar?",
+            options: [
+                "AWS Trusted Advisor",
+                "AWS Cost Explorer",
+                "AWS Budgets",
+                "AWS Pricing Calculator"
+            ],
+            answer: 2,
+            explanation: "**AWS Budgets** permite establecer presupuestos personalizados y recibir alertas cuando superas (o se prevé que superes) tus umbrales de costo o uso."
+        },
+        {
+            type: "single",
+            category: "Infraestructura Global",
+            question: "¿Qué es una Zona de Disponibilidad (AZ) en AWS?",
+            options: [
+                "Una ubicación geográfica única en todo el mundo",
+                "Uno o más centros de datos discretos con energía, red y conectividad redundantes",
+                "Una red de entrega de contenido (CDN)",
+                "Un servicio de almacenamiento para datos de archivo"
+            ],
+            answer: 1,
+            explanation: "Una **AZ** consiste en centros de datos físicamente separados dentro de una Región, diseñados para el aislamiento de fallos."
+        },
+        {
+            type: "single",
+            category: "Redes",
+            question: "Una empresa necesita una conexión física dedicada y privada entre su centro de datos local y AWS para reducir costos de red y aumentar el ancho de banda. ¿Qué servicio debe usar?",
+            options: [
+                "AWS Site-to-Site VPN",
+                "Amazon VPC Peering",
+                "AWS Direct Connect",
+                "Internet Gateway"
+            ],
+            answer: 2,
+            explanation: "**AWS Direct Connect** establece una conexión de red dedicada desde tus instalaciones a AWS, sin pasar por la internet pública."
+        },
+        {
+            type: "single",
+            category: "Seguridad",
+            question: "En el Modelo de Responsabilidad Compartida, ¿cuál es una responsabilidad del CLIENTE?",
+            options: [
+                "Parchear el hardware físico",
+                "Configurar las tablas de ruteo de la VPC",
+                "Gestionar el software de virtualización",
+                "Destrucción física de discos duros antiguos"
+            ],
+            answer: 1,
+            explanation: "El cliente es responsable de la configuración de la red virtual, incluyendo **subredes, tablas de ruteo y firewalls (SG/NACL)**."
+        },
+        {
+            type: "single",
+            category: "Computación",
+            question: "¿Qué modelo de precios de Amazon EC2 ofrece el mayor descuento (hasta un 90%) para aplicaciones que pueden tolerar interrupciones?",
+            options: [
+                "On-Demand",
+                "Reserved Instances",
+                "Spot Instances",
+                "Savings Plans"
+            ],
+            answer: 2,
+            explanation: "Las **Spot Instances** utilizan capacidad excedente de AWS con grandes descuentos, pero AWS puede reclamarlas con un aviso de 2 minutos."
+        },
+        {
+            type: "multi",
+            category: "Computación",
+            question: "¿Cuáles de los siguientes servicios son considerados 'Serverless' (Sin servidor)? (Elija 2)",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "Amazon Fargate",
+                "Amazon EBS"
+            ],
+            answer: [1, 2],
+            explanation: "**Lambda** (para código) y **Fargate** (para contenedores) son serverless porque no requieren que gestiones servidores."
+        },
+        {
+            type: "single",
+            category: "Redes",
+            question: "¿Cuál es el alcance geográfico de una Amazon VPC?",
+            options: [
+                "Global",
+                "Regional",
+                "Nivel de Zona de Disponibilidad",
+                "Nivel de Ubicación de Borde (Edge Location)"
+            ],
+            answer: 1,
+            explanation: "Las VPC son **Regionales**. Puedes crear subredes en diferentes AZs, pero la VPC en sí no cruza fronteras de región."
+        },
+        {
+            type: "single",
+            category: "Almacenamiento",
+            question: "Necesitas un disco duro virtual persistente para adjuntarlo a una instancia EC2. ¿Qué servicio debes elegir?",
+            options: [
+                "Amazon S3",
+                "Amazon EFS",
+                "Amazon EBS",
+                "AWS Storage Gateway"
+            ],
+            answer: 2,
+            explanation: "**Amazon EBS** (Elastic Block Store) proporciona volúmenes de almacenamiento a nivel de bloque para usar con instancias EC2."
+        },
+        {
+            type: "single",
+            category: "Escenarios de Negocio",
+            question: "Una startup quiere lanzar un sitio web sencillo rápidamente con un precio mensual fijo y bajo que incluya computación, almacenamiento y transferencia de datos. ¿Qué servicio es ideal?",
+            options: [
+                "Amazon EC2 con Auto Scaling",
+                "AWS Elastic Beanstalk",
+                "Amazon Lightsail",
+                "AWS CloudFormation"
+            ],
+            answer: 2,
+            explanation: "**Amazon Lightsail** es la forma más sencilla de lanzar servidores virtuales con planes de precio predecibles para proyectos simples."
+        },
+        {
+            type: "single",
+            category: "Redes",
+            question: "Para que una subred sea considerada 'Pública', ¿qué debe tener configurado en su tabla de ruteo?",
+            options: [
+                "Una ruta hacia una Virtual Private Gateway",
+                "Una ruta hacia una Internet Gateway (IGW)",
+                "Una conexión Direct Connect",
+                "Una IP elástica asignada a cada recurso"
+            ],
+            answer: 1,
+            explanation: "Una **Subred Pública** tiene una ruta directa a Internet a través de una **Internet Gateway**."
+        },
+        {
+            type: "single",
+            category: "Gobernanza",
+            question: "¿Qué servicio permite a las empresas aplicar políticas de control de servicios (SCP) para restringir servicios de AWS en múltiples cuentas?",
+            options: [
+                "AWS IAM",
+                "AWS Organizations",
+                "AWS Config",
+                "AWS Control Tower"
+            ],
+            answer: 1,
+            explanation: "**AWS Organizations** permite la gestión centralizada de múltiples cuentas y el uso de **SCPs** para la gobernanza."
+        },
+        {
+            type: "single",
+            category: "IA Generativa",
+            question: "¿Qué servicio de AWS ofrece acceso a múltiples modelos fundacionales (FMs) de IA de empresas como Anthropic, Meta y Amazon a través de una API?",
+            options: [
+                "Amazon SageMaker",
+                "Amazon Bedrock",
+                "AWS DeepLens",
+                "Amazon Rekognition"
+            ],
+            answer: 1,
+            explanation: "**Amazon Bedrock** es el servicio gestionado para construir aplicaciones de IA generativa usando modelos fundacionales."
+        },
+        {
+            type: "multi",
+            category: "Redes",
+            question: "¿Cuáles de los siguientes son componentes fundamentales de una Amazon VPC? (Elija 2)",
+            options: [
+                "Subredes",
+                "Cuentas de usuario de IAM",
+                "Tablas de ruteo",
+                "Buckets de S3"
+            ],
+            answer: [0, 2],
+            explanation: "Las **subredes** dividen la VPC y las **tablas de ruteo** determinan hacia dónde se dirige el tráfico de red."
+        },
+        {
+            type: "single",
+            category: "Arquitectura",
+            question: "El diseño de sistemas que pueden soportar el fallo de componentes individuales sin afectar la disponibilidad total se conoce como:",
+            options: [
+                "Escalado Vertical",
+                "Diseño para el fallo (Design for Failure)",
+                "Acoplamiento fuerte",
+                "Optimización de costos"
+            ],
+            answer: 1,
+            explanation: "El **Diseño para el fallo** implica usar redundancia y componentes desacoplados para garantizar la Alta Disponibilidad."
+        },
+        {
+            type: "single",
+            category: "Computación",
+            question: "¿Qué servicio de AWS puede distribuir automáticamente el tráfico entrante de aplicaciones entre múltiples destinos, como instancias EC2 y contenedores?",
+            options: [
+                "Amazon Route 53",
+                "Elastic Load Balancing (ELB)",
+                "AWS Auto Scaling",
+                "Amazon CloudFront"
+            ],
+            answer: 1,
+            explanation: "**ELB** distribuye el tráfico para mejorar la tolerancia a fallos y la disponibilidad de la aplicación."
+        },
+        {
+            type: "single",
+            category: "Seguridad",
+            question: "Un usuario quiere aplicar el 'Principio de Menor Privilegio'. ¿Qué servicio de AWS debe usar para gestionar permisos?",
+            options: [
+                "AWS CloudTrail",
+                "AWS Security Hub",
+                "AWS IAM",
+                "Amazon GuardDuty"
+            ],
+            answer: 2,
+            explanation: "**AWS IAM** (Identity and Access Management) permite definir quién puede acceder a qué recursos y bajo qué condiciones."
+        },
+        {
+            type: "single",
+            category: "Conceptos de Nube",
+            question: "¿Qué significa 'Agilidad' en la nube?",
+            options: [
+                "La velocidad de los procesadores de AWS",
+                "La capacidad de reducir el tiempo para desplegar nuevos recursos de semanas a minutos",
+                "La velocidad de la conexión Direct Connect",
+                "La capacidad de mover datos entre regiones rápidamente"
+            ],
+            answer: 1,
+            explanation: "La **Agilidad** permite a los desarrolladores experimentar y lanzar aplicaciones más rápido al eliminar la gestión de infraestructura física."
+        },
+        {
+            type: "single",
+            category: "Infraestructura Global",
+            question: "Deseas reducir la latencia para los usuarios globales que acceden a tus archivos de video. ¿Qué servicio de red de entrega de contenido (CDN) deberías usar?",
+            options: [
+                "Amazon Route 53",
+                "Amazon CloudFront",
+                "AWS Global Accelerator",
+                "Amazon S3 Transfer Acceleration"
+            ],
+            answer: 1,
+            explanation: "**Amazon CloudFront** utiliza las Ubicaciones de Borde (Edge Locations) para poner el contenido más cerca de los usuarios finales."
+        },
+        {
+            type: "single",
+            category: "Redes",
+            question: "Acabas de crear una VPC nueva. ¿Tiene conectividad a Internet de forma automática?",
+            options: [
+                "Sí, todas las VPC nuevas son públicas por defecto",
+                "No, debes crear y adjuntar una Internet Gateway y configurar las tablas de ruteo",
+                "Sí, siempre que crees una subred",
+                "No, solo se puede conectar a través de una VPN"
+            ],
+            answer: 1,
+            explanation: "Las VPC nuevas están **aisladas**. La conectividad a Internet requiere una **Internet Gateway** (IGW) y una configuración de ruteo explícita."
+        },
+        {
+            type: "single",
+            category: "Computación",
+            question: "¿Cuál es el propósito principal de AWS Auto Scaling?",
+            options: [
+                "Aumentar el tamaño de las instancias EC2 (Vertical Scaling)",
+                "Añadir o eliminar instancias según la demanda (Horizontal Scaling)",
+                "Cambiar el tipo de instancia de T3 a M5 automáticamente",
+                "Realizar copias de seguridad de las instancias"
+            ],
+            answer: 1,
+            explanation: "**Auto Scaling** mantiene la disponibilidad de la aplicación añadiendo o quitando instancias EC2 automáticamente."
+        },
+        {
+            type: "single",
+            category: "Soporte",
+            question: "¿Qué plan de soporte de AWS es el más económico que ofrece acceso a un Technical Account Manager (TAM)?",
+            options: [
+                "Developer",
+                "Business",
+                "Enterprise On-Ramp",
+                "Enterprise"
+            ],
+            answer: 3,
+            explanation: "El plan **Enterprise** es el único que incluye un TAM dedicado (el Enterprise On-Ramp incluye acceso a un grupo de TAMs, pero el TAM dedicado es del Enterprise)."
+        },
+        {
+            type: "multi",
+            category: "Arquitectura",
+            question: "¿Cuáles son dos de los pilares del AWS Well-Architected Framework? (Elija 2)",
+            options: [
+                "Sostenibilidad",
+                "Marketing y Ventas",
+                "Excelencia Operativa",
+                "Desarrollo Ágil"
+            ],
+            answer: [0, 2],
+            explanation: "Los 6 pilares son: Excelencia Operativa, Seguridad, Fiabilidad, Eficiencia del Rendimiento, Optimización de Costos y **Sostenibilidad**."
+        },
+        {
+            type: "single",
+            category: "Redes",
+            question: "¿Qué servicio DNS de AWS permite registrar nombres de dominio y realizar comprobaciones de estado (health checks)?",
+            options: [
+                "Amazon Route 53",
+                "Amazon Connect",
+                "AWS PrivateLink",
+                "Amazon VPC"
+            ],
+            answer: 0,
+            explanation: "**Amazon Route 53** es un servicio web de DNS altamente disponible y escalable."
+        },
+        {
+            type: "single",
+            category: "Escenarios de Negocio",
+            question: "Una base de datos que contiene información privada de clientes y no debe ser accesible desde la internet pública debería colocarse en:",
+            options: [
+                "Una subred pública",
+                "Una subred privada",
+                "Un Edge Location",
+                "Un Bucket de S3 público"
+            ],
+            answer: 1,
+            explanation: "Las **Subredes Privadas** se utilizan para recursos que no requieren acceso directo desde Internet, maximizando la seguridad."
+        },
+        {
+            type: "single",
+            category: "Precios",
+            question: "¿Qué herramienta te permite visualizar, entender y gestionar tus costos y uso de AWS a lo largo del tiempo mediante gráficos interactivos?",
+            options: [
+                "AWS Pricing Calculator",
+                "AWS Cost Explorer",
+                "AWS Marketplace",
+                "AWS Budgets"
+            ],
+            answer: 1,
+            explanation: "**AWS Cost Explorer** es la herramienta principal para analizar datos históricos de costos y uso."
+        },
+        {
+            type: "single",
+            category: "Conceptos de Nube",
+            question: "¿Qué permite a AWS ofrecer precios más bajos a medida que más clientes usan la plataforma?",
+            options: [
+                "Pago por uso",
+                "Economías de escala",
+                "Acceso global",
+                "Elasticidad masiva"
+            ],
+            answer: 1,
+            explanation: "Debido a que AWS tiene millones de clientes, puede lograr **economías de escala**, lo que resulta en reducciones de precios para los usuarios."
+        },
+        {
+            type: "single",
+            category: "Redes",
+            question: "En una VPC, una subred reside en:",
+            options: [
+                "Múltiples Regiones",
+                "Múltiples Zonas de Disponibilidad",
+                "Una única Zona de Disponibilidad (AZ)",
+                "Toda la infraestructura global"
+            ],
+            answer: 2,
+            explanation: "Una subred es **específica de una AZ**. Para alta disponibilidad, debes crear subredes en diferentes AZs."
+        },
+        {
+            type: "single",
+            category: "Seguridad",
+            question: "¿Qué servicio ayuda a proteger aplicaciones web contra exploits comunes como la inyección SQL o el scripting entre sitios (XSS)?",
+            options: [
+                "AWS Shield",
+                "AWS WAF (Web Application Firewall)",
+                "Amazon GuardDuty",
+                "AWS Inspector"
+            ],
+            answer: 1,
+            explanation: "**AWS WAF** protege las aplicaciones web de ataques comunes al filtrar el tráfico HTTP/S."
+        },
+        {
+            type: "single",
+            category: "Well-Architected",
+            question: "¿Cuál es el beneficio de 'Desacoplar' (Decoupling) los componentes de una aplicación?",
+            options: [
+                "Aumenta la velocidad de red entre componentes",
+                "Permite que los componentes funcionen de forma independiente, mejorando la tolerancia a fallos",
+                "Reduce el costo de almacenamiento de S3",
+                "Obliga a que todos los componentes se ejecuten en la misma instancia EC2"
+            ],
+            answer: 1,
+            explanation: "El **desacoplamiento** asegura que si un componente falla, los demás puedan seguir funcionando o gestionar el fallo de forma elegante."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let shuffledQuestions = [];
+    let failedQuestions = [];
+    let selectedOptions = [];
+
+    function initQuiz(questionsSource = questions) {
+        shuffledQuestions = shuffleArray([...questionsSource]);
+        currentQuestionIndex = 0;
+        score = 0;
+        failedQuestions = [];
+        document.getElementById('totalCount').innerText = shuffledQuestions.length;
+        document.getElementById('currentScore').innerText = '0';
+        showQuestion();
+    }
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function showQuestion() {
+        const quizContainer = document.getElementById('quizContainer');
+        quizContainer.innerHTML = '';
+        
+        const q = shuffledQuestions[currentQuestionIndex];
+        const card = document.createElement('div');
+        card.className = 'question-card active';
+        
+        const meta = document.createElement('div');
+        meta.className = 'question-meta';
+        meta.innerText = q.category;
+        
+        const text = document.createElement('div');
+        text.className = 'question-text';
+        text.innerText = q.question;
+
+        const multiHint = q.type === "multi" ? `<span class="multi-choice-hint">Esta es una pregunta de selección múltiple. Seleccione las opciones indicadas.</span>` : "";
+        
+        const optionsList = document.createElement('ul');
+        optionsList.className = 'options-list';
+        
+        q.options.forEach((opt, idx) => {
+            const li = document.createElement('li');
+            li.className = 'option-item';
+            const btn = document.createElement('button');
+            btn.className = 'option-button';
+            btn.innerText = opt;
+            btn.onclick = () => handleOptionClick(idx, btn);
+            li.appendChild(btn);
+            optionsList.appendChild(li);
+        });
+
+        card.appendChild(meta);
+        card.appendChild(text);
+        if(multiHint) card.innerHTML += multiHint;
+        card.appendChild(optionsList);
+
+        // Feedback placeholder
+        const feedback = document.createElement('div');
+        feedback.id = 'feedbackBox';
+        feedback.className = 'feedback';
+        card.appendChild(feedback);
+
+        // Submit button for multi choice
+        if (q.type === "multi") {
+            const submitBtn = document.createElement('button');
+            submitBtn.className = 'btn btn-submit';
+            submitBtn.id = 'multiSubmit';
+            submitBtn.innerText = 'Validar Respuestas';
+            submitBtn.onclick = () => validateMultiChoice();
+            card.appendChild(submitBtn);
+        }
+
+        // Nav buttons (initially hidden)
+        const nav = document.createElement('div');
+        nav.className = 'nav-buttons';
+        nav.style.display = 'none';
+        nav.id = 'navContainer';
+        
+        const nextBtn = document.createElement('button');
+        nextBtn.className = 'btn btn-next';
+        nextBtn.innerText = currentQuestionIndex === shuffledQuestions.length - 1 ? 'Finalizar' : 'Siguiente Pregunta';
+        nextBtn.onclick = nextQuestion;
+        nav.appendChild(nextBtn);
+        card.appendChild(nav);
+
+        quizContainer.appendChild(card);
+        updateProgress();
+        selectedOptions = [];
+    }
+
+    function handleOptionClick(idx, btn) {
+        const q = shuffledQuestions[currentQuestionIndex];
+        
+        if (q.type === "single") {
+            // Deshabilitar todos los botones
+            const buttons = document.querySelectorAll('.option-button');
+            buttons.forEach(b => b.disabled = true);
+            
+            const isCorrect = idx === q.answer;
+            if (isCorrect) {
+                btn.classList.add('correct');
+                score++;
+            } else {
+                btn.classList.add('wrong');
+                buttons[q.answer].classList.add('correct');
+                failedQuestions.push(q);
+            }
+            showFeedback(isCorrect);
+        } else {
+            // Lógica multi-choice
+            if (btn.classList.contains('selected')) {
+                btn.classList.remove('selected');
+                selectedOptions = selectedOptions.filter(i => i !== idx);
+            } else {
+                if (selectedOptions.length < q.answer.length) {
+                    btn.classList.add('selected');
+                    selectedOptions.push(idx);
+                }
+            }
+        }
+    }
+
+    function validateMultiChoice() {
+        const q = shuffledQuestions[currentQuestionIndex];
+        if (selectedOptions.length !== q.answer.length) {
+            alert(`Por favor seleccione ${q.answer.length} opciones.`);
+            return;
+        }
+
+        const buttons = document.querySelectorAll('.option-button');
+        buttons.forEach(b => b.disabled = true);
+        document.getElementById('multiSubmit').style.display = 'none';
+
+        const isCorrect = selectedOptions.every(val => q.answer.includes(val)) && selectedOptions.length === q.answer.length;
+        
+        selectedOptions.forEach(idx => {
+            if (q.answer.includes(idx)) {
+                buttons[idx].classList.add('correct');
+            } else {
+                buttons[idx].classList.add('wrong');
+            }
+        });
+
+        q.answer.forEach(idx => {
+            buttons[idx].classList.add('correct');
+        });
+
+        if (isCorrect) {
+            score++;
+        } else {
+            failedQuestions.push(q);
+        }
+        showFeedback(isCorrect);
+    }
+
+    function showFeedback(isCorrect) {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const feedbackBox = document.getElementById('feedbackBox');
+        feedbackBox.innerHTML = `
+            <div class="feedback-title" style="color: ${isCorrect ? '#2e7d32' : '#d32f2f'}">
+                ${isCorrect ? '✓ ¡Correcto!' : '✗ Incorrecto'}
+            </div>
+            <div class="explanation-box">
+                ${q.explanation}
+            </div>
+        `;
+        feedbackBox.classList.add('visible');
+        feedbackBox.style.backgroundColor = isCorrect ? 'var(--success)' : 'var(--error)';
+        
+        document.getElementById('navContainer').style.display = 'flex';
+        document.getElementById('currentScore').innerText = score;
+    }
+
+    function nextQuestion() {
+        if (currentQuestionIndex < shuffledQuestions.length - 1) {
+            currentQuestionIndex++;
+            showQuestion();
+        } else {
+            showDashboard();
+        }
+    }
+
+    function updateProgress() {
+        const progress = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        document.getElementById('currentCount').innerText = currentQuestionIndex + 1;
+        document.getElementById('totalCount').innerText = shuffledQuestions.length;
+    }
+
+    function showDashboard() {
+        document.getElementById('quizContainer').style.display = 'none';
+        const dashboard = document.getElementById('dashboard');
+        dashboard.style.display = 'block';
+        
+        const percentage = Math.round((score / shuffledQuestions.length) * 100);
+        document.getElementById('finalScore').innerText = percentage;
+        
+        let msg = "";
+        if (percentage >= 85) msg = "¡Excelente! Estás listo para el examen CLF-C02.";
+        else if (percentage >= 70) msg = "Buen trabajo, pero te recomendamos repasar los puntos débiles.";
+        else msg = "Sigue estudiando. Revisa los conceptos de redes y el modelo de responsabilidad compartida.";
+        
+        document.getElementById('resultMessage').innerText = msg;
+
+        // Hide retry failed button if no failures
+        const retryBtn = document.querySelector('.btn-next[onclick="retryFailed()"]');
+        if (failedQuestions.length === 0) {
+            retryBtn.style.display = 'none';
+        } else {
+            retryBtn.style.display = 'inline-block';
+        }
+    }
+
+    function restartQuiz() {
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'block';
+        initQuiz();
+    }
+
+    function retryFailed() {
+        if (failedQuestions.length === 0) return;
+        document.getElementById('dashboard').style.display = 'none';
+        document.getElementById('quizContainer').style.display = 'block';
+        initQuiz(failedQuestions);
+    }
+
+    // Iniciar
+    initQuiz();
+</script>
+
+</body>
+</html>

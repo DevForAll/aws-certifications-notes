@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Exam Simulator - Módulo 5, Lección 2 (Acumulativo)</title>
+    <style>
+        :root {
+            --aws-navy: #232F3E;
+            --aws-orange: #FF9900;
+            --aws-white: #FFFFFF;
+            --aws-bg: #F2F3F3;
+            --correct-bg: #E7F4E4;
+            --incorrect-bg: #FAEAEA;
+            --feedback-bg: #FFF9C4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-navy);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--aws-white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+
+        .progress-bar {
+            background-color: #444;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: var(--aws-orange);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .score-display {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option-btn.selected {
+            border-color: var(--aws-orange);
+            background-color: #fff4e6;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: #2e7d32;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: #c62828;
+        }
+
+        .feedback-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--feedback-bg);
+            border-radius: 5px;
+            border-left: 5px solid var(--aws-orange);
+            display: none;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-next {
+            background-color: var(--aws-orange);
+            color: var(--aws-white);
+        }
+
+        .btn-next:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #results-dashboard {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .final-score {
+            font-size: 3rem;
+            color: var(--aws-orange);
+            margin: 1rem 0;
+        }
+
+        .btn-restart {
+            background-color: var(--aws-navy);
+            color: white;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim">AWS Academy Simulator</div>
+    <div class="progress-container">
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+    </div>
+    <div class="score-display">Puntuación: <span id="current-score">0</span>%</div>
+</header>
+
+<main>
+    <div id="quiz-container">
+        <!-- Questions will be injected here -->
+    </div>
+
+    <div id="results-dashboard">
+        <h2>Evaluación Completada</h2>
+        <div class="final-score" id="final-score">0%</div>
+        <p id="result-message"></p>
+        <button class="btn btn-restart" onclick="restartQuiz()">Reiniciar todo (Shuffle)</button>
+    </div>
+</main>
+
+<script>
+    const questions = [
+        // MODULE 5: NETWORKING
+        {
+            text: "Una empresa requiere una conexión de red privada y dedicada desde su centro de datos local a AWS para garantizar un rendimiento constante y cumplir con requisitos regulatorios. ¿Qué servicio debería utilizar?",
+            options: [
+                "AWS Site-to-Site VPN",
+                "AWS Direct Connect",
+                "Amazon VPC Peering",
+                "Internet Gateway"
+            ],
+            answer: 1,
+            explanation: "AWS Direct Connect establece una conexión de fibra dedicada física que no pasa por la Internet pública, ofreciendo rendimiento consistente y seguridad de nivel físico."
+        },
+        {
+            text: "En una arquitectura de tres capas, ¿dónde debería ubicarse la base de datos de producción según las mejores prácticas de AWS?",
+            options: [
+                "En una subred pública con un Internet Gateway.",
+                "En una subred privada sin acceso directo a Internet.",
+                "En el Virtual Private Gateway.",
+                "En una red On-premises conectada por Direct Connect solamente."
+            ],
+            answer: 1,
+            explanation: "Las bases de datos deben residir en subredes privadas para minimizar la superficie de ataque, permitiendo solo el tráfico necesario desde la capa de aplicación."
+        },
+        {
+            text: "Usted desea permitir que sus instancias de EC2 en una subred pública se comuniquen con Internet. ¿Qué componente debe adjuntar a su VPC?",
+            options: [
+                "Virtual Private Gateway",
+                "NAT Gateway",
+                "Internet Gateway",
+                "Customer Gateway"
+            ],
+            answer: 2,
+            explanation: "El Internet Gateway (IGW) es el componente de la VPC que permite la comunicación bi-direccional entre los recursos de la VPC e Internet."
+        },
+        {
+            text: "Una startup necesita conectar dos VPCs en la misma región para que los recursos puedan comunicarse de forma privada. ¿Cuál es la solución más eficiente?",
+            options: [
+                "AWS Direct Connect",
+                "VPC Peering",
+                "AWS VPN",
+                "Public Internet"
+            ],
+            answer: 1,
+            explanation: "VPC Peering permite conectar dos VPCs de forma privada utilizando la infraestructura de red de AWS, sin que el tráfico pase por la Internet pública."
+        },
+        {
+            text: "¿Qué componente actúa como la 'puerta de entrada' para una conexión VPN cifrada desde su oficina a AWS?",
+            options: [
+                "Internet Gateway",
+                "NAT Gateway",
+                "Virtual Private Gateway",
+                "Transit Gateway"
+            ],
+            answer: 2,
+            explanation: "El Virtual Private Gateway (VPG) es el punto de terminación en el lado de AWS para las conexiones VPN Site-to-Site."
+        },
+        // MODULE 1-4: CUMULATIVE
+        {
+            text: "Según el Modelo de Responsabilidad Compartida, ¿quién es responsable de la seguridad física de los centros de datos de AWS?",
+            options: [
+                "El Cliente",
+                "AWS",
+                "Ambos",
+                "El proveedor de Internet (ISP)"
+            ],
+            answer: 1,
+            explanation: "AWS es responsable de la 'Seguridad DE la nube', lo que incluye la infraestructura física, hardware, software y redes globales."
+        },
+        {
+            text: "¿Cuál es el beneficio de la computación en la nube que permite a las empresas dejar de adivinar la capacidad necesaria?",
+            options: [
+                "Economías de escala",
+                "Globalización en minutos",
+                "Agilidad",
+                "Dejar de adivinar la capacidad"
+            ],
+            answer: 3,
+            explanation: "La nube permite escalar recursos bajo demanda, eliminando la necesidad de realizar grandes inversiones iniciales basadas en predicciones de capacidad a largo plazo."
+        },
+        {
+            text: "¿Cuál de las siguientes es una característica de las Regiones de AWS?",
+            options: [
+                "Cada región consta de un solo centro de datos masivo.",
+                "Cada región consta de dos o más Zonas de Disponibilidad.",
+                "Las regiones están conectadas entre sí por la Internet pública.",
+                "Las regiones son ubicaciones físicas dentro de una Zona de Disponibilidad."
+            ],
+            answer: 1,
+            explanation: "Una Región de AWS es un área geográfica que contiene múltiples Zonas de Disponibilidad (AZ) aisladas y físicamente separadas."
+        },
+        {
+            text: "Una empresa quiere migrar sus servidores actuales a AWS pero solo desea pagar por lo que usa, con la capacidad de terminar instancias en cualquier momento sin penalización. ¿Qué modelo de precios de EC2 es el más adecuado?",
+            options: [
+                "Instancias Reservadas",
+                "Instancias On-Demand",
+                "Instancias Spot",
+                "Dedicated Hosts"
+            ],
+            answer: 1,
+            explanation: "Las instancias On-Demand ofrecen flexibilidad total, pago por segundo o hora, y no requieren compromisos a largo plazo."
+        },
+        {
+            text: "¿Qué servicio se utiliza para gestionar permisos de acceso a los recursos de AWS de forma centralizada?",
+            options: [
+                "AWS Secrets Manager",
+                "AWS IAM (Identity and Access Management)",
+                "Amazon GuardDuty",
+                "AWS Shield"
+            ],
+            answer: 1,
+            explanation: "IAM permite controlar de forma segura quién puede autenticarse (iniciar sesión) y quién tiene autorización (permisos) para utilizar los recursos."
+        },
+        {
+            text: "¿Cuál es la principal ventaja de utilizar múltiples Zonas de Disponibilidad (AZs)?",
+            options: [
+                "Reducción de costos",
+                "Alta Disponibilidad y Tolerancia a Fallos",
+                "Menor latencia para usuarios globales",
+                "Simplificación de la configuración de red"
+            ],
+            answer: 1,
+            explanation: "Al distribuir recursos en múltiples AZs, la aplicación puede seguir funcionando incluso si una AZ entera experimenta un fallo."
+        },
+        {
+            text: "Usted necesita almacenar archivos que rara vez se consultan pero que deben estar disponibles de inmediato cuando sea necesario. ¿Qué clase de almacenamiento de S3 es la más rentable?",
+            options: [
+                "S3 Standard",
+                "S3 Standard-Infrequent Access (S3 Standard-IA)",
+                "S3 Glacier Deep Archive",
+                "S3 Intelligent-Tiering"
+            ],
+            answer: 1,
+            explanation: "S3 Standard-IA es ideal para datos de acceso poco frecuente pero que requieren acceso en milisegundos."
+        },
+        {
+            text: "¿Qué pilar del AWS Well-Architected Framework se centra en la capacidad de recuperarse de interrupciones de infraestructura o servicio?",
+            options: [
+                "Excelencia Operativa",
+                "Seguridad",
+                "Fiabilidad (Reliability)",
+                "Eficiencia de Rendimiento"
+            ],
+            answer: 2,
+            explanation: "El pilar de Fiabilidad se enfoca en que el sistema realice su función de manera correcta y consistente cuando se espera, incluyendo la recuperación ante fallos."
+        },
+        {
+            text: "Una empresa desea recibir alertas si su factura mensual proyectada supera un umbral específico. ¿Qué servicio debería usar?",
+            options: [
+                "AWS Cost Explorer",
+                "AWS Budgets",
+                "AWS Trusted Advisor",
+                "Pricing Calculator"
+            ],
+            answer: 1,
+            explanation: "AWS Budgets permite establecer presupuestos personalizados que te alertan cuando tus costos o uso superan (o se prevé que superen) el importe presupuestado."
+        },
+        {
+            text: "¿Cuál de los siguientes es un servicio de base de datos NoSQL altamente escalable en AWS?",
+            options: [
+                "Amazon RDS",
+                "Amazon Aurora",
+                "Amazon DynamoDB",
+                "Amazon Redshift"
+            ],
+            answer: 2,
+            explanation: "DynamoDB es un servicio de base de datos de clave-valor y documentos que ofrece rendimiento de milisegundos de un solo dígito a cualquier escala."
+        },
+        {
+            text: "¿Qué servicio de AWS ayuda a mitigar ataques de denegación de servicio distribuido (DDoS) de forma automática y gratuita para todos los clientes?",
+            options: [
+                "AWS WAF",
+                "AWS Shield Standard",
+                "AWS Shield Advanced",
+                "Amazon Inspector"
+            ],
+            answer: 1,
+            explanation: "AWS Shield Standard proporciona protección automática para ataques DDoS comunes en las capas 3 y 4 sin costo adicional."
+        },
+        {
+            text: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable de parchear el sistema operativo invitado (Guest OS) en una instancia de Amazon EC2?",
+            options: [
+                "AWS",
+                "El Cliente",
+                "Ambos",
+                "El fabricante del sistema operativo"
+            ],
+            answer: 1,
+            explanation: "EC2 es un servicio de infraestructura (IaaS); AWS gestiona el host físico, pero el cliente es responsable de todo lo que instale en la instancia, incluyendo el OS."
+        },
+        {
+            text: "¿Qué servicio de AWS permite ejecutar código sin aprovisionar ni gestionar servidores (Serverless)?",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "Amazon ECS",
+                "AWS Elastic Beanstalk"
+            ],
+            answer: 1,
+            explanation: "AWS Lambda es un servicio de computación sin servidor que ejecuta tu código en respuesta a eventos y gestiona automáticamente los recursos de computación subyacentes."
+        },
+        {
+            text: "¿Cuál es el servicio de almacenamiento de objetos líder de AWS que ofrece durabilidad del 99.999999999% (11 nueves)?",
+            options: [
+                "Amazon EBS",
+                "Amazon EFS",
+                "Amazon S3",
+                "AWS Storage Gateway"
+            ],
+            answer: 2,
+            explanation: "Amazon S3 (Simple Storage Service) está diseñado para proporcionar una durabilidad de datos extremadamente alta mediante la replicación de objetos en múltiples AZs."
+        },
+        {
+            text: "Usted necesita un sistema de archivos compartido que pueda ser montado simultáneamente por cientos de instancias de EC2 basadas en Linux. ¿Qué servicio elegiría?",
+            options: [
+                "Amazon EBS",
+                "Amazon S3",
+                "Amazon EFS (Elastic File System)",
+                "Amazon FSx"
+            ],
+            answer: 2,
+            explanation: "EFS es un sistema de archivos NFS elástico y totalmente gestionado que permite el acceso compartido desde múltiples instancias de EC2."
+        },
+        {
+            text: "Elija DOS beneficios de utilizar Amazon CloudFront. (Seleccione 2)",
+            options: [
+                "Reduce la latencia para usuarios globales.",
+                "Proporciona almacenamiento de base de datos persistente.",
+                "Ofrece protección contra ataques DDoS en el borde.",
+                "Permite gestionar el hardware físico de los servidores."
+            ],
+            isMultiple: true,
+            answers: [0, 2],
+            explanation: "CloudFront es una red de entrega de contenido (CDN) que utiliza ubicaciones de borde para reducir la latencia y se integra con AWS Shield para seguridad."
+        },
+        {
+            text: "¿Qué herramienta de AWS proporciona recomendaciones en tiempo real para ayudarle a seguir las mejores prácticas en categorías como Seguridad, Optimización de Costos y Rendimiento?",
+            options: [
+                "AWS Config",
+                "AWS Trusted Advisor",
+                "AWS CloudTrail",
+                "AWS Personal Health Dashboard"
+            ],
+            answer: 1,
+            explanation: "Trusted Advisor analiza su entorno de AWS y ofrece recomendaciones para ahorrar dinero, mejorar el rendimiento y cerrar brechas de seguridad."
+        },
+        {
+            text: "Una empresa quiere automatizar la creación de su infraestructura de red y computación utilizando archivos de texto (Infraestructura como Código). ¿Qué servicio debe usar?",
+            options: [
+                "AWS CloudFormation",
+                "AWS OpsWorks",
+                "AWS Systems Manager",
+                "AWS Elastic Beanstalk"
+            ],
+            answer: 0,
+            explanation: "CloudFormation permite modelar y configurar sus recursos de AWS mediante plantillas JSON o YAML de forma predecible y repetitiva."
+        },
+        {
+            text: "¿Cuál de los siguientes es un servicio de computación de alto rendimiento ideal para cargas de trabajo de corta duración y tolerantes a fallos, ofreciendo hasta un 90% de descuento?",
+            options: [
+                "Instancias On-Demand",
+                "Instancias Reservadas",
+                "Instancias Spot",
+                "Savings Plans"
+            ],
+            answer: 2,
+            explanation: "Las instancias Spot utilizan capacidad excedente de EC2 y son ideales para tareas que pueden ser interrumpidas, como procesamiento de datos por lotes."
+        },
+        {
+            text: "En una VPC, ¿cuál es la función de una Tabla de Enrutamiento (Route Table)?",
+            options: [
+                "Proteger la red contra virus.",
+                "Determinar hacia dónde se dirige el tráfico de red de las subredes.",
+                "Almacenar las direcciones IP de los usuarios.",
+                "Conectar automáticamente la VPC con otras regiones."
+            ],
+            answer: 1,
+            explanation: "Las tablas de enrutamiento contienen un conjunto de reglas (rutas) que se utilizan para determinar hacia dónde se dirige el tráfico de red de su subred o puerta de enlace."
+        },
+        {
+            text: "¿Qué servicio de AWS le permite inspeccionar y auditar las llamadas a la API realizadas en su cuenta, proporcionando un historial de actividad?",
+            options: [
+                "Amazon CloudWatch",
+                "AWS CloudTrail",
+                "AWS X-Ray",
+                "Amazon Inspector"
+            ],
+            answer: 1,
+            explanation: "CloudTrail registra todas las actividades de la cuenta de AWS, incluyendo quién realizó una acción, qué acción se realizó y cuándo."
+        },
+        {
+            text: "Usted necesita conectar su VPC con un servicio de AWS (como S3) de forma privada, sin que el tráfico pase por Internet. ¿Qué debería usar?",
+            options: [
+                "Internet Gateway",
+                "VPC Endpoint",
+                "Virtual Private Gateway",
+                "NAT Gateway"
+            ],
+            answer: 1,
+            explanation: "Los VPC Endpoints permiten la conectividad privada entre su VPC y los servicios compatibles de AWS sin necesidad de un IGW, dispositivo VPN o conexión Direct Connect."
+        },
+        {
+            text: "¿Qué servicio de IA generativa de AWS permite crear y escalar aplicaciones de IA generativa con modelos fundacionales (FMs)?",
+            options: [
+                "Amazon SageMaker",
+                "Amazon Bedrock",
+                "Amazon Lex",
+                "Amazon Rekognition"
+            ],
+            answer: 1,
+            explanation: "Amazon Bedrock es un servicio totalmente gestionado que ofrece una selección de modelos fundacionales de alto rendimiento de empresas líderes en IA a través de una API."
+        },
+        {
+            text: "Usted es responsable de la configuración de red dentro de su VPC. ¿Esto es parte de la 'Seguridad DE la nube' o 'Seguridad EN la nube'?",
+            options: [
+                "Seguridad DE la nube (AWS)",
+                "Seguridad EN la nube (Cliente)",
+                "Ambos",
+                "Ninguno"
+            ],
+            answer: 1,
+            explanation: "La configuración de red (subredes, ACLs, grupos de seguridad) es responsabilidad del cliente, por lo que es 'Seguridad EN la nube'."
+        },
+        {
+            text: "¿Cuál es el beneficio de 'Economías de Escala' en AWS?",
+            options: [
+                "Permite a los clientes construir sus propios centros de datos.",
+                "AWS puede pasar los ahorros de costos a los clientes debido a su gran escala de operación.",
+                "Permite a los clientes elegir en qué país residen sus datos.",
+                "Garantiza que el hardware nunca falle."
+            ],
+            answer: 1,
+            explanation: "Debido a que AWS gestiona millones de clientes, puede comprar hardware a granel y optimizar operaciones, reduciendo los costos unitarios y bajando los precios para los usuarios."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let shuffledQuestions = [];
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz() {
+        shuffledQuestions = shuffleArray([...questions]);
+        renderQuestion();
+        updateProgress();
+    }
+
+    function renderQuestion() {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+        
+        const q = shuffledQuestions[currentQuestionIndex];
+        const card = document.createElement('div');
+        card.className = 'question-card active';
+        
+        const typeHint = q.isMultiple ? ' (Seleccione 2 opciones)' : '';
+        card.innerHTML = `
+            <div class="question-text">${currentQuestionIndex + 1}. ${q.text}${typeHint}</div>
+            <div class="options-container" id="options-${currentQuestionIndex}">
+                ${q.options.map((opt, i) => `
+                    <button class="option-btn" onclick="handleOptionClick(${i})">${opt}</button>
+                `).join('')}
+            </div>
+            <div id="feedback-${currentQuestionIndex}" class="feedback-box">
+                <strong>Explicación Técnica:</strong><br>
+                ${q.explanation}
+            </div>
+            <div class="controls">
+                <button id="next-btn" class="btn btn-next" onclick="nextQuestion()" disabled>Siguiente</button>
+            </div>
+        `;
+        container.appendChild(card);
+    }
+
+    let selectedOptions = [];
+
+    function handleOptionClick(index) {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const options = document.getElementById(`options-${currentQuestionIndex}`).children;
+        
+        if (q.isMultiple) {
+            if (selectedOptions.includes(index)) {
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                options[index].classList.remove('selected');
+            } else if (selectedOptions.length < 2) {
+                selectedOptions.push(index);
+                options[index].classList.add('selected');
+            }
+            
+            if (selectedOptions.length === 2) {
+                validateMultiple(q, options);
+            }
+        } else {
+            validateSingle(q, index, options);
+        }
+    }
+
+    function validateSingle(q, index, options) {
+        const isCorrect = index === q.answer;
+        if (isCorrect) {
+            options[index].classList.add('correct');
+            score++;
+        } else {
+            options[index].classList.add('incorrect');
+            options[q.answer].classList.add('correct');
+        }
+        
+        disableOptions(options);
+        showFeedback();
+    }
+
+    function validateMultiple(q, options) {
+        let correctCount = 0;
+        selectedOptions.forEach(idx => {
+            if (q.answers.includes(idx)) {
+                options[idx].classList.add('correct');
+                correctCount++;
+            } else {
+                options[idx].classList.add('incorrect');
+            }
+        });
+
+        q.answers.forEach(idx => {
+            options[idx].classList.add('correct');
+        });
+
+        if (correctCount === 2) score++;
+        
+        disableOptions(options);
+        showFeedback();
+    }
+
+    function disableOptions(options) {
+        Array.from(options).forEach(btn => btn.disabled = true);
+        document.getElementById('next-btn').disabled = false;
+        updateScoreDisplay();
+    }
+
+    function showFeedback() {
+        document.getElementById(`feedback-${currentQuestionIndex}`).style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        selectedOptions = [];
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            renderQuestion();
+            updateProgress();
+        } else {
+            showResults();
+        }
+    }
+
+    function updateProgress() {
+        const percent = (currentQuestionIndex / shuffledQuestions.length) * 100;
+        document.getElementById('progress-fill').style.width = `${percent}%`;
+    }
+
+    function updateScoreDisplay() {
+        const totalPossibleSoFar = currentQuestionIndex + 1;
+        const currentPercent = Math.round((score / totalPossibleSoFar) * 100);
+        document.getElementById('current-score').innerText = currentPercent;
+    }
+
+    function showResults() {
+        document.getElementById('quiz-container').style.display = 'none';
+        const dashboard = document.getElementById('results-dashboard');
+        dashboard.style.display = 'block';
+        
+        const finalPercent = Math.round((score / shuffledQuestions.length) * 100);
+        document.getElementById('final-score').innerText = `${finalPercent}%`;
+        
+        let msg = "";
+        if (finalPercent >= 80) msg = "¡Excelente! Estás listo para el examen de certificación.";
+        else if (finalPercent >= 60) msg = "Buen trabajo. Repasa los conceptos fallidos para consolidar tu conocimiento.";
+        else msg = "Necesitas repasar más los módulos. Enfócate en el Modelo de Responsabilidad Compartida y Redes.";
+        
+        document.getElementById('result-message').innerText = msg;
+        document.getElementById('progress-fill').style.width = '100%';
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        selectedOptions = [];
+        document.getElementById('quiz-container').style.display = 'block';
+        document.getElementById('results-dashboard').style.display = 'none';
+        initQuiz();
+    }
+
+    // Start the quiz
+    initQuiz();
+</script>
+
+</body>
+</html>

@@ -190,4 +190,9 @@ $rg = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\r
 New-NoteHtml "$rg\Resumen_Maestro_Modulos_1_y_2.md"  "$rg\resumen-m1m2-notas.html" "Resumen Maestro - Modulos 1 y 2" ""
 New-NoteHtml "$rg\Resumen_Maestro_Modulos_3_y_4.md"  "$rg\resumen-m3m4-notas.html" "Resumen Maestro - Modulos 3 y 4" "Evaluacion_Simulada_Modulos_3_y_4.html"
 
-Write-Host "`nListo. 26 paginas regeneradas con dark mode."
+$m5 = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\modulo-05-redes"
+
+New-NoteHtml "$m5\Lección 1 - Introducción a las redes.md"                   "$m5\leccion-01-notas.html" "Leccion 1 - Introduccion a las Redes"              "Lecci%C3%B3n%201%20-%20EVALUACION.html"
+New-NoteHtml "$m5\Lección 2 - Organización de los recursos en la nube.md"    "$m5\leccion-02-notas.html" "Leccion 2 - Organizacion de Recursos en la Nube"   "Lecci%C3%B3n%202%20-%20EVALUACION.html"
+
+Write-Host "`nListo. 28 paginas regeneradas con dark mode."

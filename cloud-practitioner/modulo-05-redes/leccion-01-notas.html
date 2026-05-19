@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Leccion 1 - Introduccion a las Redes — AWS Cloud Practitioner</title>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
+  <style>
+    :root {
+      --navy: #232f3e;
+      --orange: #ff9900;
+      --page-bg: #f4f6f8;
+      --card-bg: #ffffff;
+      --text: #16191f;
+      --text-muted: #555;
+      --h2-bg: #eef1f5;
+      --quote-bg: #fff9ee;
+      --code-bg: #e4e8ef;
+      --row-even: #f5f7fa;
+      --row-border: #e4e8ee;
+      --btn-notes-bg: #eef1f5;
+      --btn-notes-border: #d5dce8;
+      --btn-notes-hover: #dde2ea;
+    }
+    [data-theme="dark"] {
+      --page-bg: #151c25;
+      --card-bg: #1e2838;
+      --text: #e8eaed;
+      --text-muted: #9aabb8;
+      --h2-bg: #1e2838;
+      --quote-bg: #1e2830;
+      --code-bg: #283848;
+      --row-even: #253545;
+      --row-border: #2a3a4a;
+      --btn-notes-bg: #283848;
+      --btn-notes-border: #364858;
+      --btn-notes-hover: #324058;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: var(--page-bg); color: var(--text); transition: background-color 0.25s, color 0.25s; }
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: var(--navy); padding: 0.7rem 1.2rem;
+      display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .btn-back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .btn-back:hover { color: var(--orange); }
+    .header-title { flex: 1; color: white; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .btn-eval { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .btn-eval:hover { background: #e68a00; }
+    .btn-no-eval { color: #888; font-size: 0.8rem; white-space: nowrap; font-style: italic; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 5rem; }
+    #md-content h1 { font-size: 1.4rem; color: var(--navy); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    [data-theme="dark"] #md-content h1 { color: #c8d8ff; }
+    #md-content h2 { font-size: 1.1rem; color: var(--navy); background: var(--h2-bg); padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    [data-theme="dark"] #md-content h2 { color: #c8d8ff; border-color: var(--orange); }
+    #md-content h3 { font-size: 1rem; color: var(--text); margin: 1.2rem 0 0.5rem; font-weight: 700; }
+    #md-content h4 { font-size: 0.95rem; color: var(--text-muted); margin: 1rem 0 0.4rem; font-weight: 700; }
+    #md-content p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md-content strong { color: var(--navy); }
+    [data-theme="dark"] #md-content strong { color: #c8d8ff; }
+    #md-content ul, #md-content ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md-content li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md-content hr { border: none; border-top: 1px solid var(--row-border); margin: 1.5rem 0; }
+    #md-content blockquote { border-left: 4px solid var(--orange); background: var(--quote-bg); padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md-content blockquote p { margin-bottom: 0; }
+    #md-content code { background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md-content pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; }
+    #md-content pre code { background: none; color: inherit; padding: 0; font-size: 0.9em; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md-content table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md-content th { background: var(--navy); color: white; padding: 0.5rem 0.75rem; text-align: left; font-weight: 600; }
+    #md-content td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--row-border); vertical-align: top; }
+    #md-content tr:nth-child(even) td { background: var(--row-even); }
+    .theme-toggle {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      width: 46px; height: 46px; border-radius: 50%;
+      background: var(--orange); color: #111; border: none; cursor: pointer;
+      font-size: 1.25rem; box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+      z-index: 1000; transition: transform 0.2s, box-shadow 0.2s;
+      display: flex; align-items: center; justify-content: center; line-height: 1;
+    }
+    .theme-toggle:hover { transform: scale(1.1); box-shadow: 0 4px 16px rgba(0,0,0,0.4); }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      .header-title { font-size: 0.8rem; }
+      main { padding: 1rem 0.75rem 5rem; }
+      #md-content h1 { font-size: 1.15rem; }
+      #md-content h2 { font-size: 0.98rem; padding: 0.4rem 0.6rem; }
+      #md-content table { font-size: 0.78rem; }
+      #md-content th, #md-content td { padding: 0.3rem 0.45rem; }
+      .theme-toggle { width: 42px; height: 42px; font-size: 1.1rem; bottom: 1rem; right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="../../index.html" class="btn-back">← Portal</a>
+    <span class="header-title">Leccion 1 - Introduccion a las Redes</span>
+    <a href="Lecci%C3%B3n%201%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+  </header>
+  <main><div id="md-content"></div></main>
+  <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+  <script>
+    marked.setOptions({ breaks: true, gfm: true });
+    const md = `# [Módulo 5 - Lección 1] Introducción a las Redes en AWS
+
+## Resumen Ejecutivo
+La red en AWS es el tejido conectivo que permite la comunicación entre recursos. A diferencia de las redes físicas tradicionales, AWS utiliza **Redes Definidas por Software (SDN)**. El corazón de esta infraestructura es **Amazon VPC**, que permite crear un centro de datos virtual aislado lógicamente en la nube. La estrategia principal es el **Aislamiento y la Segmentación**: no todo debe estar expuesto a Internet; la seguridad se basa en colocar los recursos en el "compartimento" adecuado según su función.
+
+---
+## Conceptos Clave (Probabilidad en Examen: 🔴 Alta)
+
+### 1. Amazon VPC (Virtual Private Cloud)
+- **Definición:** Red virtual dedicada a tu cuenta. Aislada lógicamente de otros clientes.
+- **Alcance:** **REGIONAL**. No cruza regiones (ej. una VPC en N. Virginia no puede tener recursos en Irlanda directamente sin peering).
+- **Control:** El usuario define rangos de IP (CIDR), subredes y tablas de ruteo.
+
+### 2. Subredes (Subnets)
+Rangos de direcciones IP dentro de la VPC. Se usan para organizar recursos.
+- **Subred Pública:** Tiene una ruta a una **Internet Gateway**. Se usa para recursos que interactúan con el público (Servidores Web, Balanceadores de Carga).
+- **Subred Privada:** No tiene ruta directa a Internet. Se usa para datos sensibles (Bases de datos, Lógica de aplicación interna).
+- **Alcance:** **Zona de Disponibilidad (AZ)**. Cada subred reside en UNA sola AZ.
+
+### 3. Puerta de Enlace de Internet (Internet Gateway - IGW)
+- **Función:** El "puente" entre la VPC e Internet.
+- **Relevancia:** Es un componente escalable y de alta disponibilidad. Sin una IGW, una VPC es un "búnker" sin salida.
+
+---
+## Tabla Comparativa: Subred Pública vs. Subred Privada
+
+| Característica        | Subred Pública                   | Subred Privada            |
+| :-------------------- | :------------------------------- | :------------------------ |
+| **Acceso a Internet** | Directo (vía Internet Gateway)   | Indirecto o Ninguno       |
+| **Recursos Típicos**  | Servidores Web (Cajeros)         | Bases de Datos (Baristas) |
+| **Seguridad**         | Mayor exposición                 | Máximo aislamiento        |
+| **Requerimiento**     | Debe tener tabla de ruteo al IGW | No tiene ruta al IGW      |
+
+---
+## Puntos Críticos (Keywords para el Examen)
+- **"Lógicamente Aislada":** Keyword principal para identificar Amazon VPC.
+- **"Regional":** Una VPC pertenece a una Región, pero sus subredes se distribuyen en múltiples Zonas de Disponibilidad (AZ) para Alta Disponibilidad.
+- **"Software-Defined Networking":** AWS gestiona el hardware, tú gestionas la configuración lógica.
+- **Modelo de Responsabilidad Compartida (Redes):**
+    - **AWS:** Seguridad **DE** la red (infraestructura física, cables, routers físicos, aislamiento entre clientes).
+    - **Cliente:** Seguridad **EN** la red (configuración de VPC, subredes, firewalls - SG/NACL, tablas de ruteo).
+
+---
+## Trampas de Examen (Cuidado con esto)
+1. **Confundir VPC con Global:** Las VPC son **Regionales**. Si una pregunta menciona recursos en múltiples regiones comunicándose "nativamente" sin configuración extra, es falso.
+2. **IGW por defecto:** Una VPC nueva NO tiene una Internet Gateway por defecto. Debes crearla y adjuntarla.
+3. **Subred en múltiples AZ:** Una subred **NO** puede cruzar múltiples AZ. Si quieres alta disponibilidad, creas subredes en diferentes AZs.
+
+---
+## Diccionario de Servicios AWS (Visualización de Distractores)
+
+| Servicio                    | Definición Corta                        | Palabras Gatillo (Keywords)                              |
+| :-------------------------- | :-------------------------------------- | :------------------------------------------------------- |
+| **Amazon VPC**              | Red virtual privada en la nube.         | Aislamiento lógico, Regional, SDN.                       |
+| **Subnet**                  | Subdivisión de una VPC.                 | AZ-specific, Organización, Pública/Privada.              |
+| **Internet Gateway**        | Conexión a la internet pública.         | Entrada/Salida Internet, Público.                        |
+| **Virtual Private Gateway** | Conexión VPN a red on-premise.          | VPN, Cifrado, On-premises.                               |
+| **Direct Connect**          | Conexión física dedicada (no internet). | Fibra óptica, Línea dedicada, Baja latencia, Costo alto. |
+| **Security Group**          | Firewall a nivel de **Instancia**.      | Stateful (Con estado), Nivel de recurso.                 |
+| **Network ACL**             | Firewall a nivel de **Subred**.         | Stateless (Sin estado), Nivel de red, Primera línea.     |
+| **Route 53**                | Servicio de DNS de AWS.                 | Nombres de dominio, Health checks, Registro.             |
+| **CloudFront**              | Red de entrega de contenido (CDN).      | Ubicaciones periféricas (Edge), Latencia, Caché.         |
+
+---
+*Nota de Instructor: En el examen CLF-C02, recuerda que la VPC es el fundamento. Si la pregunta menciona "aislamiento", "entorno propio" o "segmentación de red", piensa inmediatamente en VPC.*
+`;
+    const html = marked.parse(md);
+    document.getElementById('md-content').innerHTML =
+      html.replace(/<table>/g, '<div class="table-wrap"><table>')
+          .replace(/<\/table>/g, '</table></div>');
+    (function() {
+      var btn = document.getElementById('theme-toggle');
+      var root = document.documentElement;
+      if (localStorage.getItem('aws-theme') === 'dark') {
+        root.setAttribute('data-theme', 'dark');
+        btn.textContent = '☀️';
+      }
+      btn.addEventListener('click', function() {
+        var isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          root.setAttribute('data-theme', 'light');
+          btn.textContent = '🌙';
+          localStorage.setItem('aws-theme', 'light');
+        } else {
+          root.setAttribute('data-theme', 'dark');
+          btn.textContent = '☀️';
+          localStorage.setItem('aws-theme', 'dark');
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

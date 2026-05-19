@@ -1,68 +1,65 @@
-## Resumen General
+# [Módulo 5 - Lección 1] Introducción a las Redes en AWS
 
-En AWS, la red no es un conjunto de cables físicos, sino una **red definida por software**. El servicio principal es **Amazon VPC**, que permite crear un entorno privado y aislado dentro de la nube de AWS. La analogía de la cafetería nos enseña que no todos los recursos deben ser visibles; algunos (como los cajeros) deben ser públicos para recibir clientes, mientras que otros (como los baristas/bases de datos) deben ser privados para seguridad y eficiencia.
-
----
-
-## Conceptos Clave (Priorizados por probabilidad en el examen)
-
-### 🔴 PRIORIDAD ALTA: Amazon VPC (Virtual Private Cloud)
-
-- **Definición:** Es una red virtual dedicada a tu cuenta de AWS. Está aislada lógicamente de otras redes virtuales en la nube de AWS.
-    
-- **Alcance:** Una VPC reside dentro de una **Región** específica.
-    
-- **Función:** Te da control total sobre tu entorno de red, incluyendo la selección de rangos de direcciones IP, creación de subredes y configuración de tablas de enrutamiento.
-    
-
-### 🔴 PRIORIDAD ALTA: Subredes (Subnets)
-
-Las subredes son secciones o sub-divisiones dentro de una VPC que permiten agrupar recursos según sus necesidades de seguridad:
-
-- **Subred Pública:** Tiene acceso directo a Internet a través de una **Internet Gateway**.
-    
-    - _Ejemplo examen:_ Servidores web o "cajeros" de la cafetería.
-        
-- **Subred Privada:** No tiene acceso directo a la Internet pública. Se utiliza para recursos que deben estar protegidos.
-    
-    - _Ejemplo examen:_ Bases de datos o los "baristas" que procesan pedidos.
-        
-
-### 🟡 PRIORIDAD MEDIA: Puerta de enlace de Internet (Internet Gateway)
-
-- **Función:** Es el componente que permite la comunicación entre los recursos de tu VPC y la Internet pública. Sin ella, una subred no puede ser "pública".
-    
+## Resumen Ejecutivo
+La red en AWS es el tejido conectivo que permite la comunicación entre recursos. A diferencia de las redes físicas tradicionales, AWS utiliza **Redes Definidas por Software (SDN)**. El corazón de esta infraestructura es **Amazon VPC**, que permite crear un centro de datos virtual aislado lógicamente en la nube. La estrategia principal es el **Aislamiento y la Segmentación**: no todo debe estar expuesto a Internet; la seguridad se basa en colocar los recursos en el "compartimento" adecuado según su función.
 
 ---
+## Conceptos Clave (Probabilidad en Examen: 🔴 Alta)
 
-## Puntos críticos para el examen Cloud Practitioner
+### 1. Amazon VPC (Virtual Private Cloud)
+- **Definición:** Red virtual dedicada a tu cuenta. Aislada lógicamente de otros clientes.
+- **Alcance:** **REGIONAL**. No cruza regiones (ej. una VPC en N. Virginia no puede tener recursos en Irlanda directamente sin peering).
+- **Control:** El usuario define rangos de IP (CIDR), subredes y tablas de ruteo.
 
-1. **Aislamiento Lógico:** Recuerda que la palabra clave de una VPC es **"lógicamente aislada"**. Aunque compartes hardware físico con otros clientes, tu red es privada.
-    
-2. **VPC vs. Región:** Una VPC no puede cruzar fronteras de Regiones, pero sí puede tener subredes en diferentes **Zonas de Disponibilidad (AZ)** dentro de esa misma región para mayor redundancia.
-    
-3. **Seguridad por niveles:** El examen evaluará si comprendes que los datos sensibles (como información de clientes o bases de datos) siempre deben ir en una **subred privada**.
-    
+### 2. Subredes (Subnets)
+Rangos de direcciones IP dentro de la VPC. Se usan para organizar recursos.
+- **Subred Pública:** Tiene una ruta a una **Internet Gateway**. Se usa para recursos que interactúan con el público (Servidores Web, Balanceadores de Carga).
+- **Subred Privada:** No tiene ruta directa a Internet. Se usa para datos sensibles (Bases de datos, Lógica de aplicación interna).
+- **Alcance:** **Zona de Disponibilidad (AZ)**. Cada subred reside en UNA sola AZ.
 
----
-
-## Conceptos que suelen confundir en el examen
-
-|**Concepto**|**Lo que el estudiante suele confundir**|**La realidad para el examen**|
-|---|---|---|
-|**VPC vs. Internet Gateway**|Cree que la VPC da internet por sí sola.|La VPC es el "espacio". La **Internet Gateway** es la "puerta" hacia afuera.|
-|**Subred Pública vs. Privada**|Cree que una subred privada no puede hablar con nada.|Puede hablar con otros recursos dentro de la misma VPC, pero no con la Internet pública directamente.|
-|**VPC vs. On-premises**|Cree que configurar una VPC es igual de lento que una red física.|Una VPC se aprovisiona en segundos mediante software (API), a diferencia de comprar routers físicos.|
+### 3. Puerta de Enlace de Internet (Internet Gateway - IGW)
+- **Función:** El "puente" entre la VPC e Internet.
+- **Relevancia:** Es un componente escalable y de alta disponibilidad. Sin una IGW, una VPC es un "búnker" sin salida.
 
 ---
+## Tabla Comparativa: Subred Pública vs. Subred Privada
 
-## 💡 Información adicional valiosa (Complemento de instructor)
+| Característica        | Subred Pública                   | Subred Privada            |
+| :-------------------- | :------------------------------- | :------------------------ |
+| **Acceso a Internet** | Directo (vía Internet Gateway)   | Indirecto o Ninguno       |
+| **Recursos Típicos**  | Servidores Web (Cajeros)         | Bases de Datos (Baristas) |
+| **Seguridad**         | Mayor exposición                 | Máximo aislamiento        |
+| **Requerimiento**     | Debe tener tabla de ruteo al IGW | No tiene ruta al IGW      |
 
-Para complementar lo visto en la transcripción, el examen CLF-C02 suele preguntar por estos dos componentes de seguridad que verás más adelante:
+---
+## Puntos Críticos (Keywords para el Examen)
+- **"Lógicamente Aislada":** Keyword principal para identificar Amazon VPC.
+- **"Regional":** Una VPC pertenece a una Región, pero sus subredes se distribuyen en múltiples Zonas de Disponibilidad (AZ) para Alta Disponibilidad.
+- **"Software-Defined Networking":** AWS gestiona el hardware, tú gestionas la configuración lógica.
+- **Modelo de Responsabilidad Compartida (Redes):**
+    - **AWS:** Seguridad **DE** la red (infraestructura física, cables, routers físicos, aislamiento entre clientes).
+    - **Cliente:** Seguridad **EN** la red (configuración de VPC, subredes, firewalls - SG/NACL, tablas de ruteo).
 
-- **Security Groups (Grupos de Seguridad):** Actúan como un firewall virtual para tus **instancias** (nivel de recurso). Controlan quién entra y sale de una instancia EC2 específica.
-    
-- **Network ACL (NACL):** Actúan como un firewall para la **subred** completa (nivel de red). Es la primera línea de defensa antes de entrar a la subred.
-    
-- **Peering de VPC:** Si tienes dos VPCs y quieres que se comuniquen de forma privada, usas una conexión de "Peering".
-    
+---
+## Trampas de Examen (Cuidado con esto)
+1. **Confundir VPC con Global:** Las VPC son **Regionales**. Si una pregunta menciona recursos en múltiples regiones comunicándose "nativamente" sin configuración extra, es falso.
+2. **IGW por defecto:** Una VPC nueva NO tiene una Internet Gateway por defecto. Debes crearla y adjuntarla.
+3. **Subred en múltiples AZ:** Una subred **NO** puede cruzar múltiples AZ. Si quieres alta disponibilidad, creas subredes en diferentes AZs.
+
+---
+## Diccionario de Servicios AWS (Visualización de Distractores)
+
+| Servicio                    | Definición Corta                        | Palabras Gatillo (Keywords)                              |
+| :-------------------------- | :-------------------------------------- | :------------------------------------------------------- |
+| **Amazon VPC**              | Red virtual privada en la nube.         | Aislamiento lógico, Regional, SDN.                       |
+| **Subnet**                  | Subdivisión de una VPC.                 | AZ-specific, Organización, Pública/Privada.              |
+| **Internet Gateway**        | Conexión a la internet pública.         | Entrada/Salida Internet, Público.                        |
+| **Virtual Private Gateway** | Conexión VPN a red on-premise.          | VPN, Cifrado, On-premises.                               |
+| **Direct Connect**          | Conexión física dedicada (no internet). | Fibra óptica, Línea dedicada, Baja latencia, Costo alto. |
+| **Security Group**          | Firewall a nivel de **Instancia**.      | Stateful (Con estado), Nivel de recurso.                 |
+| **Network ACL**             | Firewall a nivel de **Subred**.         | Stateless (Sin estado), Nivel de red, Primera línea.     |
+| **Route 53**                | Servicio de DNS de AWS.                 | Nombres de dominio, Health checks, Registro.             |
+| **CloudFront**              | Red de entrega de contenido (CDN).      | Ubicaciones periféricas (Edge), Latencia, Caché.         |
+
+---
+*Nota de Instructor: En el examen CLF-C02, recuerda que la VPC es el fundamento. Si la pregunta menciona "aislamiento", "entorno propio" o "segmentación de red", piensa inmediatamente en VPC.*

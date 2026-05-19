@@ -185,4 +185,9 @@ New-NoteHtml "$m4\Lección 2 - Elección de las regiones de AWS.md"             
 New-NoteHtml "$m4\Lección 3 - Profundizar en la infraestructura global de AWS.md"        "$m4\leccion-03-notas.html" "Leccion 3 - Infraestructura Global de AWS"         "Lecci%C3%B3n%203%20-%20EVALUACION.html"
 New-NoteHtml "$m4\Lección 4 - Infraestructura y automatización.md"                       "$m4\leccion-04-notas.html" "Leccion 4 - Infraestructura y Automatizacion"      "Lecci%C3%B3n%204%20-%20EVALUACION.html"
 
+$rg = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\repaso-general"
+
+New-NoteHtml "$rg\Resumen_Maestro_Modulos_1_y_2.md"  "$rg\resumen-m1m2-notas.html" "Resumen Maestro - Modulos 1 y 2" ""
+New-NoteHtml "$rg\Resumen_Maestro_Modulos_3_y_4.md"  "$rg\resumen-m3m4-notas.html" "Resumen Maestro - Modulos 3 y 4" "Evaluacion_Simulada_Modulos_3_y_4.html"
+
 Write-Host "`nListo. 26 paginas regeneradas con dark mode."

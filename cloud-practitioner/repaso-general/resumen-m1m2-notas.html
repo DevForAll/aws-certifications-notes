@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leccion 3 - Infraestructura Global de AWS — AWS Cloud Practitioner</title>
+  <title>Resumen Maestro - Modulos 1 y 2 — AWS Cloud Practitioner</title>
   <script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
   <style>
     :root {
@@ -96,78 +96,112 @@
 <body>
   <header>
     <a href="../../index.html" class="btn-back">← Portal</a>
-    <span class="header-title">Leccion 3 - Infraestructura Global de AWS</span>
-    <a href="Lecci%C3%B3n%203%20-%20EVALUACION.html" class="btn-eval">Evaluacion</a>
+    <span class="header-title">Resumen Maestro - Modulos 1 y 2</span>
+    <span class="btn-no-eval">Sin evaluacion aun</span>
   </header>
   <main><div id="md-content"></div></main>
   <button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
   <script>
     marked.setOptions({ breaks: true, gfm: true });
-    const md = `## 📝 Resumen Ejecutivo
-Para competir globalmente, una aplicación no solo debe estar "en línea", sino que debe ser **resiliente** y **rápida**. El valor de negocio de profundizar en la infraestructura global radica en maximizar la **Alta Disponibilidad** (que la app no falle) y minimizar la **Latencia** (que la app sea rápida en cualquier país). Esto se logra mediante la combinación de arquitecturas Multi-AZ/Región y el uso de la Red de Entrega de Contenido (CDN) de AWS.
+    const md = `# 🎓 AWS CLF-C02: Consolidado Maestro - Módulos 1 y 2
+### "De los Fundamentos al Dominio del Cómputo"
 
-
----
-## 💡 Conceptos Clave (High Probability)
-
-### 1. Estrategias de Disponibilidad y Resiliencia
-AWS evalúa tu capacidad para diseñar contra fallas:
-- **Multi-AZ (Alta Disponibilidad):** Desplegar en al menos 2 Zonas de Disponibilidad. Protege contra fallas de centros de datos (cortes eléctricos, inundaciones locales).
-- **Multi-Región (Recuperación ante Desastres):** Desplegar en áreas geográficas distintas. Protege contra interrupciones regionales catastróficas.
-
-### 2. Amazon CloudFront y Ubicaciones de Borde
-- **CloudFront:** Servicio de CDN que acelera la entrega de contenido estático (imágenes/JS) y dinámico (video).
-- **Ubicaciones de Borde (Edge Locations):** Puntos de presencia físicos distribuidos por el mundo donde CloudFront guarda copias (**Caché**) de los datos.
-- **Relación:** El usuario pide un dato -> CloudFront lo busca en la Edge Location más cercana -> Menor latencia.
-
-### 3. Amazon Route 53 (DNS)
-- **Función:** Sistema de nombres de dominio. Traduce \`www.ejemplo.com\` en una dirección IP.
-- **Valor:** Dirige el tráfico de los usuarios hacia el recurso de AWS más cercano o saludable.
+Este documento sintetiza el conocimiento de los primeros dos módulos, integrando los conceptos clave de tus notas con los requisitos actualizados del examen **CLF-C02** (incluyendo IA Generativa y Gobernanza).
 
 ---
-## 📊 Tabla Comparativa: AZ vs. Edge Location
 
-| Característica | Zona de Disponibilidad (AZ) | Ubicación de Borde (Edge Location) |
+## 🚀 1. El Valor de Negocio (Módulo 1)
+
+### Los 6 Beneficios de la Nube (Crucial)
+1.  **De Gastos de Capital (CapEx) a Gastos Operativos (OpEx):** Paga solo por lo que usas (Variable).
+2.  **Economías de Escala Masivas:** AWS compra tanto que los precios bajan para todos.
+3.  **Dejar de adivinar la capacidad:** Escala según la demanda real (**Elasticidad**).
+4.  **Aumentar velocidad y agilidad:** Innova y despliega en minutos, no semanas.
+5.  **Adiós al "Mantenimiento Pesado Indiferenciado":** AWS cuida el centro de datos; tú cuidas tu negocio.
+6.  **Globalización en minutos:** Despliegue mundial con un clic.
+
+> **💡 Analogía del Examen:** La nube es como el **suministro eléctrico**. No construyes una planta de energía (CapEx); solo enchufas tus equipos y pagas por los kilovatios consumidos (OpEx).
+
+---
+
+## 🌍 2. Infraestructura Global (Módulo 1)
+
+| Componente | Definición | Uso para el Examen |
 | :--- | :--- | :--- |
-| **Componente de** | Una Región de AWS | Red Global de AWS (CloudFront) |
-| **Uso Principal** | Ejecutar EC2, RDS, VPCs | Almacenamiento en caché (S3, Video) |
-| **Protección contra** | Fallas de hardware/centros de datos | Alta latencia de red |
+| **Región** | Área geográfica aislada. | Elige por: **Cumplimiento (Leyes)**, **Latencia**, **Precio** y **Servicios disponibles**. |
+| **Zona de Disponibilidad (AZ)** | Uno o más centros de datos (min. 3 por región). | Diseña con múltiples AZs para **Alta Disponibilidad** y **Tolerancia a Fallos**. |
+| **Edge Location** | Puntos de caché (CloudFront). | Reduce la latencia para usuarios finales (Entrega de contenido). |
 
 ---
 
-## 🎯 Puntos Críticos para el Examen (Keywords)
-- **"High Availability":** Siempre busca **Multi-AZ**.
-- **"Disaster Recovery":** Siempre busca **Multi-Región**.
-- **"Edge Locations" / "Points of Presence (PoP)":** Gatillos para **CloudFront**.
-- **"DNS Resolution":** Gatillo para **Route 53**.
+## 🛡️ 3. Seguridad: El Modelo de Responsabilidad Compartida
+
+AWS utiliza el mantra: **"AWS es responsable DE la nube, el Cliente es responsable EN la nube"**.
+
+| AWS (DE la nube) | Cliente (EN la nube) |
+| :--- | :--- |
+| Infraestructura Física (Servidores, Red, Energía). | Configuración de **Security Groups** y Firewalls. |
+| Gestión de Capas de Virtualización. | Parches del **Sistema Operativo** y Aplicaciones. |
+| Seguridad de los Centros de Datos. | **Cifrado de Datos** (Client-side & Server-side). |
+| Servicios Globales (S3, DynamoDB, IAM). | Gestión de Identidades y Accesos (**IAM**). |
 
 ---
 
-## ⚠️ Trampas de Examen (Distractores)
-- **CloudFront NO es para almacenamiento:** El archivo original está en **S3**; CloudFront solo guarda una copia temporal.
-- **Edge Location NO es un centro de datos para EC2:** No puedes lanzar una instancia EC2 directamente en una Edge Location (a menos que uses servicios híbridos específicos).
-- **Route 53 vs CloudFront:** Route 53 encuentra la "dirección"; CloudFront entrega el "contenido" rápido.
+## 💻 4. Cómputo y EC2 (Módulo 2)
+
+### Tipos de Instancias (Nomenclatura: \`t3.large\`)
+*   **General Purpose:** Equilibrio (Web servers, repos).
+*   **Compute Optimized:** Procesamiento intensivo (Batch, Media transcoding).
+*   **Memory Optimized:** Bases de datos de alto rendimiento, Cache (Redis).
+*   **Storage Optimized:** Sistemas de archivos distribuidos, Data Warehousing.
+*   **Accelerated Computing:** GPUs para IA/ML y Gráficos.
+
+### Modelos de Precios (Tu arma secreta para ahorrar)
+1.  **On-Demand:** Sin compromiso. Ideal para pruebas y picos impredecibles.
+2.  **Spot:** Capacidad sobrante con hasta 90% de descuento. **Riesgo:** Aviso de terminación de 2 min. (Ideal para Batch).
+3.  **Savings Plans:** Compromiso de gasto ($/hora) por 1-3 años. Cubre **EC2, Fargate y Lambda**.
+4.  **Reserved Instances:** Compromiso de capacidad por 1-3 años.
+5.  **Dedicated Hosts:** Servidor físico exclusivo. Necesario para **Licencias (BYOL)** y cumplimiento estricto.
 
 ---
-## 📖 Diccionario de Servicios AWS (Visualización de Distractores)
 
-| Servicio | Definición Corta | Palabras Gatillo (Keywords) |
-| :--- | :--- | :--- |
-| **Amazon CloudFront** | Red de Entrega de Contenido (CDN). | Caching, Low Latency, Edge. |
-| **Amazon Route 53** | Servicio de DNS altamente disponible. | Domain, Routing, DNS, Failover. |
-| **AWS Outposts** | Ejecuta AWS en centros de datos locales. | Hybrid, On-premises, Local latency. |
-| **AWS Global Accelerator** | Mejora la ruta de red global. | Anycast IP, Network path optimization. |
+## ⚖️ 5. Escalado y Mensajería (Módulo 2)
+
+*   **Vertical (Up/Down):** Cambiar el tamaño de la instancia (más CPU/RAM). *Límite físico.*
+*   **Horizontal (Out/In):** Añadir o quitar más instancias. *Escalado infinito.*
+*   **Elastic Load Balancing (ELB):** El "policía de tráfico" que reparte la carga entre instancias.
+*   **SQS (Simple Queue Service):** Mensajería para desacoplar sistemas (evita que un fallo en un componente tire todo el sistema).
+*   **SNS (Simple Notification Service):** Envío de notificaciones (Email, SMS, HTTP) estilo Pub/Sub.
 
 ---
 
-## 🤖 Conexión con IA Generativa y Responsabilidad Compartida
-- **IA Generativa (Baja Latencia):** Para aplicaciones de chat de IA en tiempo real, usar **CloudFront** para entregar la interfaz web y **Global Accelerator** para optimizar la conexión con el endpoint de inferencia de IA reduce drásticamente el "lag" percibido por el usuario.
-- **Modelo de Responsabilidad Compartida:** 
-    - **AWS es responsable de:** El mantenimiento físico de las Edge Locations y la replicación de datos entre AZs si el servicio es gestionado (Seguridad **DE** la nube).
-    - **El Cliente es responsable de:** Configurar correctamente las políticas de caché en CloudFront y diseñar su arquitectura como Multi-AZ para garantizar la disponibilidad (Seguridad **EN** la nube).
+## 🔥 6. CONTENIDO CLF-C02: Lo que debes saber y NO estaba en las notas
 
-> **Nota del Instructor:** Un error común es pensar que "CloudFront es solo para imágenes". También acelera APIs y contenido dinámico. Si el examen dice "acelerar entrega global", piensa en CloudFront.
+Para asegurar tu certificación, memoriza estos conceptos adicionales que AWS ha integrado en la versión actual del examen:
 
+### A. IA Generativa en AWS
+*   **Amazon Bedrock:** El servicio más importante para el examen. Permite construir aplicaciones de IA Generativa usando modelos base (FMs) a través de una API. Es **Serverless**.
+*   **Amazon SageMaker:** Plataforma completa para construir, entrenar y desplegar modelos de ML propios.
+
+### B. Pilares del Well-Architected Framework (6 Pilares)
+1.  **Excelencia Operativa:** Ejecutar y monitorear sistemas.
+2.  **Seguridad:** Proteger datos y sistemas.
+3.  **Fiabilidad (Reliability):** Recuperarse de fallos.
+4.  **Rendimiento:** Usar recursos de forma eficiente.
+5.  **Optimización de Costos:** Evitar gastos innecesarios.
+6.  **Sostenibilidad:** Minimizar el impacto ambiental (Nuevo en CLF-C02).
+
+### C. Gobernanza y Gestión de Cuentas
+*   **AWS Organizations:** Centraliza la facturación (**Consolidated Billing**) y permite aplicar políticas de control (**SCPs**) a múltiples cuentas.
+*   **AWS Control Tower:** La forma más fácil de configurar y gobernar un entorno multi-cuenta seguro (Landing Zones).
+
+---
+
+## ⚠️ Trampas Comunes de Examen
+1.  **"¿Cuál es el servicio más barato para X?":** Si la carga es tolerable a interrupciones, la respuesta es **Spot**. Si es constante, es **Savings Plans**.
+2.  **"¿Cómo reduzco la latencia global?":** No es solo añadir Regiones, usa **Amazon CloudFront** (Edge Locations) para contenido estático.
+3.  **"¿Quién es responsable de parchar el OS en EC2?":** Siempre el **Cliente**. (AWS solo parcha el software de servicios administrados como RDS o Lambda).
+4.  **"Soberanía de Datos":** Significa que AWS **NUNCA** moverá tus datos de una Región a otra sin tu permiso explícito.
 `;
     const html = marked.parse(md);
     document.getElementById('md-content').innerHTML =

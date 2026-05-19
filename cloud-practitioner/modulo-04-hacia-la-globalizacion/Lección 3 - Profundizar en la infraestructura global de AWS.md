@@ -21,7 +21,6 @@ AWS evalúa tu capacidad para diseñar contra fallas:
 - **Valor:** Dirige el tráfico de los usuarios hacia el recurso de AWS más cercano o saludable.
 
 ---
-
 ## 📊 Tabla Comparativa: AZ vs. Edge Location
 
 | Característica | Zona de Disponibilidad (AZ) | Ubicación de Borde (Edge Location) |
@@ -46,7 +45,6 @@ AWS evalúa tu capacidad para diseñar contra fallas:
 - **Route 53 vs CloudFront:** Route 53 encuentra la "dirección"; CloudFront entrega el "contenido" rápido.
 
 ---
-
 ## 📖 Diccionario de Servicios AWS (Visualización de Distractores)
 
 | Servicio | Definición Corta | Palabras Gatillo (Keywords) |
@@ -65,14 +63,4 @@ AWS evalúa tu capacidad para diseñar contra fallas:
     - **El Cliente es responsable de:** Configurar correctamente las políticas de caché en CloudFront y diseñar su arquitectura como Multi-AZ para garantizar la disponibilidad (Seguridad **EN** la nube).
 
 > **Nota del Instructor:** Un error común es pensar que "CloudFront es solo para imágenes". También acelera APIs y contenido dinámico. Si el examen dice "acelerar entrega global", piensa en CloudFront.
-
-
-
-Te comparto el comando de nvidia:
-
-name, memory.total [MiB]
-NVIDIA GeForce RTX 4080 Laptop GPU, 12282 MiB
-
-Estuve revisando el CLAUDE.md, pero creo que no es necesario agregar un carpeta "jarvis", de mi lado lo veo innecesario en si todo el proyecto esta enfocado Jarvis, así que no le veo necesidad de agregar, podrías realizar esa corrección y modificar en base a los datos que te comparto de "nvidia"
-
 

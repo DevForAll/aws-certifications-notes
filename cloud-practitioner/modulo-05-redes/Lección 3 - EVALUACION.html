@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AWS Exam Simulator - Módulo 5, Lección 3 (Acumulativo)</title>
+    <style>
+        :root {
+            --aws-navy: #232F3E;
+            --aws-orange: #FF9900;
+            --aws-white: #FFFFFF;
+            --aws-bg: #F2F3F3;
+            --correct-bg: #E7F4E4;
+            --incorrect-bg: #FAEAEA;
+            --feedback-bg: #FFF9C4;
+        }
+
+        body {
+            font-family: 'Amazon Ember', Arial, sans-serif;
+            background-color: var(--aws-bg);
+            margin: 0;
+            padding: 0;
+            color: var(--aws-navy);
+        }
+
+        header {
+            background-color: var(--aws-navy);
+            color: var(--aws-white);
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .logo-sim {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+
+        .progress-container {
+            flex-grow: 1;
+            margin: 0 2rem;
+        }
+
+        .progress-bar {
+            background-color: #444;
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background-color: var(--aws-orange);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .score-display {
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .question-card {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .option-btn {
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            background: none;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover {
+            border-color: var(--aws-orange);
+            background-color: #fffaf0;
+        }
+
+        .option-btn.selected {
+            border-color: var(--aws-orange);
+            background-color: #fff4e6;
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct-bg);
+            border-color: #2e7d32;
+        }
+
+        .option-btn.incorrect {
+            background-color: var(--incorrect-bg);
+            border-color: #c62828;
+        }
+
+        .feedback-box {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: var(--feedback-bg);
+            border-radius: 5px;
+            border-left: 5px solid var(--aws-orange);
+            display: none;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 1rem;
+        }
+
+        .btn {
+            padding: 0.8rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .btn-next {
+            background-color: var(--aws-orange);
+            color: var(--aws-white);
+        }
+
+        .btn-next:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #results-dashboard {
+            background: var(--aws-white);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .final-score {
+            font-size: 3rem;
+            color: var(--aws-orange);
+            margin: 1rem 0;
+        }
+
+        .btn-restart {
+            background-color: var(--aws-navy);
+            color: white;
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-sim">AWS Academy Simulator - M5 L3</div>
+    <div class="progress-container">
+        <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+    </div>
+    <div class="score-display">Puntuación: <span id="current-score">0</span>%</div>
+</header>
+
+<main>
+    <div id="quiz-container">
+        <!-- Questions will be injected here -->
+    </div>
+
+    <div id="results-dashboard">
+        <h2>Evaluación Completada</h2>
+        <div class="final-score" id="final-score">0%</div>
+        <p id="result-message"></p>
+        <button class="btn btn-restart" onclick="restartQuiz()">Reiniciar todo (Shuffle)</button>
+    </div>
+</main>
+
+<script>
+    const questions = [
+        // --- MODULE 5: NETWORKING (LESSON 3 FOCUS) ---
+        {
+            text: "Un equipo de desarrolladores que trabaja desde sus hogares necesita acceder de forma segura a un servidor interno en una subred privada de AWS. ¿Qué servicio es el más adecuado para esta necesidad individual?",
+            options: [
+                "AWS Direct Connect",
+                "AWS Site-to-Site VPN",
+                "AWS Client VPN",
+                "AWS Transit Gateway"
+            ],
+            answer: 2,
+            explanation: "AWS Client VPN es un servicio de VPN basado en software que permite a usuarios individuales conectarse a AWS desde cualquier lugar."
+        },
+        {
+            text: "Una empresa desea conectar su centro de datos local con su VPC utilizando una conexión física de fibra óptica que no pase por la Internet pública. ¿Qué servicio cumple con este requisito?",
+            options: [
+                "AWS Site-to-Site VPN",
+                "AWS Direct Connect",
+                "VPC Peering",
+                "Amazon API Gateway"
+            ],
+            answer: 1,
+            explanation: "Direct Connect establece una conexión física dedicada y privada, evitando la Internet pública para mayor rendimiento y seguridad."
+        },
+        {
+            text: "¿Cuál es el componente de AWS que actúa como un concentrador (Hub) para simplificar la conexión entre cientos de VPCs y redes locales?",
+            options: [
+                "Virtual Private Gateway",
+                "Internet Gateway",
+                "AWS Transit Gateway",
+                "AWS PrivateLink"
+            ],
+            answer: 2,
+            explanation: "Transit Gateway simplifica la red actuando como un hub central, evitando la complejidad de crear cientos de conexiones individuales o peerings."
+        },
+        {
+            text: "Usted necesita implementar una conexión segura entre su oficina y AWS de forma rápida y económica. No le importa usar la Internet pública para el transporte siempre que el tráfico esté cifrado. ¿Qué elegiría?",
+            options: [
+                "AWS Direct Connect",
+                "AWS Site-to-Site VPN",
+                "VPC Endpoint",
+                "Amazon CloudFront"
+            ],
+            answer: 1,
+            explanation: "Site-to-Site VPN es rápido de configurar, económico y utiliza Internet pública para crear un túnel IPsec cifrado."
+        },
+        {
+            text: "¿Qué servicio permite conectar servicios entre diferentes VPCs o hacia servicios de terceros sin que el tráfico salga nunca de la red de AWS?",
+            options: [
+                "AWS Transit Gateway",
+                "AWS PrivateLink",
+                "Internet Gateway",
+                "AWS Client VPN"
+            ],
+            answer: 1,
+            explanation: "AWS PrivateLink proporciona conectividad privada entre VPCs y servicios, garantizando que el tráfico no pase por la Internet pública."
+        },
+        {
+            text: "¿Cuál es el punto de terminación en el lado de AWS requerido para establecer una conexión Site-to-Site VPN?",
+            options: [
+                "Customer Gateway",
+                "Virtual Private Gateway",
+                "NAT Gateway",
+                "Internet Gateway"
+            ],
+            answer: 1,
+            explanation: "El Virtual Private Gateway (VPG) es el anchor del lado de AWS para las conexiones VPN y Direct Connect."
+        },
+
+        // --- MODULE 5: PREVIOUS LESSONS ---
+        {
+            text: "Usted tiene una instancia de EC2 en una subred privada que necesita descargar actualizaciones de seguridad de Internet. ¿Qué componente debería utilizar para permitir esto sin permitir tráfico entrante?",
+            options: [
+                "Internet Gateway",
+                "NAT Gateway",
+                "Virtual Private Gateway",
+                "Egress-Only Internet Gateway"
+            ],
+            answer: 1,
+            explanation: "Un NAT Gateway permite que los recursos en subredes privadas salgan a Internet (unidireccional) pero evita que Internet inicie conexiones con ellos."
+        },
+        {
+            text: "¿Cuál es el alcance geográfico de una Amazon VPC?",
+            options: [
+                "Global",
+                "Regional",
+                "Zona de Disponibilidad (AZ)",
+                "Ubicación de Borde (Edge)"
+            ],
+            answer: 1,
+            explanation: "Una VPC es un recurso regional. Puede abarcar múltiples AZs dentro de una misma región."
+        },
+        {
+            text: "¿Qué componente se utiliza para permitir que una subred sea 'Pública'?",
+            options: [
+                "NAT Gateway",
+                "Internet Gateway (IGW)",
+                "Direct Connect",
+                "VPC Peering"
+            ],
+            answer: 1,
+            explanation: "Una subred es pública si su tabla de enrutamiento tiene una ruta que apunta a un Internet Gateway."
+        },
+
+        // --- CUMULATIVE: MODULES 1 TO 4 ---
+        {
+            text: "¿Cuál de los siguientes es un beneficio de la nube que permite a las empresas pagar solo por lo que consumen?",
+            options: [
+                "Economías de escala",
+                "Cambiar gastos de capital (CapEx) por gastos variables (OpEx)",
+                "Globalización en minutos",
+                "Dejar de adivinar la capacidad"
+            ],
+            answer: 1,
+            explanation: "Este beneficio permite pasar de invertir grandes sumas en hardware (CapEx) a pagar solo por el uso mensual (OpEx)."
+        },
+        {
+            text: "Según el Modelo de Responsabilidad Compartida, ¿quién es responsable de la gestión de la identidad y el acceso (IAM)?",
+            options: [
+                "AWS",
+                "El Cliente",
+                "Ambos",
+                "Terceros autorizados"
+            ],
+            answer: 1,
+            explanation: "El cliente es responsable de configurar usuarios, grupos, roles y sus respectivos permisos dentro de AWS."
+        },
+        {
+            text: "¿Qué servicio de AWS se utiliza para monitorizar la salud de las aplicaciones y el uso de recursos como el porcentaje de CPU de las instancias EC2?",
+            options: [
+                "AWS CloudTrail",
+                "Amazon CloudWatch",
+                "AWS Trusted Advisor",
+                "Amazon Inspector"
+            ],
+            answer: 1,
+            explanation: "CloudWatch es el servicio de monitorización y observabilidad de AWS para métricas, logs y alarmas."
+        },
+        {
+            text: "¿Cuál es el servicio de almacenamiento de bases de datos relacionales totalmente gestionado que admite motores como MySQL, PostgreSQL y SQL Server?",
+            options: [
+                "Amazon DynamoDB",
+                "Amazon RDS",
+                "Amazon Redshift",
+                "Amazon Aurora"
+            ],
+            answer: 1,
+            explanation: "Amazon RDS facilita la configuración, operación y escalado de bases de datos relacionales en la nube."
+        },
+        {
+            text: "Usted necesita una solución de almacenamiento para archivos que se acceden con frecuencia y requieren un rendimiento de latencia de milisegundos. ¿Qué clase de S3 es la más adecuada?",
+            options: [
+                "S3 Standard",
+                "S3 Standard-IA",
+                "S3 Glacier Deep Archive",
+                "S3 One Zone-IA"
+            ],
+            answer: 0,
+            explanation: "S3 Standard es ideal para datos de acceso frecuente y aplicaciones críticas con baja latencia."
+        },
+        {
+            text: "¿Qué pilar del Well-Architected Framework se centra en la capacidad de ejecutar cargas de trabajo de forma eficaz y obtener información sobre sus operaciones?",
+            options: [
+                "Seguridad",
+                "Excelencia Operativa",
+                "Fiabilidad",
+                "Optimización de Costos"
+            ],
+            answer: 1,
+            explanation: "La Excelencia Operativa se trata de procesos, automatización y mejora continua de los sistemas."
+        },
+        {
+            text: "¿Cuál es el modelo de precios de EC2 que ofrece el mayor descuento (hasta el 90%) pero cuyas instancias pueden ser interrumpidas por AWS?",
+            options: [
+                "Instancias On-Demand",
+                "Instancias Reservadas",
+                "Instancias Spot",
+                "Dedicated Hosts"
+            ],
+            answer: 2,
+            explanation: "Las instancias Spot son ideales para tareas flexibles o tolerantes a fallos debido a su precio extremadamente bajo."
+        },
+        {
+            text: "¿Qué servicio de AWS le permite registrar todas las llamadas a la API realizadas en su cuenta para fines de auditoría?",
+            options: [
+                "Amazon CloudWatch",
+                "AWS CloudTrail",
+                "AWS Config",
+                "Amazon GuardDuty"
+            ],
+            answer: 1,
+            explanation: "CloudTrail registra la actividad de la cuenta, permitiendo rastrear quién hizo qué, cuándo y desde dónde."
+        },
+        {
+            text: "¿Qué herramienta de AWS proporciona recomendaciones para mejorar la seguridad, el rendimiento y reducir los costos basándose en las mejores prácticas?",
+            options: [
+                "AWS Budgets",
+                "AWS Trusted Advisor",
+                "AWS Artifact",
+                "AWS Organizations"
+            ],
+            answer: 1,
+            explanation: "Trusted Advisor analiza su cuenta y sugiere mejoras inmediatas en varias categorías críticas."
+        },
+        {
+            text: "¿Cuál es el servicio de entrega de contenido (CDN) de AWS que utiliza ubicaciones de borde para reducir la latencia?",
+            options: [
+                "Amazon Route 53",
+                "Amazon CloudFront",
+                "AWS Global Accelerator",
+                "Direct Connect"
+            ],
+            answer: 1,
+            explanation: "CloudFront distribuye contenido globalmente con baja latencia mediante el almacenamiento en caché en ubicaciones de borde."
+        },
+        {
+            text: "¿Qué servicio de AWS permite ejecutar código en respuesta a eventos sin tener que gestionar servidores?",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "Amazon ECS",
+                "AWS Elastic Beanstalk"
+            ],
+            answer: 1,
+            explanation: "Lambda es el servicio Serverless por excelencia de AWS para ejecutar funciones de código."
+        },
+        {
+            text: "En el Modelo de Responsabilidad Compartida, ¿quién es responsable de la protección de los datos del cliente (Cifrado)?",
+            options: [
+                "AWS",
+                "El Cliente",
+                "Ambos",
+                "El proveedor de hardware"
+            ],
+            answer: 1,
+            explanation: "El cliente es responsable de cifrar sus propios datos, tanto en reposo como en tránsito."
+        },
+        {
+            text: "¿Qué servicio de base de datos es ideal para analítica de datos a gran escala (Data Warehousing)?",
+            options: [
+                "Amazon RDS",
+                "Amazon DynamoDB",
+                "Amazon Redshift",
+                "Amazon ElastiCache"
+            ],
+            answer: 2,
+            explanation: "Redshift es un data warehouse rápido y totalmente gestionado que permite analizar datos con SQL."
+        },
+        {
+            text: "Usted necesita crear una red de VPCs que se comuniquen entre sí en diferentes regiones. ¿Qué característica de VPC utilizaría?",
+            options: [
+                "VPC Endpoints",
+                "VPC Peering",
+                "NAT Gateway",
+                "Internet Gateway"
+            ],
+            answer: 1,
+            explanation: "VPC Peering permite la comunicación entre VPCs, incluso si están en diferentes regiones o cuentas de AWS."
+        },
+        {
+            text: "¿Cuál de los siguientes servicios es un ejemplo de almacenamiento de archivos (Network Attached Storage) para Linux?",
+            options: [
+                "Amazon EBS",
+                "Amazon S3",
+                "Amazon EFS",
+                "Amazon Glacier"
+            ],
+            answer: 2,
+            explanation: "EFS (Elastic File System) proporciona un sistema de archivos compartible y escalable para instancias EC2."
+        },
+        {
+            text: "¿Qué pilar del Well-Architected Framework se enfoca en evitar gastos innecesarios?",
+            options: [
+                "Eficiencia de Rendimiento",
+                "Optimización de Costos",
+                "Excelencia Operativa",
+                "Fiabilidad"
+            ],
+            answer: 1,
+            explanation: "El pilar de Optimización de Costos se centra en pagar solo por lo necesario y maximizar el valor."
+        },
+        {
+            text: "¿Cuál es el beneficio de la nube que permite lanzar recursos globalmente en cuestión de minutos?",
+            options: [
+                "Agilidad",
+                "Globalización en minutos",
+                "Economías de escala",
+                "Tolerancia a fallos"
+            ],
+            answer: 1,
+            explanation: "AWS permite desplegar aplicaciones en múltiples regiones del mundo con unos pocos clics."
+        },
+        {
+            text: "¿Qué servicio de AWS ayuda a proteger sus aplicaciones web contra ataques comunes como inyección SQL o scripts entre sitios (XSS)?",
+            options: [
+                "AWS Shield",
+                "AWS WAF (Web Application Firewall)",
+                "Amazon GuardDuty",
+                "AWS KMS"
+            ],
+            answer: 1,
+            explanation: "AWS WAF permite filtrar el tráfico web basándose en reglas para proteger las aplicaciones de exploits comunes."
+        },
+        {
+            text: "¿Qué tipo de almacenamiento de bloques se utiliza como disco duro para las instancias EC2?",
+            options: [
+                "Amazon S3",
+                "Amazon EBS (Elastic Block Store)",
+                "Amazon EFS",
+                "AWS Snowball"
+            ],
+            answer: 1,
+            explanation: "EBS proporciona volúmenes de almacenamiento de bloques de alto rendimiento para su uso con Amazon EC2."
+        },
+        {
+            text: "¿Cuál de los siguientes es un servicio de base de datos NoSQL de clave-valor totalmente gestionado?",
+            options: [
+                "Amazon Aurora",
+                "Amazon RDS",
+                "Amazon DynamoDB",
+                "Amazon Neptune"
+            ],
+            answer: 2,
+            explanation: "DynamoDB es la base de datos NoSQL escalable y de alto rendimiento de AWS."
+        },
+        {
+            text: "Si desea recibir una notificación cuando su gasto mensual alcance los $100, ¿qué servicio usaría?",
+            options: [
+                "AWS Cost Explorer",
+                "AWS Budgets",
+                "AWS Trusted Advisor",
+                "Pricing Calculator"
+            ],
+            answer: 1,
+            explanation: "AWS Budgets permite crear alertas de umbral de coste y uso."
+        },
+        {
+            text: "¿Qué servicio de AWS permite a los clientes descargar informes de cumplimiento (como ISO o PCI) y acuerdos de seguridad?",
+            options: [
+                "AWS Secrets Manager",
+                "AWS Artifact",
+                "AWS Shield",
+                "AWS IAM"
+            ],
+            answer: 1,
+            explanation: "Artifact es el portal de autoservicio para acceder a los documentos de cumplimiento de AWS."
+        },
+        {
+            text: "Usted desea automatizar el escalado de sus instancias de EC2 en respuesta a cambios en la demanda. ¿Qué servicio usaría?",
+            options: [
+                "AWS Elastic Beanstalk",
+                "Amazon EC2 Auto Scaling",
+                "AWS CloudFormation",
+                "Elastic Load Balancing"
+            ],
+            answer: 1,
+            explanation: "Auto Scaling ajusta automáticamente el número de instancias para mantener el rendimiento y minimizar costos."
+        },
+        {
+            text: "¿Cuál es el pilar del Well-Architected Framework que incluye la capacidad de proteger la información, los sistemas y los activos?",
+            options: [
+                "Fiabilidad",
+                "Seguridad",
+                "Excelencia Operativa",
+                "Optimización de Costos"
+            ],
+            answer: 1,
+            explanation: "El pilar de Seguridad se centra en proteger los datos y la infraestructura."
+        },
+        {
+            text: "¿Qué servicio de AWS permite realizar búsquedas de texto completo y análisis de registros?",
+            options: [
+                "Amazon Redshift",
+                "Amazon OpenSearch Service",
+                "Amazon RDS",
+                "Amazon DocumentDB"
+            ],
+            answer: 1,
+            explanation: "OpenSearch (antes Elasticsearch) es ideal para búsqueda y análisis de datos en tiempo real."
+        },
+        {
+            text: "Elija DOS servicios que se consideran Serverless (sin servidor). (Seleccione 2)",
+            options: [
+                "Amazon EC2",
+                "AWS Lambda",
+                "Amazon S3",
+                "Amazon RDS (Instancia estándar)"
+            ],
+            isMultiple: true,
+            answers: [1, 2],
+            explanation: "Lambda y S3 son servicios donde AWS gestiona toda la infraestructura subyacente por ti."
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let shuffledQuestions = [];
+
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    function initQuiz() {
+        shuffledQuestions = shuffleArray([...questions]);
+        renderQuestion();
+        updateProgress();
+    }
+
+    function renderQuestion() {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = '';
+        
+        const q = shuffledQuestions[currentQuestionIndex];
+        const card = document.createElement('div');
+        card.className = 'question-card active';
+        
+        const typeHint = q.isMultiple ? ' (Seleccione 2 opciones)' : '';
+        card.innerHTML = `
+            <div class="question-text">${currentQuestionIndex + 1}. ${q.text}${typeHint}</div>
+            <div class="options-container" id="options-${currentQuestionIndex}">
+                ${q.options.map((opt, i) => `
+                    <button class="option-btn" onclick="handleOptionClick(${i})">${opt}</button>
+                `).join('')}
+            </div>
+            <div id="feedback-${currentQuestionIndex}" class="feedback-box">
+                <strong>Explicación Técnica:</strong><br>
+                ${q.explanation}
+            </div>
+            <div class="controls">
+                <button id="next-btn" class="btn btn-next" onclick="nextQuestion()" disabled>Siguiente</button>
+            </div>
+        `;
+        container.appendChild(card);
+    }
+
+    let selectedOptions = [];
+
+    function handleOptionClick(index) {
+        const q = shuffledQuestions[currentQuestionIndex];
+        const options = document.getElementById(`options-${currentQuestionIndex}`).children;
+        
+        if (q.isMultiple) {
+            if (selectedOptions.includes(index)) {
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                options[index].classList.remove('selected');
+            } else if (selectedOptions.length < 2) {
+                selectedOptions.push(index);
+                options[index].classList.add('selected');
+            }
+            
+            if (selectedOptions.length === 2) {
+                validateMultiple(q, options);
+            }
+        } else {
+            validateSingle(q, index, options);
+        }
+    }
+
+    function validateSingle(q, index, options) {
+        const isCorrect = index === q.answer;
+        if (isCorrect) {
+            options[index].classList.add('correct');
+            score++;
+        } else {
+            options[index].classList.add('incorrect');
+            options[q.answer].classList.add('correct');
+        }
+        
+        disableOptions(options);
+        showFeedback();
+    }
+
+    function validateMultiple(q, options) {
+        let correctCount = 0;
+        selectedOptions.forEach(idx => {
+            if (q.answers.includes(idx)) {
+                options[idx].classList.add('correct');
+                correctCount++;
+            } else {
+                options[idx].classList.add('incorrect');
+            }
+        });
+
+        q.answers.forEach(idx => {
+            options[idx].classList.add('correct');
+        });
+
+        if (correctCount === 2) score++;
+        
+        disableOptions(options);
+        showFeedback();
+    }
+
+    function disableOptions(options) {
+        Array.from(options).forEach(btn => btn.disabled = true);
+        document.getElementById('next-btn').disabled = false;
+        updateScoreDisplay();
+    }
+
+    function showFeedback() {
+        document.getElementById(`feedback-${currentQuestionIndex}`).style.display = 'block';
+    }
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        selectedOptions = [];
+        if (currentQuestionIndex < shuffledQuestions.length) {
+            renderQuestion();
+            updateProgress();
+        } else {
+            showResults();
+        }
+    }
+
+    function updateProgress() {
+        const percent = (currentQuestionIndex / shuffledQuestions.length) * 100;
+        document.getElementById('progress-fill').style.width = `${percent}%`;
+    }
+
+    function updateScoreDisplay() {
+        const totalPossibleSoFar = currentQuestionIndex + 1;
+        const currentPercent = Math.round((score / totalPossibleSoFar) * 100);
+        document.getElementById('current-score').innerText = currentPercent;
+    }
+
+    function showResults() {
+        document.getElementById('quiz-container').style.display = 'none';
+        const dashboard = document.getElementById('results-dashboard');
+        dashboard.style.display = 'block';
+        
+        const finalPercent = Math.round((score / shuffledQuestions.length) * 100);
+        document.getElementById('final-score').innerText = `${finalPercent}%`;
+        
+        let msg = "";
+        if (finalPercent >= 80) msg = "¡Excelente! Dominas los conceptos fundamentales de AWS hasta el Módulo 5.";
+        else if (finalPercent >= 65) msg = "Buen trabajo. Estás cerca del nivel de certificación, pero repasa los servicios de red.";
+        else msg = "Necesitas reforzar los fundamentos. Repasa el Modelo de Responsabilidad Compartida y las diferencias de conectividad.";
+        
+        document.getElementById('result-message').innerText = msg;
+        document.getElementById('progress-fill').style.width = '100%';
+    }
+
+    function restartQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        selectedOptions = [];
+        document.getElementById('quiz-container').style.display = 'block';
+        document.getElementById('results-dashboard').style.display = 'none';
+        initQuiz();
+    }
+
+    // Start the quiz
+    initQuiz();
+</script>
+
+</body>
+</html>

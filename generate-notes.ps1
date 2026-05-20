@@ -194,5 +194,6 @@ $m5 = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\m
 
 New-NoteHtml "$m5\Lección 1 - Introducción a las redes.md"                   "$m5\leccion-01-notas.html" "Leccion 1 - Introduccion a las Redes"              "Lecci%C3%B3n%201%20-%20EVALUACION.html"
 New-NoteHtml "$m5\Lección 2 - Organización de los recursos en la nube.md"    "$m5\leccion-02-notas.html" "Leccion 2 - Organizacion de Recursos en la Nube"   "Lecci%C3%B3n%202%20-%20EVALUACION.html"
+New-NoteHtml "$m5\Lección 3 - Más formas de conectarse a la nube de AWS.md" "$m5\leccion-03-notas.html" "Leccion 3 - Mas formas de conectarse a AWS"        "Lecci%C3%B3n%203%20-%20EVALUACION.html"
 
-Write-Host "`nListo. 28 paginas regeneradas con dark mode."
+Write-Host "`nListo. 29 paginas regeneradas con dark mode."

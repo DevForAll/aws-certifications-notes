@@ -9,11 +9,10 @@
 - **Fecha:** 2026-10-15
 - **Hecho:** plan confirmado con la captura del Exam Prep Plan, horario, decisiones (§2, §6) y flujo de trabajo por sesión (§5).
   Decisiones del dueño (2026-10-15): **25 preguntas por lección, lo más real posible**, y **simulacro de 20 preguntas al cerrar cada módulo** (§5). Con eso el examen pasa a enero de 2027 salvo que se estudie 7 días por semana (§6).
-- **Estado:** el plan **sigue en definición** con el dueño; la próxima sesión continúa definiendo puntos antes de empezar a estudiar.
-- **Pendiente del dueño:** confirmar **qué días** de la semana estudia (define la fecha del examen, ver §6).
-- **Agenda de la próxima sesión (de definición, no de estudio):** revisar **punto por punto** con el dueño,
+- **Estado:** el plan **sigue en definición** con el dueño; se revisa punto por punto antes de empezar a estudiar.
+- **Agenda de definición (no de estudio):** revisar **punto por punto** con el dueño,
   uno a la vez, cerrar cada uno con una decisión y anotarla en su sección antes de pasar al siguiente:
-  1. Días de estudio → fechas exactas del calendario y fecha objetivo del examen (§6).
+  1. ✅ Días de estudio (2026-10-15): **7 días por semana**, inicio sáb 17 oct, examen objetivo **mar 22 dic 2026** (§6).
   2. Diseño del simulador: modo examen, modo estudio, revisión antes de enviar, «Copiar resultado para Claude» (§5).
   3. Proporciones de la práctica: 25 por lección (60 % lección / 40 % acumulativo), simulacro de 20 por módulo,
      simulacros de 65 tras M3, M5, M8 y M11 (¿se mantienen los 4 o bajan a 2 para ganar tiempo?) (§5).
@@ -31,7 +30,7 @@
   3. Script `simulador/listar-preguntas.py`: lista los enunciados ya usados para no repetir preguntas
      sin que el agente relea todos los bancos (ahorro de tokens).
   4. Hacer que el portal descubra solo lecciones, prácticas y simuladores.
-- **Siguiente (sesión 1 de estudio: sábado 2026-10-18, 10:00–12:00, si los 8 puntos quedan cerrados antes):**
+- **Siguiente (sesión 1 de estudio: sábado 2026-10-17, 10:00–12:00, si los 8 puntos quedan cerrados antes):**
   1. Ver *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min) en Skill Builder.
   2. Dar el **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta** y registrar el puntaje en §8.
   3. Empezar Módulo 1, Lección 1 de Essentials con el flujo de §5.
@@ -247,7 +246,7 @@ resaltar Service Limits / Quotas; incluir IA generativa y gobernanza.
 |---|---|
 | 5 | ~fin de enero 2027 |
 | 6 | ~primera quincena de enero 2027 |
-| 7 | ~22–28 dic 2026 (sin colchón) |
+| **7 (elegido)** | ~22–28 dic 2026 (sin colchón) |
 
 **Lectura honesta:** con 25 preguntas por lección y simulacro por módulo, «antes de fin de año» **solo se mantiene
 estudiando los 7 días**, y sin margen para perder sesiones. Lo realista es **enero de 2027**.
@@ -261,7 +260,21 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 | 2 | Domain 1–4 Review (gratis) + simulacros completos finales 1 y 2 |
 | 3 | Simulacro 3 (+ Official Pretest / Practice Exam si hay suscripción) → **examen** |
 
-Las fechas exactas se fijan cuando el dueño confirme sus días de estudio.
+### Calendario fijado (decisión del dueño 2026-10-15: **7 días por semana**, inicio **sábado 2026-10-17**)
+
+| Sesiones | Fechas | Fase |
+|---|---|---|
+| 1 | sáb 17 oct | Fase 0: overviews + línea base + inicio M1 |
+| 2–23 | 18 oct – 8 nov | Fase 1A: M1–M5 (+ simulacros de módulo + completos tras M3 y M5) |
+| 24–58 | 9 nov – 13 dic | Fase 1B: M6–M13 (+ simulacros de módulo + completos tras M8 y M11) |
+| 59–65 | 14 – 20 dic | Fases 2 y 3: Domain Reviews + 3 simulacros finales |
+| — | **mar 22 dic 2026** | **Fecha objetivo del examen** (lun 21 dic queda de colchón de 1 día) |
+
+- Sin margen: cada sesión perdida corre el examen un día. Si se pierden más de ~3 sesiones, el examen pasa a
+  la primera semana de enero de 2027 (evitar 24–25 y 31 dic). No se recorta la Fase 3.
+- Hitos de control: si al **8 nov** no está cerrado M5, o al **13 dic** no está cerrado M13, se recalcula la fecha.
+- Consecuencia para §10: con este calendario la Fase 2 empieza el 14 dic, demasiado tarde para reservar con
+  2–3 semanas. La regla de reserva se redefine en el punto 6.
 
 ## 7. Suscripción de Skill Builder (decisión del dueño, recomendada)
 

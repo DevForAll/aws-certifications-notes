@@ -105,10 +105,9 @@ Ya están en el cuaderno de errores (§9).
 |---|---|---|
 | 1 | Dueño | Ve la lección en Skill Builder (texto + video) y hace su **comprobación de conocimientos** |
 | 2 | Dueño → agente | Escribe «terminé M_ L_» y pasa los datos de la tabla «Qué pasa el dueño» |
-| 3 | Agente | **3 preguntas de recuerdo** abiertas; el dueño responde de memoria, sin notas |
-| 4 | Agente | Corrige el recuerdo y entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Dueño la lee (~10 min) |
-| 5 | Agente | **Práctica de 10 preguntas en el chat**, en 2 bloques de 5. Dueño responde «1B 2D 3AC…» |
-| 6 | Agente | Corrige con el razonamiento de cada fallo, guarda la práctica, el puntaje (§8) y los errores (§9) |
+| 3 | Agente | Entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Dueño la lee (~10 min) |
+| 4 | Agente | **Práctica de 10–12 preguntas en el chat**, en bloques de 5–6. Dueño responde «1B 2D 3AC…» |
+| 5 | Agente | Corrige con el razonamiento de cada fallo, guarda la práctica, el puntaje (§8) y los errores (§9) |
 
 **Qué pasa el dueño en el paso 2:**
 
@@ -117,8 +116,12 @@ Ya están en el cuaderno de errores (§9).
 | M1–M5 | Solo «terminé M_ L_» + resultado de la comprobación de Skill Builder (captura de las que falló) + dudas o algo nuevo que no esté en la nota |
 | M6–M13 | Lo anterior **+ texto de la lección** (copiar y pegar la página) **+ transcripción del video** **+ capturas** de diagramas. Todo pegado directo en el chat |
 
+Decisión 2026-10-15: **sin preguntas abiertas de recuerdo**. El examen es de opción múltiple y la
+práctica ya obliga a recordar; los ~7 h que costaban en el curso van a más preguntas tipo examen.
+Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pide explicar la diferencia en una línea.
+
 ### Práctica de lección: reglas
-- 10 preguntas (15 si la lección es larga), en español, términos clave en inglés.
+- 10–12 preguntas (15 si la lección es larga), en español, términos clave en inglés.
 - 70 % de la lección + 30 % de lecciones/módulos anteriores (repaso espaciado).
 - ~15 % respuesta múltiple («Elija 2»). Distractores = servicios reales de la misma categoría.
 - Se hace en el chat (no en HTML) para que el agente reciba las respuestas y registre los errores solo.
@@ -147,8 +150,12 @@ Ya están en el cuaderno de errores (§9).
 | Evaluaciones antiguas de Gemini | Donde están; quedan como archivo, no se borran | Sí |
 | Carpeta Obsidian `CERTIFIED AWS CLOUD PRACTITIONER` | Queda como archivo histórico; ya no se escribe ahí | — |
 
-**Portal (`index.html`, `generate-notes.ps1`) en pausa** durante este ciclo: no suma puntos en el examen.
-Se actualiza de una vez al final, si el dueño quiere.
+**Portal web (GitHub Pages): se mantiene** — el dueño repasa desde fuera de su computadora.
+Para que no coma tiempo de estudio:
+- Se actualiza **una vez por módulo** (al cerrar el módulo), no por lección.
+- Mejora única (~30 min, sesión 1 o fuera de horario): que `generate-notes.ps1` e `index.html`
+  descubran solos las lecciones, prácticas y simuladores, sin editar entradas a mano.
+- Las prácticas de lección (`practicas/*.md`) también se publican como páginas para repasarlas en el celular.
 
 Ritmo estimado: **M1–M5 ≈ 3 lecciones por sesión** (ya hay notas); **M6–M13 ≈ 2 lecciones por sesión**.
 

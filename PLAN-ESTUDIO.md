@@ -11,12 +11,18 @@
   Decisiones del dueño (2026-10-15): **25 preguntas por lección, lo más real posible**, y **simulacro de 20 preguntas al cerrar cada módulo** (§5). Con eso el examen pasa a enero de 2027 salvo que se estudie 7 días por semana (§6).
 - **Estado:** el plan **sigue en definición** con el dueño; la próxima sesión continúa definiendo puntos antes de empezar a estudiar.
 - **Pendiente del dueño:** confirmar **qué días** de la semana estudia (define la fecha del examen, ver §6).
-- **Puntos abiertos para la próxima sesión de definición:**
-  1. Días de estudio → fechas exactas del calendario (§6).
-  2. Revisar y aprobar el diseño del simulador (§5: modo examen, modo estudio, «Copiar resultado para Claude»).
-  3. Decidir si se contrata 1 mes de suscripción de Skill Builder y cuándo (§7).
-  4. Logística del examen: en línea desde casa o en centro de Lima (§10).
-  5. Lo que el dueño quiera ajustar del flujo por sesión (§5).
+- **Agenda de la próxima sesión (de definición, no de estudio):** revisar **punto por punto** con el dueño,
+  uno a la vez, cerrar cada uno con una decisión y anotarla en su sección antes de pasar al siguiente:
+  1. Días de estudio → fechas exactas del calendario y fecha objetivo del examen (§6).
+  2. Diseño del simulador: modo examen, modo estudio, revisión antes de enviar, «Copiar resultado para Claude» (§5).
+  3. Proporciones de la práctica: 25 por lección (60 % lección / 40 % acumulativo), simulacro de 20 por módulo,
+     simulacros de 65 tras M3, M5, M8 y M11 (¿se mantienen los 4 o bajan a 2 para ganar tiempo?) (§5).
+  4. Reglas de control: umbrales de 70 %, lecciones partidas entre sesiones, calentamiento, registro de resultados (§5).
+  5. Suscripción de Skill Builder: si se contrata 1 mes y cuándo (§7).
+  6. Logística del examen: en línea desde casa o en centro de Lima; cuándo reservar (§10).
+  7. Portal web y repo: qué se publica, `CLAUDE.md` nuevo, push por el dueño (§5 «Dónde se guarda»).
+  8. Cualquier otro ajuste del dueño al flujo por sesión (§5).
+  Al cerrar los 8 puntos, el agente hace las tareas de «Antes de la sesión 1» y se fija el día de inicio real.
 - **Antes de la sesión 1 (lo hace el agente, fuera del horario de estudio):**
   1. Reescribir el `CLAUDE.md` del repo: hoy describe la sincronización vieja desde Obsidian con **push autónomo**;
      pasa a ser el tutor de estudio (contenido de `GEMINI.md` + flujo de §5) y **el push lo hace el dueño**.
@@ -25,7 +31,7 @@
   3. Script `simulador/listar-preguntas.py`: lista los enunciados ya usados para no repetir preguntas
      sin que el agente relea todos los bancos (ahorro de tokens).
   4. Hacer que el portal descubra solo lecciones, prácticas y simuladores.
-- **Siguiente (sesión 1, sábado 2026-10-18, 10:00–12:00):**
+- **Siguiente (sesión 1 de estudio: sábado 2026-10-18, 10:00–12:00, si los 8 puntos quedan cerrados antes):**
   1. Ver *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min) en Skill Builder.
   2. Dar el **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta** y registrar el puntaje en §8.
   3. Empezar Módulo 1, Lección 1 de Essentials con el flujo de §5.

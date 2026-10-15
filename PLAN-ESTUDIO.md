@@ -8,18 +8,23 @@
 
 - **Fecha:** 2026-10-15
 - **Hecho:** plan confirmado con la captura del Exam Prep Plan, horario, decisiones (§2, §6) y flujo de trabajo por sesión (§5).
-  Decisión del dueño (2026-10-15): **30 preguntas por lección, lo más real posible** (§5). Con eso el examen pasa a enero de 2027 salvo que se estudie 6–7 días por semana (§6).
+  Decisiones del dueño (2026-10-15): **25 preguntas por lección, lo más real posible**, y **simulacro de 20 preguntas al cerrar cada módulo** (§5). Con eso el examen pasa a enero de 2027 salvo que se estudie 7 días por semana (§6).
 - **Estado:** el plan **sigue en definición** con el dueño; la próxima sesión continúa definiendo puntos antes de empezar a estudiar.
 - **Pendiente del dueño:** confirmar **qué días** de la semana estudia (define la fecha del examen, ver §6).
 - **Puntos abiertos para la próxima sesión de definición:**
   1. Días de estudio → fechas exactas del calendario (§6).
   2. Revisar y aprobar el diseño del simulador (§5: modo examen, modo estudio, «Copiar resultado para Claude»).
   3. Decidir si se contrata 1 mes de suscripción de Skill Builder y cuándo (§7).
-  4. Lo que el dueño quiera ajustar del flujo por sesión (§5).
+  4. Logística del examen: en línea desde casa o en centro de Lima (§10).
+  5. Lo que el dueño quiera ajustar del flujo por sesión (§5).
 - **Antes de la sesión 1 (lo hace el agente, fuera del horario de estudio):**
-  1. Migrar `GEMINI.md` → `CLAUDE.md` de estudio.
-  2. Construir el **motor del simulador** (`simulador/`, ver §5) y probarlo con un banco de ejemplo.
-  3. Hacer que el portal descubra solo lecciones, prácticas y simuladores.
+  1. Reescribir el `CLAUDE.md` del repo: hoy describe la sincronización vieja desde Obsidian con **push autónomo**;
+     pasa a ser el tutor de estudio (contenido de `GEMINI.md` + flujo de §5) y **el push lo hace el dueño**.
+  2. Construir el **motor del simulador** (`simulador/`, ver §5) y probarlo con un banco de ejemplo,
+     en local (doble clic) y en GitHub Pages.
+  3. Script `simulador/listar-preguntas.py`: lista los enunciados ya usados para no repetir preguntas
+     sin que el agente relea todos los bancos (ahorro de tokens).
+  4. Hacer que el portal descubra solo lecciones, prácticas y simuladores.
 - **Siguiente (sesión 1, sábado 2026-10-18, 10:00–12:00):**
   1. Ver *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min) en Skill Builder.
   2. Dar el **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta** y registrar el puntaje en §8.
@@ -75,7 +80,8 @@ Fuera del plan, pero gratis: **AWS Cloud Quest: Cloud Practitioner** (12 tareas 
   y de las demostraciones de Essentials (lanzar EC2, VPC, etc.).
 - Cuenta propia de AWS: **no ahora**. Se abre cuando empiece la preparación de Solutions Architect Associate,
   donde sí hace falta construir.
-- Cloud Quest va como laboratorio de cierre de módulo cuando haya una tarea relacionada (el agente indica cuál).
+- Cloud Quest es **opcional y fuera de las 2 h**: con 25 preguntas por lección no cabe en la sesión. El agente indica qué tarea
+  corresponde a cada módulo por si el dueño quiere hacerla en tiempo libre. No es necesario para aprobar.
 
 ## 4. Avance en Cloud Practitioner Essentials
 
@@ -109,15 +115,15 @@ Ya están en el cuaderno de errores (§9).
 2. **Agente:** lee «Dónde quedamos», dice la meta del día (ej. «M1 L1–L3») y lanza un
    **calentamiento de 5 preguntas** sacadas del cuaderno de errores (§9). Dueño responde «1B 2D 3AC…».
 
-### Ciclo por lección (~70–85 min)
+### Ciclo por lección (~65–80 min)
 
 | Paso | Quién | Qué | Tiempo |
 |---|---|---|---|
 | 1 | Dueño | Ve la lección en Skill Builder (texto + video) y hace su **comprobación de conocimientos** | 15–20 min |
 | 2 | Dueño → agente | Escribe «terminé M_ L_» y pasa los datos de la tabla «Qué pasa el dueño» | 2 min |
 | 3 | Agente | Entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Dueño la lee | 5–10 min |
-| 4 | Agente | Genera el **banco de 30 preguntas** de la lección (`practicas/`) y avisa que está listo | 2–3 min |
-| 5 | Dueño | Da la práctica en el **simulador** (navegador), con cronómetro, **sin pistas** | ~40 min |
+| 4 | Agente | Genera el **banco de 25 preguntas** de la lección (`practicas/`) y avisa que está listo | 2–3 min |
+| 5 | Dueño | Da la práctica en el **simulador** (navegador), con cronómetro, **sin pistas** | ~35 min |
 | 6 | Dueño → agente | Pulsa «Copiar resultado para Claude» y lo pega en el chat | 1 min |
 | 7 | Agente | Explica **solo las falladas** (por qué la correcta y por qué no las demás), registra puntaje (§8) y errores (§9) | 10–15 min |
 
@@ -131,10 +137,10 @@ Ya están en el cuaderno de errores (§9).
 Decisión 2026-10-15: **sin preguntas abiertas de recuerdo**. El examen es de opción múltiple; el tiempo va a preguntas tipo examen.
 Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pide explicar la diferencia en una línea.
 
-### Práctica de lección: 30 preguntas, lo más real posible (decisión del dueño 2026-10-15)
+### Práctica de lección: 25 preguntas, lo más real posible (decisión del dueño 2026-10-15)
 
 **Contenido:**
-- **30 preguntas por lección**, en español LATAM, términos clave en inglés como en el examen traducido.
+- **25 preguntas por lección**, en español LATAM, términos clave en inglés como en el examen traducido.
 - Mezcla: **~60 % de la lección + ~40 % acumulativo** de lecciones y módulos anteriores.
   Si la lección es corta, sube la parte acumulativa en vez de rellenar con preguntas repetidas o triviales
   (las variantes de la misma pregunta inflan el puntaje y dan falsa seguridad).
@@ -147,7 +153,7 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 
 **Formato (lo más parecido al examen real):**
 - Se da en el **simulador HTML**, no en el chat.
-- **Modo examen:** cronómetro de **42 min** (ritmo real: 90 min / 65 preg. ≈ 1,4 min por pregunta), **sin pistas
+- **Modo examen:** cronómetro de **35 min** (ritmo real: 90 min / 65 preg. ≈ 1,4 min por pregunta), **sin pistas
   ni feedback** mientras se responde, botón «Marcar para revisión», navegación entre preguntas y pantalla
   de revisión antes de enviar, como en Pearson VUE.
 - **Al enviar:** puntaje, % por dominio, explicación de cada pregunta (correcta y por qué no las otras),
@@ -157,18 +163,36 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 
 **Motor reutilizable (para no gastar tokens ni tiempo):**
 - `simulador/index.html` + `simulador/motor.js`: un único motor que se escribe una vez.
-- Cada práctica es solo un archivo de datos: `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.json`
-  (preguntas, opciones, correctas, explicación, dominio). El simulador lo carga por URL
-  (`simulador/?banco=…`), así que **funciona igual en la computadora y en el celular** desde GitHub Pages.
+- Cada práctica es solo un archivo de datos: `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js`
+  (preguntas, opciones, correctas, explicación, dominio y enunciado de tarea de la guía). Es `.js` y no `.json`
+  porque un `.json` no se puede cargar al abrir el HTML con doble clic (`file://`); el `.js` funciona igual
+  **en la computadora y en el celular** desde GitHub Pages (https://devforall.github.io/aws-certifications-notes/,
+  verificado activo 2026-10-15). El simulador lo elige por URL (`simulador/?banco=…`).
+- «Copiar resultado para Claude» tiene respaldo: si el navegador bloquea el portapapeles, muestra el texto
+  en un cuadro para seleccionarlo y copiarlo a mano.
 - El mismo motor sirve para los simulacros de 65 preguntas.
 
-### Simulacros grandes
-- Con 30 preguntas por lección se **elimina el simulacro de 20 de fin de módulo** (sería redundante).
+### Simulacros
+- **Fin de cada módulo: simulacro de 20 preguntas / 28 min** (decisión del dueño 2026-10-15), en modo examen.
+  ~80 % del módulo + ~20 % de módulos anteriores. Se da al empezar la sesión siguiente al cierre del módulo.
 - **Simulacro completo de 65 preguntas / 90 min** tras M3, M5, M8 y M11, con pesos por dominio
-  (24/30/34/12) sobre lo visto hasta ahí.
+  (24/30/34/12) sobre lo visto hasta ahí. Ocupa una sesión entera (simulacro + revisión).
 - Fase 3: 3 simulacros completos finales, todos los dominios.
 - **Programar el examen** al sacar ≥ 80 % en dos simulacros completos seguidos
   (y ≥ 750 en el Official Practice Exam si se contrata la suscripción).
+
+### Reglas de control (agregadas 2026-10-15)
+- **Nunca se corta una práctica para «cumplir» la sesión.** Si a las 12:00 la práctica no terminó, se sigue
+  al inicio de la sesión siguiente. Las lecciones pueden quedar partidas entre sesiones.
+- **Umbrales:**
+  - Práctica de lección < 70 %: «Reintentar falladas» en modo estudio (puede ser desde el celular) y esas
+    preguntas entran al calentamiento de la sesión siguiente.
+  - Simulacro de módulo < 70 %: repaso dirigido de los temas fallados antes de empezar el módulo siguiente.
+  - Simulacro completo < 70 %: no se avanza a Fase 3; se repasa el dominio más bajo.
+- **Calentamiento de apertura:** 5 preguntas en el chat, sacadas de los fallos más recientes y del cuaderno de errores.
+- **Sin repetir preguntas:** antes de generar un banco, el agente corre `listar-preguntas.py` y evita enunciados ya usados.
+- **Dónde va cada resultado:** el texto pegado se guarda en `resultados/AAAA-MM-DD-<banco>.txt`; en §8 va una línea
+  por práctica; en §9 solo **conceptos** confundidos (no cada pregunta), para que el cuaderno siga siendo legible.
 
 ### Cierre (5 min)
 1. **Dueño:** «cerremos».
@@ -181,9 +205,11 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 |---|---|---|
 | Transcripciones y texto crudo de cada lección | `cloud-practitioner/modulo-0N-…/_crudo/` | No (en `.gitignore`: es contenido de AWS) |
 | Nota de cada lección | `cloud-practitioner/modulo-0N-…/Lección N - Título.md` (se mejora la existente) | Sí |
-| Banco de 30 preguntas de cada lección | `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.json` | Sí |
+| Banco de 25 preguntas de cada lección | `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js` | Sí |
+| Simulacro de 20 de cada módulo | `cloud-practitioner/modulo-0N-…/practicas/simulacro-modulo.js` | Sí |
 | Motor del simulador | `simulador/` | Sí |
-| Simulacros de 65 preguntas | `cloud-practitioner/repaso-general/simulacro-NN.json` | Sí |
+| Simulacros de 65 preguntas | `cloud-practitioner/repaso-general/simulacro-NN.js` | Sí |
+| Resultados pegados por el dueño | `resultados/AAAA-MM-DD-<banco>.txt` | Sí |
 | Puntajes, cuaderno de errores, «Dónde quedamos» | Este archivo (§8, §9) | Sí |
 | Evaluaciones antiguas de Gemini | Donde están; quedan como archivo, no se borran | Sí |
 | Carpeta Obsidian `CERTIFIED AWS CLOUD PRACTITIONER` | Queda como archivo histórico; ya no se escribe ahí | — |
@@ -192,32 +218,40 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 - Se actualiza solo: el portal lista lecciones, notas y prácticas sin editar entradas a mano (mejora previa a la sesión 1).
 - Las prácticas se pueden **repetir desde el celular** en modo estudio para repasar.
 
-Ritmo estimado con 30 preguntas: **~1,5 lecciones por sesión** (M1–M5 algo más rápido porque ya hay notas).
+Ritmo estimado con 25 preguntas: **~1,6 lecciones por sesión** (M1–M5 algo más rápido porque ya hay notas).
 
 Reglas que se mantienen del `GEMINI.md`: seguridad DE la nube (AWS) vs EN la nube (cliente);
 resaltar opción más barata y plan de soporte mínimo; analogías de la vida real; explicar siglas;
 resaltar Service Limits / Quotas; incluir IA generativa y gobernanza.
 
-## 6. Calendario (desde 2026-10-18, 2 h por sesión, con 30 preguntas por lección)
+## 6. Calendario (desde 2026-10-18, 2 h por sesión, 25 preguntas por lección + simulacro por módulo)
 
-**Carga estimada:** ~77 lecciones (M1–M5 ≈ 29; M6–M13 ≈ 48) a ~1,5 lecciones por sesión ≈ **50 sesiones**,
-+ 4 simulacros de 65 preguntas durante el curso + Fases 2 y 3 (~8 sesiones) ≈ **60 sesiones en total**.
+**Carga estimada (recalculada 2026-10-15):**
 
-| Sesiones por semana | Fin de Essentials | Examen aprox. |
-|---|---|---|
-| 5 | ~31 dic | **~mediados de enero 2027** |
-| 6 | ~13 dic | ~fin de diciembre (sin colchón) |
-| 7 | ~2 dic | ~mediados de diciembre |
+| Bloque | Sesiones |
+|---|---|
+| Sesión 0 (overviews + línea base) | 1 |
+| ~77 lecciones (M1–M5 ≈ 29; M6–M13 ≈ 48) a ~1,6 por sesión | ~48 |
+| 13 simulacros de módulo (20 preg. + revisión ≈ 40 min c/u) | ~4,5 |
+| 4 simulacros completos intermedios | 4 |
+| Fases 2 y 3 (Domain Reviews + 3 simulacros finales + repasos) | ~8 |
+| **Total** | **~65** |
 
-**Lectura honesta:** con 30 preguntas por lección, «antes de fin de año» **solo se mantiene estudiando
-6–7 días por semana**. Con 5 días, el examen pasa a enero de 2027. A cambio, se llega con ~2 300 preguntas
-practicadas. Si se pierden sesiones, se corre la fecha; no se recorta la Fase 3.
+| Sesiones por semana | Examen aprox. |
+|---|---|
+| 5 | ~fin de enero 2027 |
+| 6 | ~primera quincena de enero 2027 |
+| 7 | ~22–28 dic 2026 (sin colchón) |
+
+**Lectura honesta:** con 25 preguntas por lección y simulacro por módulo, «antes de fin de año» **solo se mantiene
+estudiando los 7 días**, y sin margen para perder sesiones. Lo realista es **enero de 2027**.
+Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la fecha; no se recorta la Fase 3.
 
 | Fase | Qué |
 |---|---|
 | 0 | Sesión 1: Overviews + Official Practice Question Set (línea base) + inicio M1 |
-| 1A | Essentials M1–M5 (~17 sesiones) + simulacro de 65 tras M3 y tras M5 |
-| 1B | Essentials M6–M13 (~32 sesiones) + simulacro de 65 tras M8 y tras M11; Cloud Quest según módulo |
+| 1A | Essentials M1–M5 + simulacro de cada módulo + simulacro completo tras M3 y tras M5 |
+| 1B | Essentials M6–M13 + simulacro de cada módulo + simulacro completo tras M8 y tras M11 |
 | 2 | Domain 1–4 Review (gratis) + simulacros completos finales 1 y 2 |
 | 3 | Simulacro 3 (+ Official Pretest / Practice Exam si hay suscripción) → **examen** |
 
@@ -249,7 +283,17 @@ Las fechas exactas se fijan cuando el dueño confirme sus días de estudio.
 | 2026-05 | Plan con TAM | Solo Enterprise (y Enterprise On-Ramp con pool de TAM) | «TAM dedicado» → Enterprise |
 | 2026-05 | Excelencia Operativa vs Fiabilidad | Fiabilidad = recuperarse de fallos, disponibilidad | «recuperación ante fallos» → Reliability |
 
-## 10. Dónde está cada cosa
+## 10. Logística del examen (pendiente de decidir)
+
+- **Dónde:** Pearson VUE, **en línea desde casa** (cámara, sala sola, escritorio vacío, prueba técnica previa)
+  o **en un centro de evaluación en Lima**. A decidir por el dueño.
+- **Cuándo reservar:** al sacar ≥ 80 % en el primer simulacro completo de la Fase 2, reservar con
+  **2–3 semanas** de anticipación. Revisar en la página de reserva la política vigente de reprogramación.
+- **Cuenta:** se reserva desde la cuenta de AWS Certification (AWS Training & Certification), en **español LATAM**.
+- **Documento:** identificación oficial vigente con el mismo nombre que la cuenta de certificación.
+- **Costo:** 100 USD. Verificar si hay descuentos vigentes (vouchers de eventos de AWS) antes de pagar.
+
+## 11. Dónde está cada cosa
 
 - Fuente cruda (Obsidian, con imágenes y transcripciones): `C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\`
 - Este repo (portal + notas): `C:\workspace\LEARNING\NOTES\aws-certifications-notes\`

@@ -7,7 +7,7 @@
 ## Dónde quedamos
 
 - **Fecha:** 2026-10-15
-- **Hecho:** plan confirmado con la captura del Exam Prep Plan, horario y decisiones (ver §2 y §6).
+- **Hecho:** plan confirmado con la captura del Exam Prep Plan, horario, decisiones (§2, §6) y flujo de trabajo por sesión (§5).
 - **Pendiente del dueño:** confirmar **qué días** de la semana estudia (el calendario asume 5 sesiones/semana).
 - **Siguiente (sesión 1, sábado 2026-10-18, 10:00–12:00):**
   1. Migrar `GEMINI.md` → `CLAUDE.md` de estudio (lo hace el agente al abrir la sesión, ~10 min).
@@ -92,19 +92,63 @@ Las notas existentes de M1–M5 se **reutilizan y mejoran**, no se regeneran des
 CloudTrail vs Config vs Artifact; Budgets vs Cost Explorer; plan con TAM; pilares Well-Architected.
 Ya están en el cuaderno de errores (§9).
 
-## 5. Método por sesión (2 h, 10:00–12:00)
+## 5. Flujo de trabajo por sesión (2 h, 10:00–12:00) — definido 2026-10-15
 
-Por lección:
+### Apertura (5 min)
+1. **Dueño:** abre Claude Code en esta carpeta y escribe «retomemos AWS».
+2. **Agente:** lee «Dónde quedamos», dice la meta del día (ej. «M1 L1–L3») y lanza un
+   **calentamiento de 5 preguntas** sacadas del cuaderno de errores (§9). Dueño responde «1B 2D 3AC…».
 
-1. **Skill Builder:** el dueño ve la lección (video + texto).
-2. **Recuerdo activo:** el agente hace 3 preguntas antes de mostrar notas.
-3. **Notas** con el formato MODO 1 (resumen, conceptos, tabla comparativa, puntos críticos,
-   trampas, diccionario de servicios con palabras gatillo). M1–M5: se parte de la nota existente.
-   M6–M13: el dueño pasa transcripción y capturas (o se prueba leerlas con el navegador integrado,
-   con sesión iniciada por el dueño).
-4. **Práctica de 10–15 preguntas** en español: 70 % de la lección + 30 % de módulos anteriores;
-   distractores reales de la misma categoría; ~15 % respuesta múltiple.
-5. **Cuaderno de errores** y **registro de puntaje** (§8, §9).
+### Ciclo por lección (M1–M5 ≈ 35 min; M6–M13 ≈ 50 min)
+
+| Paso | Quién | Qué |
+|---|---|---|
+| 1 | Dueño | Ve la lección en Skill Builder (texto + video) y hace su **comprobación de conocimientos** |
+| 2 | Dueño → agente | Escribe «terminé M_ L_» y pasa los datos de la tabla «Qué pasa el dueño» |
+| 3 | Agente | **3 preguntas de recuerdo** abiertas; el dueño responde de memoria, sin notas |
+| 4 | Agente | Corrige el recuerdo y entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Dueño la lee (~10 min) |
+| 5 | Agente | **Práctica de 10 preguntas en el chat**, en 2 bloques de 5. Dueño responde «1B 2D 3AC…» |
+| 6 | Agente | Corrige con el razonamiento de cada fallo, guarda la práctica, el puntaje (§8) y los errores (§9) |
+
+**Qué pasa el dueño en el paso 2:**
+
+| Módulos | Datos |
+|---|---|
+| M1–M5 | Solo «terminé M_ L_» + resultado de la comprobación de Skill Builder (captura de las que falló) + dudas o algo nuevo que no esté en la nota |
+| M6–M13 | Lo anterior **+ texto de la lección** (copiar y pegar la página) **+ transcripción del video** **+ capturas** de diagramas. Todo pegado directo en el chat |
+
+### Práctica de lección: reglas
+- 10 preguntas (15 si la lección es larga), en español, términos clave en inglés.
+- 70 % de la lección + 30 % de lecciones/módulos anteriores (repaso espaciado).
+- ~15 % respuesta múltiple («Elija 2»). Distractores = servicios reales de la misma categoría.
+- Se hace en el chat (no en HTML) para que el agente reciba las respuestas y registre los errores solo.
+
+### Fin de módulo: simulacro HTML
+- El agente genera un simulador HTML de 20 preguntas (shuffle, cronómetro, estilo AWS, como antes)
+  en `repaso-general/`.
+- El dueño lo da en el navegador y al final pulsa **«Copiar resultado para Claude»**
+  (puntaje + IDs falladas) y lo pega en el chat. El agente lo registra.
+- Mismo mecanismo para el de cada 3 módulos (30 preg.) y los completos (65 preg. / 90 min).
+
+### Cierre (5 min)
+1. **Dueño:** «cerremos».
+2. **Agente:** actualiza «Dónde quedamos», el avance (§4), puntajes (§8) y errores (§9); hace commit.
+3. **Dueño:** hace `git push origin master` cuando quiera.
+
+### Dónde se guarda cada cosa
+
+| Qué | Dónde | ¿Se publica en GitHub? |
+|---|---|---|
+| Transcripciones y texto crudo de cada lección | `cloud-practitioner/modulo-0N-…/_crudo/` | No (en `.gitignore`: es contenido de AWS) |
+| Nota de cada lección | `cloud-practitioner/modulo-0N-…/Lección N - Título.md` (se mejora la existente) | Sí |
+| Práctica de cada lección (preguntas, tus respuestas, razonamiento) | `cloud-practitioner/modulo-0N-…/practicas/Lección N - PRACTICA.md` | Sí |
+| Simuladores HTML (módulo, cada 3 módulos, completos) | `cloud-practitioner/repaso-general/` | Sí |
+| Puntajes, cuaderno de errores, «Dónde quedamos» | Este archivo (§8, §9) | Sí |
+| Evaluaciones antiguas de Gemini | Donde están; quedan como archivo, no se borran | Sí |
+| Carpeta Obsidian `CERTIFIED AWS CLOUD PRACTITIONER` | Queda como archivo histórico; ya no se escribe ahí | — |
+
+**Portal (`index.html`, `generate-notes.ps1`) en pausa** durante este ciclo: no suma puntos en el examen.
+Se actualiza de una vez al final, si el dueño quiere.
 
 Ritmo estimado: **M1–M5 ≈ 3 lecciones por sesión** (ya hay notas); **M6–M13 ≈ 2 lecciones por sesión**.
 

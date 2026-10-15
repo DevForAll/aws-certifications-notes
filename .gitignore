@@ -1,3 +1,6 @@
 .DS_Store
 Thumbs.db
 *.tmp
+
+# Material crudo de lecciones (contenido de AWS, no se publica)
+_crudo/

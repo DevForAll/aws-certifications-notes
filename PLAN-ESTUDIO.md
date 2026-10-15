@@ -9,7 +9,13 @@
 - **Fecha:** 2026-10-15
 - **Hecho:** plan confirmado con la captura del Exam Prep Plan, horario, decisiones (§2, §6) y flujo de trabajo por sesión (§5).
   Decisión del dueño (2026-10-15): **30 preguntas por lección, lo más real posible** (§5). Con eso el examen pasa a enero de 2027 salvo que se estudie 6–7 días por semana (§6).
+- **Estado:** el plan **sigue en definición** con el dueño; la próxima sesión continúa definiendo puntos antes de empezar a estudiar.
 - **Pendiente del dueño:** confirmar **qué días** de la semana estudia (define la fecha del examen, ver §6).
+- **Puntos abiertos para la próxima sesión de definición:**
+  1. Días de estudio → fechas exactas del calendario (§6).
+  2. Revisar y aprobar el diseño del simulador (§5: modo examen, modo estudio, «Copiar resultado para Claude»).
+  3. Decidir si se contrata 1 mes de suscripción de Skill Builder y cuándo (§7).
+  4. Lo que el dueño quiera ajustar del flujo por sesión (§5).
 - **Antes de la sesión 1 (lo hace el agente, fuera del horario de estudio):**
   1. Migrar `GEMINI.md` → `CLAUDE.md` de estudio.
   2. Construir el **motor del simulador** (`simulador/`, ver §5) y probarlo con un banco de ejemplo.

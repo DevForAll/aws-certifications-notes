@@ -13,7 +13,9 @@
 - **Agenda de definición (no de estudio):** revisar **punto por punto** con el dueño,
   uno a la vez, cerrar cada uno con una decisión y anotarla en su sección antes de pasar al siguiente:
   1. ✅ Días de estudio (2026-10-15): **7 días por semana**, inicio sáb 17 oct, examen objetivo **mar 22 dic 2026** (§6).
-  2. Diseño del simulador: modo examen, modo estudio, revisión antes de enviar, «Copiar resultado para Claude» (§5).
+  2. ✅ Diseño del simulador (2026-10-15): envío automático al acabar el tiempo, pausa guardada en el navegador,
+     explicación de las 25 (falladas y marcadas primero), **«Guardar resultado» descarga un `.json`** que el agente lee
+     (sin copiar y pegar), y **archivo único de entrada** `_entrada/leccion.md` para el material de cada lección (§5).
   3. Proporciones de la práctica: 25 por lección (60 % lección / 40 % acumulativo), simulacro de 20 por módulo,
      simulacros de 65 tras M3, M5, M8 y M11 (¿se mantienen los 4 o bajan a 2 para ganar tiempo?) (§5).
   4. Reglas de control: umbrales de 70 %, lecciones partidas entre sesiones, calentamiento, registro de resultados (§5).
@@ -30,6 +32,8 @@
   3. Script `simulador/listar-preguntas.py`: lista los enunciados ya usados para no repetir preguntas
      sin que el agente relea todos los bancos (ahorro de tokens).
   4. Hacer que el portal descubra solo lecciones, prácticas y simuladores.
+  5. Crear `_entrada/leccion.md` (plantilla con secciones: texto, transcripción, comprobación, dudas) y agregar
+     `_entrada/` y `_crudo/` al `.gitignore`.
 - **Siguiente (sesión 1 de estudio: sábado 2026-10-17, 10:00–12:00, si los 8 puntos quedan cerrados antes):**
   1. Ver *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min) en Skill Builder.
   2. Dar el **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta** y registrar el puntaje en §8.
@@ -129,7 +133,7 @@ Ya están en el cuaderno de errores (§9).
 | 3 | Agente | Entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Dueño la lee | 5–10 min |
 | 4 | Agente | Genera el **banco de 25 preguntas** de la lección (`practicas/`) y avisa que está listo | 2–3 min |
 | 5 | Dueño | Da la práctica en el **simulador** (navegador), con cronómetro, **sin pistas** | ~35 min |
-| 6 | Dueño → agente | Pulsa «Copiar resultado para Claude» y lo pega en el chat | 1 min |
+| 6 | Dueño → agente | Pulsa «Guardar resultado» y escribe «listo» en el chat (el agente lee el archivo) | 1 min |
 | 7 | Agente | Explica **solo las falladas** (por qué la correcta y por qué no las demás), registra puntaje (§8) y errores (§9) | 10–15 min |
 
 **Qué pasa el dueño en el paso 2:**
@@ -137,7 +141,13 @@ Ya están en el cuaderno de errores (§9).
 | Módulos | Datos |
 |---|---|
 | M1–M5 | Solo «terminé M_ L_» + resultado de la comprobación de Skill Builder (captura de las que falló) + dudas o algo nuevo que no esté en la nota |
-| M6–M13 | Lo anterior **+ texto de la lección** (copiar y pegar la página) **+ transcripción del video** **+ capturas** de diagramas. Todo pegado directo en el chat |
+| M6–M13 | Lo anterior **+ texto de la lección** (copiar y pegar la página) **+ transcripción del video** **+ capturas** de diagramas |
+
+**Archivo único de entrada (decisión del dueño 2026-10-15):** nada se pega en el chat; todo lo recolectado de la
+lección (texto, transcripción, resultado de la comprobación, dudas) va a **un solo archivo**, `_entrada/leccion.md`,
+y las capturas a la carpeta `_entrada/` junto a él. Con «terminé M_ L_», el agente lo lee, mejora o crea la nota
+respectiva, mueve el crudo a `cloud-practitioner/modulo-0N-…/_crudo/leccion-NN.md` (con sus imágenes) y deja
+`_entrada/leccion.md` vacío para la siguiente lección. `_entrada/` no se publica (`.gitignore`).
 
 Decisión 2026-10-15: **sin preguntas abiertas de recuerdo**. El examen es de opción múltiple; el tiempo va a preguntas tipo examen.
 Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pide explicar la diferencia en una línea.
@@ -161,8 +171,16 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 - **Modo examen:** cronómetro de **35 min** (ritmo real: 90 min / 65 preg. ≈ 1,4 min por pregunta), **sin pistas
   ni feedback** mientras se responde, botón «Marcar para revisión», navegación entre preguntas y pantalla
   de revisión antes de enviar, como en Pearson VUE.
-- **Al enviar:** puntaje, % por dominio, explicación de cada pregunta (correcta y por qué no las otras),
-  botón «Reintentar falladas» y **«Copiar resultado para Claude»** (puntaje + IDs falladas + respuestas elegidas).
+- **Fin del tiempo:** se **envía solo**, como en Pearson VUE; lo no respondido cuenta como incorrecto (decisión 2026-10-15).
+- **Pausa entre sesiones:** el simulador **guarda respuestas y tiempo en el navegador** (`localStorage`); al cerrar,
+  el cronómetro se detiene y al reabrir el mismo banco sigue donde quedó (misma computadora y navegador).
+- **Al enviar:** puntaje, % por dominio y explicación de **las 25** (correcta y por qué no las otras), con
+  **las falladas y las marcadas para revisión primero**; botón «Reintentar falladas».
+- **Resultado sin copiar y pegar (decisión del dueño 2026-10-15):** botón **«Guardar resultado»**, que descarga
+  `aws-resultado-AAAA-MM-DD-<banco>.json` a la carpeta Descargas con **todo el intento**: puntaje, % por dominio,
+  tiempo usado y, por pregunta, ID, respuesta elegida, correcta, acierto y si se marcó para revisión.
+  El agente lo lee de `C:\Users\Asus\Downloads\` y lo mueve a `resultados/`. «Copiar resultado» queda solo como
+  respaldo (celular o si la descarga falla).
 - Orden de preguntas y de opciones **aleatorio** en cada intento.
 - **Modo estudio** (feedback inmediato) solo para repasar después, nunca en el primer intento.
 
@@ -173,8 +191,7 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
   porque un `.json` no se puede cargar al abrir el HTML con doble clic (`file://`); el `.js` funciona igual
   **en la computadora y en el celular** desde GitHub Pages (https://devforall.github.io/aws-certifications-notes/,
   verificado activo 2026-10-15). El simulador lo elige por URL (`simulador/?banco=…`).
-- «Copiar resultado para Claude» tiene respaldo: si el navegador bloquea el portapapeles, muestra el texto
-  en un cuadro para seleccionarlo y copiarlo a mano.
+- El respaldo «Copiar resultado» muestra el texto en un cuadro si el navegador bloquea el portapapeles.
 - El mismo motor sirve para los simulacros de 65 preguntas.
 
 ### Simulacros
@@ -196,7 +213,7 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
   - Simulacro completo < 70 %: no se avanza a Fase 3; se repasa el dominio más bajo.
 - **Calentamiento de apertura:** 5 preguntas en el chat, sacadas de los fallos más recientes y del cuaderno de errores.
 - **Sin repetir preguntas:** antes de generar un banco, el agente corre `listar-preguntas.py` y evita enunciados ya usados.
-- **Dónde va cada resultado:** el texto pegado se guarda en `resultados/AAAA-MM-DD-<banco>.txt`; en §8 va una línea
+- **Dónde va cada resultado:** el `.json` descargado se mueve a `resultados/AAAA-MM-DD-<banco>.json`; en §8 va una línea
   por práctica; en §9 solo **conceptos** confundidos (no cada pregunta), para que el cuaderno siga siendo legible.
 
 ### Cierre (5 min)
@@ -208,13 +225,14 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 
 | Qué | Dónde | ¿Se publica en GitHub? |
 |---|---|---|
-| Transcripciones y texto crudo de cada lección | `cloud-practitioner/modulo-0N-…/_crudo/` | No (en `.gitignore`: es contenido de AWS) |
+| Entrada de la lección en curso (texto, transcripción, capturas) | `_entrada/leccion.md` + imágenes en `_entrada/` | No (`.gitignore`) |
+| Transcripciones y texto crudo de cada lección ya procesada | `cloud-practitioner/modulo-0N-…/_crudo/` | No (en `.gitignore`: es contenido de AWS) |
 | Nota de cada lección | `cloud-practitioner/modulo-0N-…/Lección N - Título.md` (se mejora la existente) | Sí |
 | Banco de 25 preguntas de cada lección | `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js` | Sí |
 | Simulacro de 20 de cada módulo | `cloud-practitioner/modulo-0N-…/practicas/simulacro-modulo.js` | Sí |
 | Motor del simulador | `simulador/` | Sí |
 | Simulacros de 65 preguntas | `cloud-practitioner/repaso-general/simulacro-NN.js` | Sí |
-| Resultados pegados por el dueño | `resultados/AAAA-MM-DD-<banco>.txt` | Sí |
+| Resultados de cada intento (todas las respuestas) | `resultados/AAAA-MM-DD-<banco>.json` | Sí |
 | Puntajes, cuaderno de errores, «Dónde quedamos» | Este archivo (§8, §9) | Sí |
 | Evaluaciones antiguas de Gemini | Donde están; quedan como archivo, no se borran | Sí |
 | Carpeta Obsidian `CERTIFIED AWS CLOUD PRACTITIONER` | Queda como archivo histórico; ya no se escribe ahí | — |

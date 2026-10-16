@@ -20,7 +20,8 @@
      por módulo, **simulacros de 65 solo tras M5 y M11** → 3 días de colchón antes del examen (§5, §6).
   4. ✅ Reglas de control (2026-10-15): umbrales **80 % lección / 75 % simulacros**, calentamiento de 5 en el chat;
      se mantienen las lecciones partidas entre sesiones y el registro de resultados (§5).
-  5. Suscripción de Skill Builder: si se contrata 1 mes y cuándo (§7).
+  5. ✅ Suscripción (2026-10-15): **1 mes**, se activa al empezar la Fase 2 (tras cerrar M13; previsto 12 dic) y
+     ese mismo día se apaga la renovación automática; segundo mes solo si el examen se corre > 20 días (§7).
   6. Logística del examen: en línea desde casa o en centro de Lima; cuándo reservar (§10).
   7. Portal web y repo: qué se publica, `CLAUDE.md` nuevo, push por el dueño (§5 «Dónde se guarda»).
   8. Cualquier otro ajuste del dueño al flujo por sesión (§5).
@@ -300,10 +301,21 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 - Consecuencia para §10: con este calendario la Fase 2 empieza el 14 dic, demasiado tarde para reservar con
   2–3 semanas. La regla de reserva se redefine en el punto 6.
 
-## 7. Suscripción de Skill Builder (decisión del dueño, recomendada)
+## 7. Suscripción de Skill Builder — decidido 2026-10-15: **1 mes, un solo pago**
 
-- **Recomendación:** **1 mes** de suscripción individual (~29 USD/mes; verificar precio antes de pagar)
-  activado al **inicio de la Fase 2**, no antes.
+- **Precio:** ~29 USD/mes según fuentes de terceros (búsqueda 2026-10-15); confirmar en la página de AWS antes de pagar.
+- **Disparador exacto (no es una fecha):** se activa **el día en que empieza la Fase 2**, es decir, la sesión siguiente
+  a cerrar M13 con su simulacro de módulo ≥ 75 %. En el calendario: **sáb 12 dic 2026**. Si hay atraso, la activación
+  se corre con él; **nunca antes de cerrar M13**.
+- **Mismo día de la compra: desactivar la renovación automática** (el acceso suele seguir hasta el fin del periodo
+  pagado; confirmarlo en la página al contratar). Esto es lo que evita un segundo cobro.
+- **Uso dentro del mes, en orden:**
+  1. Primera sesión de Fase 2: **Official Pretest** (65 preg., 90 min) → resultado por dominio.
+  2. Sesiones de Fase 2: Domain Review (gratis) + **Domain Practice** solo de los 1–2 dominios más bajos del Pretest.
+  3. Fase 3, 3–5 días antes del examen: **Official Practice Exam** como filtro final (meta ≥ 750).
+  4. Examen dentro del mismo mes.
+- **Margen:** Fases 2–3 + colchón = ~10 días de un mes de ~30. **Un segundo mes solo si el examen se corre más de
+  20 días desde la activación**, y sería el último; no se paga un tercero.
 - Qué aporta: **Official Pretest** (diagnóstico por dominio con preguntas oficiales), **Domain Practice 1–4**
   para los dominios débiles y **Official Practice Exam**, el simulacro más fiel al examen real (mismo puntaje escalado).
 - Por qué vale la pena: las preguntas generadas por IA nunca igualan el estilo oficial; un examen fallido

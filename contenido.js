@@ -1,5 +1,5 @@
 window.CONTENIDO = {
- "generado": "2026-10-15 20:36",
+ "generado": "2026-10-16 00:22",
  "examen": {
   "fecha": "2026-12-28",
   "lugar": "Centro Pearson VUE, Lima"
@@ -17,7 +17,14 @@ window.CONTENIDO = {
      "titulo": "Introducción a AWS Cloud Practitioner Essentials",
      "desc": "Modelo cliente-servidor, definicion de cloud, pago por uso",
      "nota": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 1- Introducción a AWS Cloud Practitioner Essentials.md",
-     "practica": null,
+     "practica": {
+      "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/leccion-01.js",
+      "id": "m01-l01",
+      "titulo": "M1 L1 — Introducción a AWS Cloud Practitioner Essentials",
+      "tipo": "leccion",
+      "n": 16,
+      "resultados": []
+     },
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 1 - EVALUACION.html",

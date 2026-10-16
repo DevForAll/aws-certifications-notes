@@ -365,10 +365,10 @@
     borrarGuardado();
     S = null;
     if (enviado === 'tiempo') alert('Se acabó el tiempo. El examen se envió automáticamente.');
-    pantallaResultado(r, false);
+    pantallaResultado(r, false, true);
   }
 
-  function pantallaResultado(r, revision) {
+  function pantallaResultado(r, revision, recienEnviado) {
     detenerReloj();
     nav.hidden = true;
     timerEl.hidden = true;
@@ -390,7 +390,7 @@
     });
     html += '<div class="row" style="margin-top:1rem">';
     if (!revision && r.modo === 'examen') {
-      html += '<button class="btn primary" id="b-save">Guardar resultado</button><button class="btn" id="b-copy">Copiar resultado</button>';
+      html += '<button class="btn" id="b-save">Descargar de nuevo</button><button class="btn" id="b-copy">Copiar resultado</button>';
     }
     if (falladas.length) html += '<button class="btn" id="b-retry">Reintentar falladas (' + falladas.length + ')</button>';
     html += '<button class="btn" id="b-again">Nuevo intento</button><a class="btn" href="../index.html" style="text-decoration:none">Portal</a></div>' +
@@ -405,14 +405,17 @@
 
     var json = JSON.stringify(r, null, 2);
     var nombre = 'aws-resultado-' + r.fecha.slice(0, 10) + '-' + r.bancoId + '.json';
-    bind('b-save', function () {
+    function descargar() {
       var a = document.createElement('a');
       a.href = URL.createObjectURL(new Blob([json], { type: 'application/json' }));
       a.download = nombre;
       document.body.appendChild(a); a.click(); a.remove();
       document.getElementById('save-msg').innerHTML = 'Guardado en Descargas como <strong>' + esc(nombre) +
         '</strong>. Escribe «listo» en el chat.';
-    });
+    }
+    bind('b-save', descargar);
+    // Al enviar un examen el resultado se descarga solo: el dueño solo escribe «listo».
+    if (recienEnviado && r.modo === 'examen') descargar();
     bind('b-copy', function () {
       var mostrar = function () {
         document.getElementById('copy-box').innerHTML = '<textarea readonly id="copy-ta"></textarea>';

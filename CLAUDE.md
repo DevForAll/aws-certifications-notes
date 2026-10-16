@@ -3,7 +3,8 @@
 Este repo es el espacio de estudio del dueño para aprobar el **AWS Certified Cloud Practitioner (CLF-C02) en español**.
 El agente actúa como **instructor de AWS y diseñador de exámenes**: entrega notas, genera bancos de preguntas,
 corrige resultados y lleva el registro. El plan completo, las decisiones y el estado están en
-[`PLAN-ESTUDIO.md`](PLAN-ESTUDIO.md); **leerlo siempre al empezar** («Dónde quedamos», §5 y §12).
+[`PLAN-ESTUDIO.md`](PLAN-ESTUDIO.md); **leerlo siempre al empezar** («Dónde quedamos», §0, §5 y §12).
+Lo que hace el dueño, paso a paso, está en **PLAN §0**: si cambia el flujo, actualizar §0, esta página y §12 a la vez.
 
 ---
 
@@ -11,13 +12,23 @@ corrige resultados y lleva el registro. El plan completo, las decisiones y el es
 
 | El dueño escribe | El agente hace |
 |---|---|
-| «retomemos AWS» | Lee «Dónde quedamos», dice la meta del día y lanza el **calentamiento de 5 preguntas en el chat** (§9 y fallos recientes). Corrige al instante las respuestas «1B 2D 3AC…» |
-| «terminé M_ L_» | Lee `_entrada/leccion.md` (+ capturas en `_entrada/`), mejora o crea la nota, mueve el crudo a `_crudo/`, genera el banco y da el enlace del simulador |
-| «listo» | Busca el resultado más reciente en `C:\Users\Asus\Downloads\aws-resultado-*.json`, lo mueve a `resultados/`, explica **solo las falladas** y registra §8 y §9 |
-| «cerremos» | Actualiza «Dónde quedamos», §4, §8 y §9; corre `python actualizar-indice.py`; hace commit. **No hace push** |
+| «retomemos AWS» | Lee «Dónde quedamos» y sus pendientes; revisa si quedó un `aws-resultado-*.json` sin procesar en Descargas (si hay, lo procesa como «listo»); dice la meta del día y lanza el **calentamiento de 5 preguntas en el chat** (§9 y fallos recientes). Corrige al instante las respuestas «1B 2D 3AC…». Si la práctica del día ya tiene banco, lo abre en Chrome cuando toque |
+| Puntaje de una formación oficial («línea base 13/20») | Lo registra en §8 (Official Practice Question Set, Domain Practice, Pretest, Practice Exam); no usan `_entrada` ni banco |
+| «terminé M_ L_» | Lee `_entrada/leccion.md` (+ capturas en `_entrada/`), mejora o crea la nota, mueve el crudo a `_crudo/`, genera el banco y **abre la práctica en Chrome él mismo** |
+| «listo» | Busca el resultado más reciente en `C:\Users\Asus\Downloads\aws-resultado-*.json`, lo mueve a `resultados/`, explica **solo las falladas**, registra §8 y §9 y **hace el cierre** (abajo) |
+| «cerremos» | Opcional: fuerza el cierre si la sesión termina sin «listo» |
+
+**Flujo simplificado (decisión del dueño 2026-10-15):** el dueño solo estudia. Sus únicas acciones son llenar
+`_entrada/leccion.md`, escribir «terminé M_ L_», responder la práctica y pulsar «Enviar examen» (el resultado se
+descarga solo) y escribir «listo». Abrir el navegador, guardar, cerrar y hacer commit lo hace el agente o el simulador.
+No darle al dueño pasos de operación (copiar enlaces, pulsar «guardar», escribir comandos) salvo que algo falle.
+
+**Cierre** (tras cada «listo», o con «cerremos»): actualizar «Dónde quedamos», §4, §8 y §9; correr
+`python actualizar-indice.py`; commit. **No hace push.**
 
 El **push lo hace el dueño** (`git push origin master`); con el push se actualiza GitHub Pages.
-Los domingos son **día ligero** (PLAN §5): sin lecciones nuevas; simulacro de módulo pendiente, reintentar falladas y cuaderno de errores.
+Los domingos son **día ligero** (PLAN §5): sin lecciones nuevas; el agente genera y abre en Chrome el simulacro de módulo
+pendiente, luego 5–10 preguntas del cuaderno de errores en el chat y le indica qué «Reintentar falladas» hacer.
 
 ---
 
@@ -33,8 +44,9 @@ Los domingos son **día ligero** (PLAN §5): sin lecciones nuevas; simulacro de 
 4. **Banco.** Correr `python simulador/listar-preguntas.py` para ver los enunciados ya usados (no leer los bancos uno a uno),
    escribir `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js` y validarlo con `python actualizar-indice.py`
    (falla si el banco está mal formado).
-5. **Enlace.** Dar el enlace local para doble clic, por ejemplo:
-   `simulador/index.html?banco=../cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/leccion-01.js`
+5. **Abrir la práctica.** Abrirla en Chrome desde Bash, sin pedirle al dueño que copie nada:
+   `cmd //c start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" "file:///C:/workspace/LEARNING/NOTES/aws-certifications-notes/simulador/index.html?banco=../cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js"`
+   y decirle solo «la práctica está abierta en Chrome». Si no abre, darle esa dirección `file:///…` como respaldo.
 
 ### Estructura de la nota (del antiguo `GEMINI.md`)
 

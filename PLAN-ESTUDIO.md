@@ -1,63 +1,97 @@
 # Plan de estudio — AWS Certified Cloud Practitioner (CLF-C02)
 
-> Creado: 2026-10-13 · Actualizado: 2026-10-15 (sesiones con Claude Code).
+> Creado: 2026-10-13 · Actualizado: 2026-10-16 (sesiones con Claude Code).
 > Objetivo: aprobar el CLF-C02 **en español** antes de fin de 2026, primer paso hacia AWS Solutions Architect.
 > Este archivo es el punto de retorno entre sesiones: al empezar, leer «Dónde quedamos»; al cerrar, actualizarlo.
+> **¿Qué hago yo exactamente?** → §0 «Tu flujo, paso a paso».
 
 ## Dónde quedamos
 
-- **Fecha:** 2026-10-15 (última sesión de preparación; todo commiteado y **subido a GitHub**).
-- **Estado:** ✅ **plan definido y herramientas listas.** Examen objetivo: **lun 28 dic 2026**, centro Pearson VUE en Lima.
-  Aún **no se ha estudiado nada**: la sesión 1 es la primera de estudio.
-- **Cómo retomar (dueño):** abrir Claude Code en esta carpeta y escribir **«retomemos AWS»**. El agente lee este archivo
-  y `CLAUDE.md`, que tienen todo el flujo; no hace falta repetir contexto.
-- **Antes del sábado (dueño, 2 min):** verificar en Chrome con doble clic que el simulador abre y que «Guardar resultado»
-  deja `aws-resultado-….json` en Descargas. Dirección de prueba:
-  `file:///C:/workspace/LEARNING/NOTES/aws-certifications-notes/simulador/index.html?banco=ejemplo/banco-ejemplo.js`.
-  Si algo falla, decirlo al empezar la sesión 1 y el agente lo corrige primero.
-- **Notas para el agente al retomar:**
-  - Hoy no existe ningún banco real ni resultado: `cloud-practitioner/*/practicas/` y `resultados/` están vacíos.
-  - Al generar el primer banco (M1 L1): seguir el formato de `CLAUDE.md`, validar con `python actualizar-indice.py`
-    y dar el enlace `simulador/index.html?banco=../cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/leccion-01.js`.
-  - La nota de M1 L1 ya existe: `cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 1- Introducción a AWS Cloud Practitioner Essentials.md`
-    (se mejora, no se rehace). §8 y §9 se llenan desde la sesión 1.
-  - El push normalmente lo hace el dueño; el agente solo lo hace si el dueño lo pide en el chat.
-  - Las descripciones de M6–M13 en `portal.json` son provisionales: ajustarlas al llegar a cada módulo.
-- **Agenda de definición (cerrada):**
-  1. ✅ Días de estudio (2026-10-15): **7 días por semana** (domingo ligero, punto 8), inicio sáb 17 oct (§6).
-  2. ✅ Diseño del simulador (2026-10-15): envío automático al acabar el tiempo, pausa guardada en el navegador,
-     explicación de las 25 (falladas y marcadas primero), **«Guardar resultado» descarga un `.json`** que el agente lee
-     (sin copiar y pegar), y **archivo único de entrada** `_entrada/leccion.md` para el material de cada lección (§5).
-  3. ✅ Proporciones (2026-10-15): 25 por lección (60/40), **15–25 en lecciones cortas sin relleno**, simulacro de 20
-     por módulo, **simulacros de 65 solo tras M5 y M11** (§5, §6).
-  4. ✅ Reglas de control (2026-10-15): umbrales **80 % lección / 75 % simulacros**, calentamiento de 5 en el chat;
-     se mantienen las lecciones partidas entre sesiones y el registro de resultados (§5).
-  5. ✅ Suscripción (2026-10-15): **1 mes**, se activa al empezar la Fase 2 (tras cerrar M13; previsto 17 dic) y
-     ese mismo día se apaga la renovación automática; segundo mes solo si el examen se corre > 20 días (§7).
-  6. ✅ Logística (2026-10-15): **centro en Lima**; reservar el 28 dic **tras el simulacro de M5 ≥ 75 %** (~10 nov);
-     reprogramar gratis hasta 24 h antes, máx. 2 veces (§10).
-  7. ✅ Portal y repo (2026-10-15): se publica todo lo propio, **resultados incluidos**; fuera solo `_entrada/` y
-     `_crudo/`; notas renderizadas desde `.md` en el navegador; push por el dueño; flujo técnico en §12.
-  8. ✅ Otros ajustes (2026-10-15): **domingo ligero** (simulacro de módulo pendiente + reintentar falladas +
-     cuaderno de errores, sin lecciones nuevas); por eso el examen pasa del 22 al **28 dic** (§5, §6).
-- **Antes de la sesión 1 — ✅ hecho 2026-10-15 por el agente:**
-  1. ✅ `CLAUDE.md` reescrito como tutor de estudio (reglas del `GEMINI.md`, comandos, formato de banco y resultado; push del dueño).
-  2. ✅ Motor del simulador (`simulador/index.html` + `motor.js`) con banco de ejemplo en `simulador/ejemplo/`.
-     Probado en servidor local (equivale a GitHub Pages): modo examen, pausa guardada, revisión, envío, resultado,
-     reintentar falladas, modo estudio y revisión de intentos.
-     **Pendiente de verificar por el dueño:** doble clic (`file://`) y que «Guardar resultado» deje el `.json` en Descargas
-     (el panel de pruebas del agente no permite ninguna de las dos cosas).
-  3. ✅ `simulador/listar-preguntas.py` (con `--modulo`, `--buscar`, `--largo`) y validación de bancos en `simulador/bancos.py`.
-  4. ✅ Portal nuevo: `index.html` lee `contenido.js`; `visor/` muestra las 31 notas de M1–M5 y los resúmenes;
-     `actualizar-indice.py` regenera `contenido.js` y `notas.js`; historial de resultados; `portal.json` con módulos,
-     descripciones y fecha del examen. Los `leccion-NN-notas.html` y `generate-notes.ps1` quedan como archivo.
-  5. ✅ `_entrada/leccion.md` (copia de `_entrada/plantilla.md`) y `.gitignore` actualizado.
-- **Siguiente (sesión 1 de estudio: sábado 2026-10-17, 10:00–12:00):**
-  1. Ver *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min) en Skill Builder.
-  2. Dar el **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta** y registrar el puntaje en §8.
-  3. Empezar Módulo 1, Lección 1 de Essentials con el flujo de §5.
+- **Fecha:** 2026-10-16 (vie). Examen objetivo: **lun 28 dic 2026**, centro Pearson VUE en Lima.
+- **Estado:** ✅ plan definido, herramientas listas y **flujo probado de punta a punta** con M1 L1 (noche del 15 oct).
+  Tras la prueba, el dueño pidió **simplificar**: él solo estudia y el agente hace toda la operación (§0).
+- **Qué quedó de la prueba (M1 L1):**
+  - Calentamiento: 2/5 (falló Budgets vs. CUR, EC2 «Elija 2» incompleta y Fiabilidad vs. Excelencia operativa).
+  - Nota de M1 L1 **mejorada** y crudo archivado en `modulo-01-…/_crudo/leccion-01.md`.
+  - Banco `modulo-01-…/practicas/leccion-01.js` (**16 preguntas**, 23 min): el dueño lo respondió en Chrome vía `file:///`
+    (abre bien), pero el **resultado no llegó a Descargas** (el simulador de esa pestaña aún pedía «Guardar resultado»).
+    Ese intento **no cuenta**: el banco se da de nuevo el sábado.
+- **Pendientes para el agente al retomar:**
+  1. Si hay un `aws-resultado-*-m01-l01.json` en Descargas, procesarlo como «listo»; si no, abrir `leccion-01.js` en
+     Chrome cuando toque (no hace falta volver a ver la lección M1 L1).
+  2. **Primera descarga automática del resultado** sin verificar en Chrome real: confirmarla en esa práctica.
+  3. El dueño debe **explicar en una línea Excelencia operativa vs. Fiabilidad** (segundo fallo del par, regla de §5).
+     Pedírselo en el calentamiento si no lo hizo.
+  4. Las descripciones de M6–M13 en `portal.json` son provisionales: ajustarlas al llegar a cada módulo.
+- **Siguiente (sesión 1 de estudio: sáb 2026-10-17, 10:00–12:00):**
+  1. «retomemos AWS» → calentamiento de 5 (incluir los 3 fallos de la prueba).
+  2. Skill Builder: *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min).
+  3. **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta**; el dueño dice el puntaje en el chat y va a §8.
+  4. Práctica de **M1 L1** (banco ya hecho) → «listo».
+  5. Seguir con **M1 L2** con el flujo de §0.
+- **Historial de la preparación (cerrado 2026-10-15):** agenda de 8 decisiones (días, simulador, proporciones, reglas de
+  control, suscripción, logística, portal y domingo ligero), todas registradas en §5–§10 y §12; `CLAUDE.md` de tutor,
+  simulador, portal, visor y scripts hechos y probados. 2026-10-15 (noche): prueba con M1 L1 y flujo simplificado.
 
 ---
+
+## 0. Tu flujo, paso a paso (lo que haces tú) — vigente desde 2026-10-16
+
+Tu trabajo es **solo estudiar**. Abrir el navegador, guardar resultados, actualizar este plan y hacer commit lo hace
+el agente. Solo escribes **tres frases** en el chat: «retomemos AWS», «terminé M_ L_» y «listo».
+
+### A. Al empezar el día (10:00)
+1. Abre la app de Claude (pestaña Code) en la carpeta `C:\workspace\LEARNING\NOTES\aws-certifications-notes`.
+2. Escribe **`retomemos AWS`**.
+3. El agente te dice la meta del día y te pone **5 preguntas** en el chat.
+4. Respóndelas en **un solo mensaje**: `1B 2C 3AC 4D 5A`. Si una dice «Elija 2», pon las dos letras juntas (`AC`).
+5. Lee la corrección. Si el agente te pide explicar una diferencia en una línea, respóndela.
+
+### B. Por cada lección (se repite 1–2 veces por sesión)
+6. En **skillbuilder.aws**, abre *AWS Cloud Practitioner Essentials* → la lección que toca. Lee el texto, mira el video
+   y haz la **comprobación de conocimientos** si la tiene.
+7. Abre `_entrada\leccion.md` (Bloc de notas o VS Code) y llena:
+   - Primera línea: el número, por ejemplo `# Entrada de lección — M1 L2`.
+   - **Comprobación:** puntaje y cuáles fallaste.
+   - **Dudas:** lo que no quedó claro (o «ninguna»).
+   - **M6 a M13, además:** copia y pega el **texto de la lección** y la **transcripción del video**.
+   - Capturas (Win + Shift + S): guárdalas en la carpeta `_entrada\`. No hace falta renombrarlas.
+   - Guarda con **Ctrl + S**.
+8. Escribe en el chat **`terminé M1 L2`** (con el módulo y la lección que hiciste).
+9. Espera 2–3 min: el agente mejora la nota, genera la práctica y **te abre la práctica en Chrome**.
+10. Lee la nota si quieres (el agente te dice dónde está; también sale en el portal).
+11. En Chrome: pulsa **«Empezar modo examen»**, responde sin mirar apuntes (usa «Marcar para revisión» en las dudosas),
+    luego **«Revisar y enviar»** → **«Enviar examen»**. El resultado **se descarga solo**.
+12. Escribe en el chat **`listo`**.
+13. Lee la explicación de **las que fallaste**. El agente registra el puntaje y hace el commit.
+14. Si sacaste **menos de 80 %**: en la pantalla de resultado pulsa «Reintentar falladas» (modo estudio). Puede ser
+    en ese momento, en el celular o el domingo.
+
+### C. Al terminar el día
+15. Nada obligatorio: el agente ya cerró después de tu último «listo». Si te vas sin haber escrito «listo», escribe **`cerremos`**.
+16. **Publicar (cuando quieras, opcional):** en una terminal en la carpeta del repo, `git push origin master`.
+    En ~1 min la web (https://devforall.github.io/aws-certifications-notes/) muestra notas, prácticas y resultados para el celular.
+
+### D. Domingos (día ligero, sin lecciones nuevas)
+17. `retomemos AWS` → el agente te abre el **simulacro de módulo** si un módulo cerró en la semana (20 preguntas, 28 min).
+    Lo das igual que el paso 11 y escribes `listo`.
+18. Luego, el agente te pone 5–10 preguntas del cuaderno de errores en el chat y te indica qué «Reintentar falladas» hacer.
+
+### E. Formaciones oficiales de Skill Builder (no son lecciones de Essentials)
+19. Las das directamente en Skill Builder cuando el plan lo indique (Official Practice Question Set el sáb 17;
+    Domain Reviews desde el 17 dic) y **escribes el puntaje en el chat**, por ejemplo «línea base 13/20». No usan `_entrada`.
+
+### F. Fechas en que tú decides o pagas algo
+20. **~10 nov**, si el simulacro completo tras M5 sale ≥ 75 %: reservar el examen (100 USD, Pearson VUE Lima, 28 dic) (§10).
+21. **17 dic**, al cerrar M13: contratar 1 mes de suscripción de Skill Builder (~29 USD) y **ese mismo día apagar la
+    renovación automática** (§7).
+
+### Si algo falla
+- **La práctica no se abrió en Chrome:** dilo en el chat; el agente te da una dirección `file:///…` para pegar en la barra de Chrome.
+- **El resultado no apareció en Descargas:** en la pantalla de resultado pulsa «Descargar de nuevo» o «Copiar resultado» y pégalo en el chat.
+- **Se acabaron las 2 h a mitad de la práctica:** cierra Chrome sin miedo; el intento y el cronómetro quedan guardados.
+  Al volver a abrirla, pulsa «Continuar».
+- **No pudiste estudiar un día:** no se recupera ese día; el domingo puede usarse como sesión completa (§5).
 
 ## 1. Datos del examen (guía oficial CLF-C02, v1.0)
 
@@ -117,7 +151,7 @@ Las notas existentes de M1–M5 se **reutilizan y mejoran**, no se regeneran des
 
 | Módulo | Material previo | Vuelta 2026 |
 |---|---|---|
-| 1 Introducción a la nube | ✅ notas + evaluaciones | ⬜ |
+| 1 Introducción a la nube | ✅ notas + evaluaciones | 🔄 L1: nota y banco listos, práctica pendiente |
 | 2 Computación en la nube (EC2, escalado, ELB, colas) | ✅ | ⬜ |
 | 3 Servicios de computación (Lambda, contenedores) | ✅ | ⬜ |
 | 4 Hacia la globalización | ✅ | ⬜ |
@@ -137,6 +171,8 @@ Ya están en el cuaderno de errores (§9).
 
 ## 5. Flujo de trabajo por sesión (2 h, 10:00–12:00) — definido 2026-10-15
 
+> Versión para el dueño, paso a paso: §0. Esta sección guarda las reglas y el detalle de cada pieza.
+
 ### Apertura (5 min)
 1. **Dueño:** abre Claude Code en esta carpeta y escribe «retomemos AWS».
 2. **Agente:** lee «Dónde quedamos», dice la meta del día (ej. «M1 L1–L3») y lanza un
@@ -149,10 +185,14 @@ Ya están en el cuaderno de errores (§9).
 | 1 | Dueño | Ve la lección en Skill Builder (texto + video) y hace su **comprobación de conocimientos** | 15–20 min |
 | 2 | Dueño → agente | Escribe «terminé M_ L_» y pasa los datos de la tabla «Qué pasa el dueño» | 2 min |
 | 3 | Agente | Entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Dueño la lee | 5–10 min |
-| 4 | Agente | Genera el **banco de 25 preguntas** de la lección (`practicas/`) y avisa que está listo | 2–3 min |
-| 5 | Dueño | Da la práctica en el **simulador** (navegador), con cronómetro, **sin pistas** | ~35 min |
-| 6 | Dueño → agente | Pulsa «Guardar resultado» y escribe «listo» en el chat (el agente lee el archivo) | 1 min |
-| 7 | Agente | Explica **solo las falladas** (por qué la correcta y por qué no las demás), registra puntaje (§8) y errores (§9) | 10–15 min |
+| 4 | Agente | Genera el **banco** de la lección (`practicas/`) y **abre la práctica en Chrome** él mismo | 2–3 min |
+| 5 | Dueño | Da la práctica en el **simulador**, con cronómetro, **sin pistas**, y pulsa «Enviar examen» (el resultado se descarga solo) | ~35 min |
+| 6 | Dueño → agente | Escribe «listo» en el chat | — |
+| 7 | Agente | Explica **solo las falladas** (por qué la correcta y por qué no las demás), registra puntaje (§8) y errores (§9) y hace el cierre (commit) | 10–15 min |
+
+**Flujo simplificado (decisión del dueño 2026-10-15, tras la prueba con M1 L1):** el dueño solo estudia. Sus acciones
+se reducen a llenar `_entrada/leccion.md`, escribir «terminé M_ L_», responder la práctica y escribir «listo».
+Abrir el navegador, guardar el resultado, actualizar el plan y hacer commit pasan al agente o al simulador.
 
 **Qué pasa el dueño en el paso 2:**
 
@@ -196,7 +236,7 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
   el cronómetro se detiene y al reabrir el mismo banco sigue donde quedó (misma computadora y navegador).
 - **Al enviar:** puntaje, % por dominio y explicación de **las 25** (correcta y por qué no las otras), con
   **las falladas y las marcadas para revisión primero**; botón «Reintentar falladas».
-- **Resultado sin copiar y pegar (decisión del dueño 2026-10-15):** botón **«Guardar resultado»**, que descarga
+- **Resultado sin copiar y pegar (decisión del dueño 2026-10-15):** al pulsar «Enviar examen» el simulador **descarga solo**
   `aws-resultado-AAAA-MM-DD-<banco>.json` a la carpeta Descargas con **todo el intento**: puntaje, % por dominio,
   tiempo usado y, por pregunta, ID, respuesta elegida, correcta, acierto y si se marcó para revisión.
   El agente lo lee de `C:\Users\Asus\Downloads\` y lo mueve a `resultados/`. «Copiar resultado» queda solo como
@@ -246,10 +286,10 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
   en el chat.
 - Si se perdió una sesión en la semana, el domingo se puede usar para recuperarla (pasa a ser sesión completa).
 
-### Cierre (5 min)
-1. **Dueño:** «cerremos».
-2. **Agente:** actualiza «Dónde quedamos», el avance (§4), puntajes (§8) y errores (§9); hace commit.
-3. **Dueño:** hace `git push origin master` cuando quiera (con el push se actualiza la web).
+### Cierre (automático)
+1. **Agente**, tras corregir cada práctica («listo»): actualiza «Dónde quedamos», el avance (§4), puntajes (§8) y
+   errores (§9), corre `actualizar-indice.py` y hace commit. «cerremos» queda solo para forzar el cierre.
+2. **Dueño:** hace `git push origin master` cuando quiera (con el push se actualiza la web).
 
 ### Dónde se guarda cada cosa
 
@@ -258,7 +298,7 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 | Entrada de la lección en curso (texto, transcripción, capturas) | `_entrada/leccion.md` + imágenes en `_entrada/` | No (`.gitignore`) |
 | Transcripciones y texto crudo de cada lección ya procesada | `cloud-practitioner/modulo-0N-…/_crudo/` | No (en `.gitignore`: es contenido de AWS) |
 | Nota de cada lección | `cloud-practitioner/modulo-0N-…/Lección N - Título.md` (se mejora la existente) | Sí |
-| Banco de 25 preguntas de cada lección | `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js` | Sí |
+| Banco de 15–25 preguntas de cada lección | `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js` | Sí |
 | Simulacro de 20 de cada módulo | `cloud-practitioner/modulo-0N-…/practicas/simulacro-modulo.js` | Sí |
 | Motor del simulador | `simulador/` | Sí |
 | Simulacros de 65 preguntas | `cloud-practitioner/repaso-general/simulacro-NN.js` | Sí |
@@ -282,7 +322,7 @@ Reglas que se mantienen del `GEMINI.md`: seguridad DE la nube (AWS) vs EN la nub
 resaltar opción más barata y plan de soporte mínimo; analogías de la vida real; explicar siglas;
 resaltar Service Limits / Quotas; incluir IA generativa y gobernanza.
 
-## 6. Calendario (desde 2026-10-18, 2 h por sesión, 25 preguntas por lección + simulacro por módulo)
+## 6. Calendario (desde 2026-10-17, 2 h por sesión, 25 preguntas por lección + simulacro por módulo)
 
 **Carga estimada (recalculada 2026-10-15):**
 
@@ -368,6 +408,9 @@ Lunes a sábado: sesión completa. **Domingo: día ligero** (ver §5 «Día lige
 | 2026-05 | Parcheo SO en EC2 | Lo hace el cliente (IaaS) | «EC2 + sistema operativo» → cliente |
 | 2026-05 | Plan con TAM | Solo Enterprise (y Enterprise On-Ramp con pool de TAM) | «TAM dedicado» → Enterprise |
 | 2026-05 | Excelencia Operativa vs Fiabilidad | Fiabilidad = recuperarse de fallos, disponibilidad | «recuperación ante fallos» → Reliability |
+| 2026-10-15 | Excelencia Operativa vs Fiabilidad (**2.ª vez**, calentamiento) | Excelencia operativa = operar y mejorar procesos (automatizar, monitorear, cambios pequeños). Fiabilidad = recuperarse de fallos y seguir disponible | «se recupera automáticamente», «caída de una AZ» → Reliability |
+| 2026-10-15 | Budgets con Cost and Usage Report (calentamiento) | CUR = informe detallado de datos crudos hacia S3, no alerta. Budgets = alertas por umbral real o previsto | «alerta», «previsto», «umbral» → Budgets |
+| 2026-10-15 | «Elija 2» con una sola letra (calentamiento) | En respuesta múltiple no hay puntaje parcial: hay que marcar exactamente las N pedidas | «Elija 2 / Elija 3» → contar las marcadas |
 
 ## 10. Logística del examen — decidido 2026-10-15
 
@@ -386,10 +429,11 @@ Lunes a sábado: sesión completa. **Domingo: día ligero** (ver §5 «Día lige
 
 ## 11. Dónde está cada cosa
 
-- Fuente cruda (Obsidian, con imágenes y transcripciones): `C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\`
+- Fuente cruda antigua (Obsidian, archivo histórico; ya no se escribe ahí): `C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\`
+- Material crudo nuevo de cada lección: `cloud-practitioner/modulo-0N-…/_crudo/` (no se publica)
 - Este repo (portal + notas): `C:\workspace\LEARNING\NOTES\aws-certifications-notes\`
 - Prompts anteriores: `C:\workspace\LEARNING\NOTES\PROMTS\GENERAR EXAMEN\` y `PROMTS\GEMINI-CLI\ESTUDIO\`
-- Instrucciones de tutor (a migrar a CLAUDE.md): `CERTIFIED AWS CLOUD PRACTITIONER\GEMINI.md`
+- Instrucciones de tutor: migradas a `CLAUDE.md` (el `GEMINI.md` de Obsidian queda como archivo).
 - Recursos y enlaces: `C:\workspace\LEARNING\NOTES\NOTAS-ADICIONALES\AWS CLOUD PRACTITIONER.md`
 - Sesiones de estudio: abrir Claude Code en esta carpeta, no en `hub-automations`.
 
@@ -413,10 +457,10 @@ Este flujo pasa también al `CLAUDE.md` nuevo para que cualquier sesión del age
 
 1. El dueño ve la lección y pega texto, transcripción, comprobación y dudas en `_entrada/leccion.md` (capturas en `_entrada/`).
 2. «terminé M_ L_» → el agente lee la entrada, mejora o crea la nota `.md` y mueve el crudo a `_crudo/`.
-3. El agente corre `listar-preguntas.py`, genera `practicas/leccion-NN.js` (15–25 preguntas) y da el enlace del simulador.
-4. El dueño practica en modo examen y pulsa «Guardar resultado» → `.json` en Descargas → escribe «listo».
+3. El agente corre `listar-preguntas.py`, genera `practicas/leccion-NN.js` (15–25 preguntas) y abre la práctica en Chrome.
+4. El dueño practica en modo examen y pulsa «Enviar examen» → el `.json` se descarga solo → escribe «listo».
 5. El agente mueve el `.json` a `resultados/`, explica las falladas y anota §8 y §9.
-6. «cerremos» → el agente actualiza el plan, corre `actualizar-indice.py` y hace commit.
+6. En el mismo paso, el agente actualiza el plan, corre `actualizar-indice.py` y hace commit («cerremos» solo lo fuerza).
 7. El dueño hace `git push origin master` → GitHub Pages publica en ~1 min: nota, práctica y resultado
    quedan disponibles desde el celular (repasar la nota, reintentar en modo estudio, revisar el intento).
 

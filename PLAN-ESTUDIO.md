@@ -22,7 +22,8 @@
      se mantienen las lecciones partidas entre sesiones y el registro de resultados (§5).
   5. ✅ Suscripción (2026-10-15): **1 mes**, se activa al empezar la Fase 2 (tras cerrar M13; previsto 12 dic) y
      ese mismo día se apaga la renovación automática; segundo mes solo si el examen se corre > 20 días (§7).
-  6. Logística del examen: en línea desde casa o en centro de Lima; cuándo reservar (§10).
+  6. ✅ Logística (2026-10-15): **centro en Lima**; reservar el 22 dic **tras el simulacro de M5 ≥ 75 %** (~7 nov);
+     reprogramar gratis hasta 24 h antes, máx. 2 veces (§10).
   7. Portal web y repo: qué se publica, `CLAUDE.md` nuevo, push por el dueño (§5 «Dónde se guarda»).
   8. Cualquier otro ajuste del dueño al flujo por sesión (§5).
   Al cerrar los 8 puntos, el agente hace las tareas de «Antes de la sesión 1» y se fija el día de inicio real.
@@ -298,8 +299,7 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 - Colchón de 3 sesiones (ganado al bajar los simulacros completos de 4 a 2). Si se pierden más de 3, el examen pasa a
   la primera semana de enero de 2027 (evitar 24–25 y 31 dic). No se recorta la Fase 3.
 - Hitos de control: si al **7 nov** no está cerrado M5, o al **11 dic** no está cerrado M13, se recalcula la fecha.
-- Consecuencia para §10: con este calendario la Fase 2 empieza el 14 dic, demasiado tarde para reservar con
-  2–3 semanas. La regla de reserva se redefine en el punto 6.
+- Reserva del examen: tras el simulacro completo de M5 (~7 nov), ver §10.
 
 ## 7. Suscripción de Skill Builder — decidido 2026-10-15: **1 mes, un solo pago**
 
@@ -338,12 +338,17 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 | 2026-05 | Plan con TAM | Solo Enterprise (y Enterprise On-Ramp con pool de TAM) | «TAM dedicado» → Enterprise |
 | 2026-05 | Excelencia Operativa vs Fiabilidad | Fiabilidad = recuperarse de fallos, disponibilidad | «recuperación ante fallos» → Reliability |
 
-## 10. Logística del examen (pendiente de decidir)
+## 10. Logística del examen — decidido 2026-10-15
 
-- **Dónde:** Pearson VUE, **en línea desde casa** (cámara, sala sola, escritorio vacío, prueba técnica previa)
-  o **en un centro de evaluación en Lima**. A decidir por el dueño.
-- **Cuándo reservar:** al sacar ≥ 80 % en el primer simulacro completo de la Fase 2, reservar con
-  **2–3 semanas** de anticipación. Revisar en la página de reserva la política vigente de reprogramación.
+- **Dónde:** Pearson VUE, **centro de evaluación en Lima** (decisión del dueño): equipo e internet del centro.
+  Llevar identificación y llegar ~30 min antes. Elegir el centro al reservar.
+- **Cuándo reservar:** **tras el simulacro completo de M5 con ≥ 75 %** (previsto ~sáb 7 nov), para el
+  **mar 22 dic 2026**: ~6 semanas antes, con cupo asegurado cerca de las fiestas.
+- **Reprogramación (según re:Post, búsqueda 2026-10-15; confirmar en la página oficial al reservar):** cambio o
+  cancelación **sin costo hasta 24 h antes**, **máximo 2 reprogramaciones** por cita; dentro de las 24 h o si no se
+  asiste, se pierde la tarifa.
+- **Uso de las reprogramaciones:** si al 11 dic M13 no está cerrado (hito de §6), o el simulacro de M11 sale < 75 %,
+  se reprograma en ese momento, nunca a última hora. Con el Official Practice Exam < 750 (3–5 días antes), también.
 - **Cuenta:** se reserva desde la cuenta de AWS Certification (AWS Training & Certification), en **español LATAM**.
 - **Documento:** identificación oficial vigente con el mismo nombre que la cuenta de certificación.
 - **Costo:** 100 USD. Verificar si hay descuentos vigentes (vouchers de eventos de AWS) antes de pagar.

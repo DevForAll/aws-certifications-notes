@@ -16,8 +16,8 @@
   2. ✅ Diseño del simulador (2026-10-15): envío automático al acabar el tiempo, pausa guardada en el navegador,
      explicación de las 25 (falladas y marcadas primero), **«Guardar resultado» descarga un `.json`** que el agente lee
      (sin copiar y pegar), y **archivo único de entrada** `_entrada/leccion.md` para el material de cada lección (§5).
-  3. Proporciones de la práctica: 25 por lección (60 % lección / 40 % acumulativo), simulacro de 20 por módulo,
-     simulacros de 65 tras M3, M5, M8 y M11 (¿se mantienen los 4 o bajan a 2 para ganar tiempo?) (§5).
+  3. ✅ Proporciones (2026-10-15): 25 por lección (60/40), **15–25 en lecciones cortas sin relleno**, simulacro de 20
+     por módulo, **simulacros de 65 solo tras M5 y M11** → 3 días de colchón antes del examen (§5, §6).
   4. Reglas de control: umbrales de 70 %, lecciones partidas entre sesiones, calentamiento, registro de resultados (§5).
   5. Suscripción de Skill Builder: si se contrata 1 mes y cuándo (§7).
   6. Logística del examen: en línea desde casa o en centro de Lima; cuándo reservar (§10).
@@ -159,6 +159,8 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 - Mezcla: **~60 % de la lección + ~40 % acumulativo** de lecciones y módulos anteriores.
   Si la lección es corta, sube la parte acumulativa en vez de rellenar con preguntas repetidas o triviales
   (las variantes de la misma pregunta inflan el puntaje y dan falsa seguridad).
+- **Lecciones cortas o del inicio (decisión 2026-10-15):** si no hay material para 25 preguntas buenas, el banco
+  tiene **entre 15 y 25**, con el cronómetro ajustado a 1,4 min por pregunta. Nunca relleno ni adelanto de temas no vistos.
 - Por estilo, como el examen: ~40 % escenarios de negocio («¿qué opción es la más rentable o con menos
   carga operativa?»), ~30 % identificación de servicios, ~30 % seguridad y arquitectura.
 - **~85 % opción única (1 de 4) y ~15 % respuesta múltiple (2 de 5 o 3 de 6)**, indicando «Elija 2 / Elija 3».
@@ -197,7 +199,8 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 ### Simulacros
 - **Fin de cada módulo: simulacro de 20 preguntas / 28 min** (decisión del dueño 2026-10-15), en modo examen.
   ~80 % del módulo + ~20 % de módulos anteriores. Se da al empezar la sesión siguiente al cierre del módulo.
-- **Simulacro completo de 65 preguntas / 90 min** tras M3, M5, M8 y M11, con pesos por dominio
+- **Simulacro completo de 65 preguntas / 90 min** solo **tras M5 y tras M11** (decisión 2026-10-15: se bajó de 4 a 2;
+  tras M3 y M8 saldrían desbalanceados porque Seguridad y Facturación llegan en M9 y M11). Pesos por dominio
   (24/30/34/12) sobre lo visto hasta ahí. Ocupa una sesión entera (simulacro + revisión).
 - Fase 3: 3 simulacros completos finales, todos los dominios.
 - **Programar el examen** al sacar ≥ 80 % en dos simulacros completos seguidos
@@ -256,9 +259,9 @@ resaltar Service Limits / Quotas; incluir IA generativa y gobernanza.
 | Sesión 0 (overviews + línea base) | 1 |
 | ~77 lecciones (M1–M5 ≈ 29; M6–M13 ≈ 48) a ~1,6 por sesión | ~48 |
 | 13 simulacros de módulo (20 preg. + revisión ≈ 40 min c/u) | ~4,5 |
-| 4 simulacros completos intermedios | 4 |
+| 2 simulacros completos intermedios (tras M5 y M11) | 2 |
 | Fases 2 y 3 (Domain Reviews + 3 simulacros finales + repasos) | ~8 |
-| **Total** | **~65** |
+| **Total** | **~63** |
 
 | Sesiones por semana | Examen aprox. |
 |---|---|
@@ -273,8 +276,8 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 | Fase | Qué |
 |---|---|
 | 0 | Sesión 1: Overviews + Official Practice Question Set (línea base) + inicio M1 |
-| 1A | Essentials M1–M5 + simulacro de cada módulo + simulacro completo tras M3 y tras M5 |
-| 1B | Essentials M6–M13 + simulacro de cada módulo + simulacro completo tras M8 y tras M11 |
+| 1A | Essentials M1–M5 + simulacro de cada módulo + simulacro completo tras M5 |
+| 1B | Essentials M6–M13 + simulacro de cada módulo + simulacro completo tras M11 |
 | 2 | Domain 1–4 Review (gratis) + simulacros completos finales 1 y 2 |
 | 3 | Simulacro 3 (+ Official Pretest / Practice Exam si hay suscripción) → **examen** |
 
@@ -283,14 +286,15 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 | Sesiones | Fechas | Fase |
 |---|---|---|
 | 1 | sáb 17 oct | Fase 0: overviews + línea base + inicio M1 |
-| 2–23 | 18 oct – 8 nov | Fase 1A: M1–M5 (+ simulacros de módulo + completos tras M3 y M5) |
-| 24–58 | 9 nov – 13 dic | Fase 1B: M6–M13 (+ simulacros de módulo + completos tras M8 y M11) |
-| 59–65 | 14 – 20 dic | Fases 2 y 3: Domain Reviews + 3 simulacros finales |
-| — | **mar 22 dic 2026** | **Fecha objetivo del examen** (lun 21 dic queda de colchón de 1 día) |
+| 2–22 | 18 oct – 7 nov | Fase 1A: M1–M5 (+ simulacros de módulo + completo tras M5) |
+| 23–56 | 8 nov – 11 dic | Fase 1B: M6–M13 (+ simulacros de módulo + completo tras M11) |
+| 57–63 | 12 – 18 dic | Fases 2 y 3: Domain Reviews + 3 simulacros finales |
+| 64–66 | 19 – 21 dic | Colchón de 3 días (recuperar sesiones perdidas o repaso ligero) |
+| — | **mar 22 dic 2026** | **Fecha objetivo del examen** |
 
-- Sin margen: cada sesión perdida corre el examen un día. Si se pierden más de ~3 sesiones, el examen pasa a
+- Colchón de 3 sesiones (ganado al bajar los simulacros completos de 4 a 2). Si se pierden más de 3, el examen pasa a
   la primera semana de enero de 2027 (evitar 24–25 y 31 dic). No se recorta la Fase 3.
-- Hitos de control: si al **8 nov** no está cerrado M5, o al **13 dic** no está cerrado M13, se recalcula la fecha.
+- Hitos de control: si al **7 nov** no está cerrado M5, o al **11 dic** no está cerrado M13, se recalcula la fecha.
 - Consecuencia para §10: con este calendario la Fase 2 empieza el 14 dic, demasiado tarde para reservar con
   2–3 semanas. La regla de reserva se redefine en el punto 6.
 

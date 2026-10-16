@@ -24,7 +24,8 @@
      ese mismo día se apaga la renovación automática; segundo mes solo si el examen se corre > 20 días (§7).
   6. ✅ Logística (2026-10-15): **centro en Lima**; reservar el 22 dic **tras el simulacro de M5 ≥ 75 %** (~7 nov);
      reprogramar gratis hasta 24 h antes, máx. 2 veces (§10).
-  7. Portal web y repo: qué se publica, `CLAUDE.md` nuevo, push por el dueño (§5 «Dónde se guarda»).
+  7. ✅ Portal y repo (2026-10-15): se publica todo lo propio, **resultados incluidos**; fuera solo `_entrada/` y
+     `_crudo/`; notas renderizadas desde `.md` en el navegador; push por el dueño; flujo técnico en §12.
   8. Cualquier otro ajuste del dueño al flujo por sesión (§5).
   Al cerrar los 8 puntos, el agente hace las tareas de «Antes de la sesión 1» y se fija el día de inicio real.
 - **Antes de la sesión 1 (lo hace el agente, fuera del horario de estudio):**
@@ -34,7 +35,8 @@
      en local (doble clic) y en GitHub Pages.
   3. Script `simulador/listar-preguntas.py`: lista los enunciados ya usados para no repetir preguntas
      sin que el agente relea todos los bancos (ahorro de tokens).
-  4. Hacer que el portal descubra solo lecciones, prácticas y simuladores.
+  4. Portal nuevo (§12): `visor/` para `.md`, `contenido.js` + `actualizar-indice.py`, historial de resultados y
+     modo `?resultado=` del simulador. Las notas viejas de M1–M5 deben verse en el visor.
   5. Crear `_entrada/leccion.md` (plantilla con secciones: texto, transcripción, comprobación, dudas) y agregar
      `_entrada/` y `_crudo/` al `.gitignore`.
 - **Siguiente (sesión 1 de estudio: sábado 2026-10-17, 10:00–12:00, si los 8 puntos quedan cerrados antes):**
@@ -247,6 +249,11 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 **Portal web (GitHub Pages): se mantiene** — el dueño repasa desde fuera de su computadora.
 - Se actualiza solo: el portal lista lecciones, notas y prácticas sin editar entradas a mano (mejora previa a la sesión 1).
 - Las prácticas se pueden **repetir desde el celular** en modo estudio para repasar.
+- **Decisiones 2026-10-15 (punto 7):** el repo es **público** y se publica **todo lo propio**: notas, bancos,
+  simuladores y **resultados de cada intento** (el dueño repasa a otras horas y desde otros dispositivos).
+  Solo quedan fuera `_entrada/` y `_crudo/` (texto y transcripciones copiados de Skill Builder: contenido de AWS).
+  Las notas se **renderizan en el navegador desde el `.md`** (sin generar HTML); `generate-notes.ps1` y los
+  `leccion-NN-notas.html` viejos quedan como archivo. Cómo funciona todo: §12.
 
 Ritmo estimado con 25 preguntas: **~1,6 lecciones por sesión** (M1–M5 algo más rápido porque ya hay notas).
 
@@ -361,6 +368,33 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 - Instrucciones de tutor (a migrar a CLAUDE.md): `CERTIFIED AWS CLOUD PRACTITIONER\GEMINI.md`
 - Recursos y enlaces: `C:\workspace\LEARNING\NOTES\NOTAS-ADICIONALES\AWS CLOUD PRACTITIONER.md`
 - Sesiones de estudio: abrir Claude Code en esta carpeta, no en `hub-automations`.
+
+## 12. Cómo funciona todo (flujo técnico, definido 2026-10-15)
+
+Este flujo pasa también al `CLAUDE.md` nuevo para que cualquier sesión del agente lo siga igual.
+
+**Piezas del repo**
+
+| Pieza | Qué es |
+|---|---|
+| `index.html` | Portal. No tiene entradas escritas a mano: lee `contenido.js` y arma la lista de módulos, lecciones, prácticas y resultados |
+| `contenido.js` | Índice de todo lo publicable (notas `.md`, bancos `.js`, resultados `.json`). Lo **regenera un script** del agente (`actualizar-indice.py`) en cada cierre |
+| `visor/` | Página única que recibe `?nota=<ruta del .md>`, lo convierte a HTML en el navegador (librería Markdown desde CDN) y muestra la nota |
+| `simulador/` | Motor único: `?banco=<ruta del .js>` para practicar; `?resultado=<ruta del .json>` para abrir un intento pasado y repasar sus falladas |
+| `cloud-practitioner/modulo-0N-…/` | Notas `.md` y `practicas/*.js` de cada módulo |
+| `resultados/` | Un `.json` por intento, publicado |
+| `_entrada/` · `…/_crudo/` | Material copiado de Skill Builder; **no se publica** |
+
+**Recorrido de una lección**
+
+1. El dueño ve la lección y pega texto, transcripción, comprobación y dudas en `_entrada/leccion.md` (capturas en `_entrada/`).
+2. «terminé M_ L_» → el agente lee la entrada, mejora o crea la nota `.md` y mueve el crudo a `_crudo/`.
+3. El agente corre `listar-preguntas.py`, genera `practicas/leccion-NN.js` (15–25 preguntas) y da el enlace del simulador.
+4. El dueño practica en modo examen y pulsa «Guardar resultado» → `.json` en Descargas → escribe «listo».
+5. El agente mueve el `.json` a `resultados/`, explica las falladas y anota §8 y §9.
+6. «cerremos» → el agente actualiza el plan, corre `actualizar-indice.py` y hace commit.
+7. El dueño hace `git push origin master` → GitHub Pages publica en ~1 min: nota, práctica y resultado
+   quedan disponibles desde el celular (repasar la nota, reintentar en modo estudio, revisar el intento).
 
 ## Fuentes (consultadas 2026-10-13 / 2026-10-15)
 

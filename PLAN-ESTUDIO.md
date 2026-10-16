@@ -8,26 +8,26 @@
 
 - **Fecha:** 2026-10-15
 - **Hecho:** plan confirmado con la captura del Exam Prep Plan, horario, decisiones (§2, §6) y flujo de trabajo por sesión (§5).
-  Decisiones del dueño (2026-10-15): **25 preguntas por lección, lo más real posible**, y **simulacro de 20 preguntas al cerrar cada módulo** (§5). Con eso el examen pasa a enero de 2027 salvo que se estudie 7 días por semana (§6).
-- **Estado:** el plan **sigue en definición** con el dueño; se revisa punto por punto antes de empezar a estudiar.
-- **Agenda de definición (no de estudio):** revisar **punto por punto** con el dueño,
-  uno a la vez, cerrar cada uno con una decisión y anotarla en su sección antes de pasar al siguiente:
-  1. ✅ Días de estudio (2026-10-15): **7 días por semana**, inicio sáb 17 oct, examen objetivo **mar 22 dic 2026** (§6).
+  Decisiones del dueño (2026-10-15): **25 preguntas por lección, lo más real posible**, y **simulacro de 20 preguntas al cerrar cada módulo** (§5).
+- **Estado:** ✅ **definición cerrada** (los 8 puntos, 2026-10-15). **Examen objetivo: lun 28 dic 2026**, centro en Lima.
+  Falta que el agente haga «Antes de la sesión 1».
+- **Agenda de definición (cerrada):**
+  1. ✅ Días de estudio (2026-10-15): **7 días por semana** (domingo ligero, punto 8), inicio sáb 17 oct (§6).
   2. ✅ Diseño del simulador (2026-10-15): envío automático al acabar el tiempo, pausa guardada en el navegador,
      explicación de las 25 (falladas y marcadas primero), **«Guardar resultado» descarga un `.json`** que el agente lee
      (sin copiar y pegar), y **archivo único de entrada** `_entrada/leccion.md` para el material de cada lección (§5).
   3. ✅ Proporciones (2026-10-15): 25 por lección (60/40), **15–25 en lecciones cortas sin relleno**, simulacro de 20
-     por módulo, **simulacros de 65 solo tras M5 y M11** → 3 días de colchón antes del examen (§5, §6).
+     por módulo, **simulacros de 65 solo tras M5 y M11** (§5, §6).
   4. ✅ Reglas de control (2026-10-15): umbrales **80 % lección / 75 % simulacros**, calentamiento de 5 en el chat;
      se mantienen las lecciones partidas entre sesiones y el registro de resultados (§5).
-  5. ✅ Suscripción (2026-10-15): **1 mes**, se activa al empezar la Fase 2 (tras cerrar M13; previsto 12 dic) y
+  5. ✅ Suscripción (2026-10-15): **1 mes**, se activa al empezar la Fase 2 (tras cerrar M13; previsto 17 dic) y
      ese mismo día se apaga la renovación automática; segundo mes solo si el examen se corre > 20 días (§7).
-  6. ✅ Logística (2026-10-15): **centro en Lima**; reservar el 22 dic **tras el simulacro de M5 ≥ 75 %** (~7 nov);
+  6. ✅ Logística (2026-10-15): **centro en Lima**; reservar el 28 dic **tras el simulacro de M5 ≥ 75 %** (~10 nov);
      reprogramar gratis hasta 24 h antes, máx. 2 veces (§10).
   7. ✅ Portal y repo (2026-10-15): se publica todo lo propio, **resultados incluidos**; fuera solo `_entrada/` y
      `_crudo/`; notas renderizadas desde `.md` en el navegador; push por el dueño; flujo técnico en §12.
-  8. Cualquier otro ajuste del dueño al flujo por sesión (§5).
-  Al cerrar los 8 puntos, el agente hace las tareas de «Antes de la sesión 1» y se fija el día de inicio real.
+  8. ✅ Otros ajustes (2026-10-15): **domingo ligero** (simulacro de módulo pendiente + reintentar falladas +
+     cuaderno de errores, sin lecciones nuevas); por eso el examen pasa del 22 al **28 dic** (§5, §6).
 - **Antes de la sesión 1 (lo hace el agente, fuera del horario de estudio):**
   1. Reescribir el `CLAUDE.md` del repo: hoy describe la sincronización vieja desde Obsidian con **push autónomo**;
      pasa a ser el tutor de estudio (contenido de `GEMINI.md` + flujo de §5) y **el push lo hace el dueño**.
@@ -38,8 +38,8 @@
   4. Portal nuevo (§12): `visor/` para `.md`, `contenido.js` + `actualizar-indice.py`, historial de resultados y
      modo `?resultado=` del simulador. Las notas viejas de M1–M5 deben verse en el visor.
   5. Crear `_entrada/leccion.md` (plantilla con secciones: texto, transcripción, comprobación, dudas) y agregar
-     `_entrada/` y `_crudo/` al `.gitignore`.
-- **Siguiente (sesión 1 de estudio: sábado 2026-10-17, 10:00–12:00, si los 8 puntos quedan cerrados antes):**
+     `_entrada/` al `.gitignore` (`_crudo/` ya está).
+- **Siguiente (sesión 1 de estudio: sábado 2026-10-17, 10:00–12:00):**
   1. Ver *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min) en Skill Builder.
   2. Dar el **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta** y registrar el puntaje en §8.
   3. Empezar Módulo 1, Lección 1 de Essentials con el flujo de §5.
@@ -203,7 +203,8 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 
 ### Simulacros
 - **Fin de cada módulo: simulacro de 20 preguntas / 28 min** (decisión del dueño 2026-10-15), en modo examen.
-  ~80 % del módulo + ~20 % de módulos anteriores. Se da al empezar la sesión siguiente al cierre del módulo.
+  ~80 % del módulo + ~20 % de módulos anteriores. Se da el **domingo ligero** siguiente al cierre del módulo
+  (si el módulo cierra y faltan más de 2 días para el domingo, al empezar la sesión siguiente).
 - **Simulacro completo de 65 preguntas / 90 min** solo **tras M5 y tras M11** (decisión 2026-10-15: se bajó de 4 a 2;
   tras M3 y M8 saldrían desbalanceados porque Seguridad y Facturación llegan en M9 y M11). Pesos por dominio
   (24/30/34/12) sobre lo visto hasta ahí. Ocupa una sesión entera (simulacro + revisión).
@@ -224,6 +225,13 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 - **Sin repetir preguntas:** antes de generar un banco, el agente corre `listar-preguntas.py` y evita enunciados ya usados.
 - **Dónde va cada resultado:** el `.json` descargado se mueve a `resultados/AAAA-MM-DD-<banco>.json`; en §8 va una línea
   por práctica; en §9 solo **conceptos** confundidos (no cada pregunta), para que el cuaderno siga siendo legible.
+
+### Día ligero: domingos (decisión del dueño 2026-10-15, punto 8)
+- Sin lecciones nuevas. Misma hora (10:00), menos de 2 h si se termina antes.
+- Contenido, en orden: (1) **simulacro de módulo** pendiente si un módulo cerró en la semana; (2) «Reintentar
+  falladas» en modo estudio de las prácticas de la semana; (3) repaso del cuaderno de errores (§9) con 5–10 preguntas
+  en el chat.
+- Si se perdió una sesión en la semana, el domingo se puede usar para recuperarla (pasa a ser sesión completa).
 
 ### Cierre (5 min)
 1. **Dueño:** «cerremos».
@@ -292,27 +300,30 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 | 2 | Domain 1–4 Review (gratis) + simulacros completos finales 1 y 2 |
 | 3 | Simulacro 3 (+ Official Pretest / Practice Exam si hay suscripción) → **examen** |
 
-### Calendario fijado (decisión del dueño 2026-10-15: **7 días por semana**, inicio **sábado 2026-10-17**)
+### Calendario fijado (decisiones del dueño 2026-10-15: **7 días por semana** con **domingo ligero**, inicio **sábado 2026-10-17**)
 
-| Sesiones | Fechas | Fase |
+Lunes a sábado: sesión completa. **Domingo: día ligero** (ver §5 «Día ligero»). Las sesiones se cuentan sin domingos.
+
+| Sesiones completas | Fechas | Fase |
 |---|---|---|
 | 1 | sáb 17 oct | Fase 0: overviews + línea base + inicio M1 |
-| 2–22 | 18 oct – 7 nov | Fase 1A: M1–M5 (+ simulacros de módulo + completo tras M5) |
-| 23–56 | 8 nov – 11 dic | Fase 1B: M6–M13 (+ simulacros de módulo + completo tras M11) |
-| 57–63 | 12 – 18 dic | Fases 2 y 3: Domain Reviews + 3 simulacros finales |
-| 64–66 | 19 – 21 dic | Colchón de 3 días (recuperar sesiones perdidas o repaso ligero) |
-| — | **mar 22 dic 2026** | **Fecha objetivo del examen** |
+| 2–21 | 19 oct – 10 nov | Fase 1A: M1–M5 (+ completo tras M5) |
+| 22–52 | 11 nov – 16 dic | Fase 1B: M6–M13 (+ completo tras M11) |
+| 53–59 | 17 – 24 dic | Fases 2 y 3: Domain Reviews + 3 simulacros finales |
+| 60–61 | 25 – 26 dic | Colchón (el 25 es Navidad: en la práctica, ~1 día útil) |
+| — | dom 27 dic | Día ligero: repaso del cuaderno de errores, sin preguntas nuevas |
+| — | **lun 28 dic 2026** | **Fecha objetivo del examen** (antes era el 22 dic; se corrió por el domingo ligero) |
 
-- Colchón de 3 sesiones (ganado al bajar los simulacros completos de 4 a 2). Si se pierden más de 3, el examen pasa a
-  la primera semana de enero de 2027 (evitar 24–25 y 31 dic). No se recorta la Fase 3.
-- Hitos de control: si al **7 nov** no está cerrado M5, o al **11 dic** no está cerrado M13, se recalcula la fecha.
-- Reserva del examen: tras el simulacro completo de M5 (~7 nov), ver §10.
+- Colchón corto (~1–2 sesiones). Si se pierden más, el examen pasa a la primera semana de enero de 2027
+  (evitar el 31 dic) usando una reprogramación gratis (§10). No se recorta la Fase 3.
+- Hitos de control: si al **10 nov** no está cerrado M5, o al **16 dic** no está cerrado M13, se recalcula la fecha.
+- Reserva del examen: tras el simulacro completo de M5 (~10 nov), ver §10.
 
 ## 7. Suscripción de Skill Builder — decidido 2026-10-15: **1 mes, un solo pago**
 
 - **Precio:** ~29 USD/mes según fuentes de terceros (búsqueda 2026-10-15); confirmar en la página de AWS antes de pagar.
 - **Disparador exacto (no es una fecha):** se activa **el día en que empieza la Fase 2**, es decir, la sesión siguiente
-  a cerrar M13 con su simulacro de módulo ≥ 75 %. En el calendario: **sáb 12 dic 2026**. Si hay atraso, la activación
+  a cerrar M13 con su simulacro de módulo ≥ 75 %. En el calendario: **jue 17 dic 2026**. Si hay atraso, la activación
   se corre con él; **nunca antes de cerrar M13**.
 - **Mismo día de la compra: desactivar la renovación automática** (el acceso suele seguir hasta el fin del periodo
   pagado; confirmarlo en la página al contratar). Esto es lo que evita un segundo cobro.
@@ -321,7 +332,7 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
   2. Sesiones de Fase 2: Domain Review (gratis) + **Domain Practice** solo de los 1–2 dominios más bajos del Pretest.
   3. Fase 3, 3–5 días antes del examen: **Official Practice Exam** como filtro final (meta ≥ 750).
   4. Examen dentro del mismo mes.
-- **Margen:** Fases 2–3 + colchón = ~10 días de un mes de ~30. **Un segundo mes solo si el examen se corre más de
+- **Margen:** de la activación (17 dic) al examen (28 dic) son ~11 días de un mes de ~30. **Un segundo mes solo si el examen se corre más de
   20 días desde la activación**, y sería el último; no se paga un tercero.
 - Qué aporta: **Official Pretest** (diagnóstico por dominio con preguntas oficiales), **Domain Practice 1–4**
   para los dominios débiles y **Official Practice Exam**, el simulacro más fiel al examen real (mismo puntaje escalado).
@@ -349,12 +360,12 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 
 - **Dónde:** Pearson VUE, **centro de evaluación en Lima** (decisión del dueño): equipo e internet del centro.
   Llevar identificación y llegar ~30 min antes. Elegir el centro al reservar.
-- **Cuándo reservar:** **tras el simulacro completo de M5 con ≥ 75 %** (previsto ~sáb 7 nov), para el
-  **mar 22 dic 2026**: ~6 semanas antes, con cupo asegurado cerca de las fiestas.
+- **Cuándo reservar:** **tras el simulacro completo de M5 con ≥ 75 %** (previsto ~mar 10 nov), para el
+  **lun 28 dic 2026**: ~7 semanas antes, con cupo asegurado cerca de las fiestas.
 - **Reprogramación (según re:Post, búsqueda 2026-10-15; confirmar en la página oficial al reservar):** cambio o
   cancelación **sin costo hasta 24 h antes**, **máximo 2 reprogramaciones** por cita; dentro de las 24 h o si no se
   asiste, se pierde la tarifa.
-- **Uso de las reprogramaciones:** si al 11 dic M13 no está cerrado (hito de §6), o el simulacro de M11 sale < 75 %,
+- **Uso de las reprogramaciones:** si al 16 dic M13 no está cerrado (hito de §6), o el simulacro de M11 sale < 75 %,
   se reprograma en ese momento, nunca a última hora. Con el Official Practice Exam < 750 (3–5 días antes), también.
 - **Cuenta:** se reserva desde la cuenta de AWS Certification (AWS Training & Certification), en **español LATAM**.
 - **Documento:** identificación oficial vigente con el mismo nombre que la cuenta de certificación.

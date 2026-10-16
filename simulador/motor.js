@@ -414,7 +414,7 @@
         '</strong>. Escribe «listo» en el chat.';
     }
     bind('b-save', descargar);
-    // Al enviar un examen el resultado se descarga solo: el dueño solo escribe «listo».
+    // Al enviar un examen el resultado se descarga solo: el estudiante solo escribe «listo».
     if (recienEnviado && r.modo === 'examen') descargar();
     bind('b-copy', function () {
       var mostrar = function () {

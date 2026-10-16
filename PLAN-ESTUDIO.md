@@ -9,24 +9,24 @@
 
 - **Fecha:** 2026-10-16 (vie). Examen objetivo: **lun 28 dic 2026**, centro Pearson VUE en Lima.
 - **Estado:** ✅ plan definido, herramientas listas y **flujo probado de punta a punta** con M1 L1 (noche del 15 oct).
-  Tras la prueba, el dueño pidió **simplificar**: él solo estudia y el agente hace toda la operación (§0).
+  Tras la prueba, el estudiante pidió **simplificar**: solo estudia y el agente hace toda la operación (§0).
 - **Qué quedó de la prueba (M1 L1):**
   - Calentamiento: 2/5 (falló Budgets vs. CUR, EC2 «Elija 2» incompleta y Fiabilidad vs. Excelencia operativa).
   - Nota de M1 L1 **mejorada** y crudo archivado en `modulo-01-…/_crudo/leccion-01.md`.
-  - Banco `modulo-01-…/practicas/leccion-01.js` (**16 preguntas**, 23 min): el dueño lo respondió en Chrome vía `file:///`
+  - Banco `modulo-01-…/practicas/leccion-01.js` (**16 preguntas**, 23 min): el estudiante lo respondió en Chrome vía `file:///`
     (abre bien), pero el **resultado no llegó a Descargas** (el simulador de esa pestaña aún pedía «Guardar resultado»).
     Ese intento **no cuenta**: el banco se da de nuevo el sábado.
 - **Pendientes para el agente al retomar:**
   1. Si hay un `aws-resultado-*-m01-l01.json` en Descargas, procesarlo como «listo»; si no, abrir `leccion-01.js` en
      Chrome cuando toque (no hace falta volver a ver la lección M1 L1).
   2. **Primera descarga automática del resultado** sin verificar en Chrome real: confirmarla en esa práctica.
-  3. El dueño debe **explicar en una línea Excelencia operativa vs. Fiabilidad** (segundo fallo del par, regla de §5).
+  3. El estudiante debe **explicar en una línea Excelencia operativa vs. Fiabilidad** (segundo fallo del par, regla de §5).
      Pedírselo en el calentamiento si no lo hizo.
   4. Las descripciones de M6–M13 en `portal.json` son provisionales: ajustarlas al llegar a cada módulo.
 - **Siguiente (sesión 1 de estudio: sáb 2026-10-17, 10:00–12:00):**
   1. «retomemos AWS» → calentamiento de 5 (incluir los 3 fallos de la prueba).
   2. Skill Builder: *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min).
-  3. **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta**; el dueño dice el puntaje en el chat y va a §8.
+  3. **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta**; el estudiante dice el puntaje en el chat y va a §8.
   4. Práctica de **M1 L1** (banco ya hecho) → «listo».
   5. Seguir con **M1 L2** con el flujo de §0.
 - **Historial de la preparación (cerrado 2026-10-15):** agenda de 8 decisiones (días, simulador, proporciones, reglas de
@@ -114,7 +114,7 @@ el agente. Solo escribes **tres frases** en el chat: «retomemos AWS», «termin
 
 ## 2. Exam Prep Plan (CLF-C02 – Español LATAM) — confirmado 2026-10-15
 
-El plan tiene 19 formaciones. Cuenta del dueño: **Skill Builder gratuito**.
+El plan tiene 19 formaciones. Cuenta del estudiante: **Skill Builder gratuito**.
 
 | Formación | Duración | Acceso | Uso en este plan |
 |---|---|---|---|
@@ -136,17 +136,17 @@ Fuera del plan, pero gratis: **AWS Cloud Quest: Cloud Practitioner** (12 tareas 
 ## 3. Laboratorios: no hace falta cuenta de AWS (decisión 2026-10-15)
 
 - El CLF-C02 es conceptual: no pide configurar nada, pide **elegir el servicio correcto ante un escenario**.
-  El dueño ya tiene experiencia práctica en AWS.
+  El estudiante ya tiene experiencia práctica en AWS.
 - La práctica de consola sale de **Cloud Quest: Cloud Practitioner** (gratis, sandbox real, sin riesgo de cobros)
   y de las demostraciones de Essentials (lanzar EC2, VPC, etc.).
 - Cuenta propia de AWS: **no ahora**. Se abre cuando empiece la preparación de Solutions Architect Associate,
   donde sí hace falta construir.
 - Cloud Quest es **opcional y fuera de las 2 h**: con 25 preguntas por lección no cabe en la sesión. El agente indica qué tarea
-  corresponde a cada módulo por si el dueño quiere hacerla en tiempo libre. No es necesario para aprobar.
+  corresponde a cada módulo por si el estudiante quiere hacerla en tiempo libre. No es necesario para aprobar.
 
 ## 4. Avance en Cloud Practitioner Essentials
 
-**Decisión 2026-10-15: empezar desde el Módulo 1** (el dueño olvidó conceptos teóricos).
+**Decisión 2026-10-15: empezar desde el Módulo 1** (el estudiante olvidó conceptos teóricos).
 Las notas existentes de M1–M5 se **reutilizan y mejoran**, no se regeneran desde cero: eso permite ir más rápido en M1–M5.
 
 | Módulo | Material previo | Vuelta 2026 |
@@ -171,46 +171,46 @@ Ya están en el cuaderno de errores (§9).
 
 ## 5. Flujo de trabajo por sesión (2 h, 10:00–12:00) — definido 2026-10-15
 
-> Versión para el dueño, paso a paso: §0. Esta sección guarda las reglas y el detalle de cada pieza.
+> Versión para el estudiante, paso a paso: §0. Esta sección guarda las reglas y el detalle de cada pieza.
 
 ### Apertura (5 min)
-1. **Dueño:** abre Claude Code en esta carpeta y escribe «retomemos AWS».
+1. **Estudiante:** abre Claude Code en esta carpeta y escribe «retomemos AWS».
 2. **Agente:** lee «Dónde quedamos», dice la meta del día (ej. «M1 L1–L3») y lanza un
-   **calentamiento de 5 preguntas** sacadas del cuaderno de errores (§9). Dueño responde «1B 2D 3AC…».
+   **calentamiento de 5 preguntas** sacadas del cuaderno de errores (§9). Estudiante responde «1B 2D 3AC…».
 
 ### Ciclo por lección (~65–80 min)
 
 | Paso | Quién | Qué | Tiempo |
 |---|---|---|---|
-| 1 | Dueño | Ve la lección en Skill Builder (texto + video) y hace su **comprobación de conocimientos** | 15–20 min |
-| 2 | Dueño → agente | Escribe «terminé M_ L_» y pasa los datos de la tabla «Qué pasa el dueño» | 2 min |
-| 3 | Agente | Entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Dueño la lee | 5–10 min |
+| 1 | Estudiante | Ve la lección en Skill Builder (texto + video) y hace su **comprobación de conocimientos** | 15–20 min |
+| 2 | Estudiante → agente | Escribe «terminé M_ L_» y pasa los datos de la tabla «Qué pasa el estudiante» | 2 min |
+| 3 | Agente | Entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Estudiante la lee | 5–10 min |
 | 4 | Agente | Genera el **banco** de la lección (`practicas/`) y **abre la práctica en Chrome** él mismo | 2–3 min |
-| 5 | Dueño | Da la práctica en el **simulador**, con cronómetro, **sin pistas**, y pulsa «Enviar examen» (el resultado se descarga solo) | ~35 min |
-| 6 | Dueño → agente | Escribe «listo» en el chat | — |
+| 5 | Estudiante | Da la práctica en el **simulador**, con cronómetro, **sin pistas**, y pulsa «Enviar examen» (el resultado se descarga solo) | ~35 min |
+| 6 | Estudiante → agente | Escribe «listo» en el chat | — |
 | 7 | Agente | Explica **solo las falladas** (por qué la correcta y por qué no las demás), registra puntaje (§8) y errores (§9) y hace el cierre (commit) | 10–15 min |
 
-**Flujo simplificado (decisión del dueño 2026-10-15, tras la prueba con M1 L1):** el dueño solo estudia. Sus acciones
+**Flujo simplificado (decisión del estudiante 2026-10-15, tras la prueba con M1 L1):** el estudiante solo estudia. Sus acciones
 se reducen a llenar `_entrada/leccion.md`, escribir «terminé M_ L_», responder la práctica y escribir «listo».
 Abrir el navegador, guardar el resultado, actualizar el plan y hacer commit pasan al agente o al simulador.
 
-**Qué pasa el dueño en el paso 2:**
+**Qué pasa el estudiante en el paso 2:**
 
 | Módulos | Datos |
 |---|---|
 | M1–M5 | Solo «terminé M_ L_» + resultado de la comprobación de Skill Builder (captura de las que falló) + dudas o algo nuevo que no esté en la nota |
 | M6–M13 | Lo anterior **+ texto de la lección** (copiar y pegar la página) **+ transcripción del video** **+ capturas** de diagramas |
 
-**Archivo único de entrada (decisión del dueño 2026-10-15):** nada se pega en el chat; todo lo recolectado de la
+**Archivo único de entrada (decisión del estudiante 2026-10-15):** nada se pega en el chat; todo lo recolectado de la
 lección (texto, transcripción, resultado de la comprobación, dudas) va a **un solo archivo**, `_entrada/leccion.md`,
 y las capturas a la carpeta `_entrada/` junto a él. Con «terminé M_ L_», el agente lo lee, mejora o crea la nota
 respectiva, mueve el crudo a `cloud-practitioner/modulo-0N-…/_crudo/leccion-NN.md` (con sus imágenes) y deja
 `_entrada/leccion.md` vacío para la siguiente lección. `_entrada/` no se publica (`.gitignore`).
 
 Decisión 2026-10-15: **sin preguntas abiertas de recuerdo**. El examen es de opción múltiple; el tiempo va a preguntas tipo examen.
-Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pide explicar la diferencia en una línea.
+Excepción: si el estudiante falla dos veces el mismo par de servicios, el agente pide explicar la diferencia en una línea.
 
-### Práctica de lección: 25 preguntas, lo más real posible (decisión del dueño 2026-10-15)
+### Práctica de lección: 25 preguntas, lo más real posible (decisión del estudiante 2026-10-15)
 
 **Contenido:**
 - **25 preguntas por lección**, en español LATAM, términos clave en inglés como en el examen traducido.
@@ -236,7 +236,7 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
   el cronómetro se detiene y al reabrir el mismo banco sigue donde quedó (misma computadora y navegador).
 - **Al enviar:** puntaje, % por dominio y explicación de **las 25** (correcta y por qué no las otras), con
   **las falladas y las marcadas para revisión primero**; botón «Reintentar falladas».
-- **Resultado sin copiar y pegar (decisión del dueño 2026-10-15):** al pulsar «Enviar examen» el simulador **descarga solo**
+- **Resultado sin copiar y pegar (decisión del estudiante 2026-10-15):** al pulsar «Enviar examen» el simulador **descarga solo**
   `aws-resultado-AAAA-MM-DD-<banco>.json` a la carpeta Descargas con **todo el intento**: puntaje, % por dominio,
   tiempo usado y, por pregunta, ID, respuesta elegida, correcta, acierto y si se marcó para revisión.
   El agente lo lee de `C:\Users\Asus\Downloads\` y lo mueve a `resultados/`. «Copiar resultado» queda solo como
@@ -255,7 +255,7 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 - El mismo motor sirve para los simulacros de 65 preguntas.
 
 ### Simulacros
-- **Fin de cada módulo: simulacro de 20 preguntas / 28 min** (decisión del dueño 2026-10-15), en modo examen.
+- **Fin de cada módulo: simulacro de 20 preguntas / 28 min** (decisión del estudiante 2026-10-15), en modo examen.
   ~80 % del módulo + ~20 % de módulos anteriores. Se da el **domingo ligero** siguiente al cierre del módulo
   (si el módulo cierra y faltan más de 2 días para el domingo, al empezar la sesión siguiente).
 - **Simulacro completo de 65 preguntas / 90 min** solo **tras M5 y tras M11** (decisión 2026-10-15: se bajó de 4 a 2;
@@ -273,13 +273,13 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
     preguntas entran al calentamiento de la sesión siguiente.
   - Simulacro de módulo < **75 %**: repaso dirigido de los temas fallados antes de empezar el módulo siguiente.
   - Simulacro completo < **75 %**: no se avanza a Fase 3; se repasa el dominio más bajo.
-- **Calentamiento de apertura:** 5 preguntas **en el chat** (el dueño responde «1B 2D 3AC…» y el agente corrige al
+- **Calentamiento de apertura:** 5 preguntas **en el chat** (el estudiante responde «1B 2D 3AC…» y el agente corrige al
   instante, sin banco ni archivo), sacadas de los fallos más recientes y del cuaderno de errores.
 - **Sin repetir preguntas:** antes de generar un banco, el agente corre `listar-preguntas.py` y evita enunciados ya usados.
 - **Dónde va cada resultado:** el `.json` descargado se mueve a `resultados/AAAA-MM-DD-<banco>.json`; en §8 va una línea
   por práctica; en §9 solo **conceptos** confundidos (no cada pregunta), para que el cuaderno siga siendo legible.
 
-### Día ligero: domingos (decisión del dueño 2026-10-15, punto 8)
+### Día ligero: domingos (decisión del estudiante 2026-10-15, punto 8)
 - Sin lecciones nuevas. Misma hora (10:00), menos de 2 h si se termina antes.
 - Contenido, en orden: (1) **simulacro de módulo** pendiente si un módulo cerró en la semana; (2) «Reintentar
   falladas» en modo estudio de las prácticas de la semana; (3) repaso del cuaderno de errores (§9) con 5–10 preguntas
@@ -289,7 +289,7 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 ### Cierre (automático)
 1. **Agente**, tras corregir cada práctica («listo»): actualiza «Dónde quedamos», el avance (§4), puntajes (§8) y
    errores (§9), corre `actualizar-indice.py` y hace commit. «cerremos» queda solo para forzar el cierre.
-2. **Dueño:** hace `git push origin master` cuando quiera (con el push se actualiza la web).
+2. **Estudiante:** hace `git push origin master` cuando quiera (con el push se actualiza la web).
 
 ### Dónde se guarda cada cosa
 
@@ -307,11 +307,11 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 | Evaluaciones antiguas de Gemini | Donde están; quedan como archivo, no se borran | Sí |
 | Carpeta Obsidian `CERTIFIED AWS CLOUD PRACTITIONER` | Queda como archivo histórico; ya no se escribe ahí | — |
 
-**Portal web (GitHub Pages): se mantiene** — el dueño repasa desde fuera de su computadora.
+**Portal web (GitHub Pages): se mantiene** — el estudiante repasa desde fuera de su computadora.
 - Se actualiza solo: el portal lista lecciones, notas y prácticas sin editar entradas a mano (mejora previa a la sesión 1).
 - Las prácticas se pueden **repetir desde el celular** en modo estudio para repasar.
 - **Decisiones 2026-10-15 (punto 7):** el repo es **público** y se publica **todo lo propio**: notas, bancos,
-  simuladores y **resultados de cada intento** (el dueño repasa a otras horas y desde otros dispositivos).
+  simuladores y **resultados de cada intento** (el estudiante repasa a otras horas y desde otros dispositivos).
   Solo quedan fuera `_entrada/` y `_crudo/` (texto y transcripciones copiados de Skill Builder: contenido de AWS).
   Las notas se **renderizan en el navegador desde el `.md`** (sin generar HTML); `generate-notes.ps1` y los
   `leccion-NN-notas.html` viejos quedan como archivo. Cómo funciona todo: §12.
@@ -353,7 +353,7 @@ Se llega con ~2 600 preguntas practicadas. Si se pierden sesiones, se corre la f
 | 2 | Domain 1–4 Review (gratis) + simulacros completos finales 1 y 2 |
 | 3 | Simulacro 3 (+ Official Pretest / Practice Exam si hay suscripción) → **examen** |
 
-### Calendario fijado (decisiones del dueño 2026-10-15: **7 días por semana** con **domingo ligero**, inicio **sábado 2026-10-17**)
+### Calendario fijado (decisiones del estudiante 2026-10-15: **7 días por semana** con **domingo ligero**, inicio **sábado 2026-10-17**)
 
 Lunes a sábado: sesión completa. **Domingo: día ligero** (ver §5 «Día ligero»). Las sesiones se cuentan sin domingos.
 
@@ -414,7 +414,7 @@ Lunes a sábado: sesión completa. **Domingo: día ligero** (ver §5 «Día lige
 
 ## 10. Logística del examen — decidido 2026-10-15
 
-- **Dónde:** Pearson VUE, **centro de evaluación en Lima** (decisión del dueño): equipo e internet del centro.
+- **Dónde:** Pearson VUE, **centro de evaluación en Lima** (decisión del estudiante): equipo e internet del centro.
   Llevar identificación y llegar ~30 min antes. Elegir el centro al reservar.
 - **Cuándo reservar:** **tras el simulacro completo de M5 con ≥ 75 %** (previsto ~mar 10 nov), para el
   **lun 28 dic 2026**: ~7 semanas antes, con cupo asegurado cerca de las fiestas.
@@ -455,13 +455,13 @@ Este flujo pasa también al `CLAUDE.md` nuevo para que cualquier sesión del age
 
 **Recorrido de una lección**
 
-1. El dueño ve la lección y pega texto, transcripción, comprobación y dudas en `_entrada/leccion.md` (capturas en `_entrada/`).
+1. El estudiante ve la lección y pega texto, transcripción, comprobación y dudas en `_entrada/leccion.md` (capturas en `_entrada/`).
 2. «terminé M_ L_» → el agente lee la entrada, mejora o crea la nota `.md` y mueve el crudo a `_crudo/`.
 3. El agente corre `listar-preguntas.py`, genera `practicas/leccion-NN.js` (15–25 preguntas) y abre la práctica en Chrome.
-4. El dueño practica en modo examen y pulsa «Enviar examen» → el `.json` se descarga solo → escribe «listo».
+4. El estudiante practica en modo examen y pulsa «Enviar examen» → el `.json` se descarga solo → escribe «listo».
 5. El agente mueve el `.json` a `resultados/`, explica las falladas y anota §8 y §9.
 6. En el mismo paso, el agente actualiza el plan, corre `actualizar-indice.py` y hace commit («cerremos» solo lo fuerza).
-7. El dueño hace `git push origin master` → GitHub Pages publica en ~1 min: nota, práctica y resultado
+7. El estudiante hace `git push origin master` → GitHub Pages publica en ~1 min: nota, práctica y resultado
    quedan disponibles desde el celular (repasar la nota, reintentar en modo estudio, revisar el intento).
 
 ## Fuentes (consultadas 2026-10-13 / 2026-10-15)
@@ -471,4 +471,4 @@ Este flujo pasa también al `CLAUDE.md` nuevo para que cualquier sesión del age
 - Certificación: https://aws.amazon.com/certification/certified-cloud-practitioner/
 - Cloud Quest (rol Cloud Practitioner gratis): https://aws.amazon.com/training/digital/aws-cloud-quest/
 - Suscripciones de Skill Builder: https://aws.amazon.com/blogs/aws/new-aws-skill-builder-subscriptions
-- Lista de formaciones del Exam Prep Plan: capturas del dueño, 2026-10-15
+- Lista de formaciones del Exam Prep Plan: capturas del estudiante, 2026-10-15

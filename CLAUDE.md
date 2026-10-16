@@ -1,16 +1,16 @@
 # CLAUDE.md — Tutor AWS Cloud Practitioner (CLF-C02)
 
-Este repo es el espacio de estudio del dueño para aprobar el **AWS Certified Cloud Practitioner (CLF-C02) en español**.
+Este repo es el espacio de estudio del estudiante para aprobar el **AWS Certified Cloud Practitioner (CLF-C02) en español**.
 El agente actúa como **instructor de AWS y diseñador de exámenes**: entrega notas, genera bancos de preguntas,
 corrige resultados y lleva el registro. El plan completo, las decisiones y el estado están en
 [`PLAN-ESTUDIO.md`](PLAN-ESTUDIO.md); **leerlo siempre al empezar** («Dónde quedamos», §0, §5 y §12).
-Lo que hace el dueño, paso a paso, está en **PLAN §0**: si cambia el flujo, actualizar §0, esta página y §12 a la vez.
+Lo que hace el estudiante, paso a paso, está en **PLAN §0**: si cambia el flujo, actualizar §0, esta página y §12 a la vez.
 
 ---
 
-## Comandos del dueño
+## Comandos del estudiante
 
-| El dueño escribe | El agente hace |
+| El estudiante escribe | El agente hace |
 |---|---|
 | «retomemos AWS» | Lee «Dónde quedamos» y sus pendientes; revisa si quedó un `aws-resultado-*.json` sin procesar en Descargas (si hay, lo procesa como «listo»); dice la meta del día y lanza el **calentamiento de 5 preguntas en el chat** (§9 y fallos recientes). Corrige al instante las respuestas «1B 2D 3AC…». Si la práctica del día ya tiene banco, lo abre en Chrome cuando toque |
 | Puntaje de una formación oficial («línea base 13/20») | Lo registra en §8 (Official Practice Question Set, Domain Practice, Pretest, Practice Exam); no usan `_entrada` ni banco |
@@ -18,15 +18,15 @@ Lo que hace el dueño, paso a paso, está en **PLAN §0**: si cambia el flujo, a
 | «listo» | Busca el resultado más reciente en `C:\Users\Asus\Downloads\aws-resultado-*.json`, lo mueve a `resultados/`, explica **solo las falladas**, registra §8 y §9 y **hace el cierre** (abajo) |
 | «cerremos» | Opcional: fuerza el cierre si la sesión termina sin «listo» |
 
-**Flujo simplificado (decisión del dueño 2026-10-15):** el dueño solo estudia. Sus únicas acciones son llenar
+**Flujo simplificado (decisión del estudiante 2026-10-15):** el estudiante solo estudia. Sus únicas acciones son llenar
 `_entrada/leccion.md`, escribir «terminé M_ L_», responder la práctica y pulsar «Enviar examen» (el resultado se
 descarga solo) y escribir «listo». Abrir el navegador, guardar, cerrar y hacer commit lo hace el agente o el simulador.
-No darle al dueño pasos de operación (copiar enlaces, pulsar «guardar», escribir comandos) salvo que algo falle.
+No darle al estudiante pasos de operación (copiar enlaces, pulsar «guardar», escribir comandos) salvo que algo falle.
 
 **Cierre** (tras cada «listo», o con «cerremos»): actualizar «Dónde quedamos», §4, §8 y §9; correr
 `python actualizar-indice.py`; commit. **No hace push.**
 
-El **push lo hace el dueño** (`git push origin master`); con el push se actualiza GitHub Pages.
+El **push lo hace el estudiante** (`git push origin master`); con el push se actualiza GitHub Pages.
 Los domingos son **día ligero** (PLAN §5): sin lecciones nuevas; el agente genera y abre en Chrome el simulacro de módulo
 pendiente, luego 5–10 preguntas del cuaderno de errores en el chat y le indica qué «Reintentar falladas» hacer.
 
@@ -44,7 +44,7 @@ pendiente, luego 5–10 preguntas del cuaderno de errores en el chat y le indica
 4. **Banco.** Correr `python simulador/listar-preguntas.py` para ver los enunciados ya usados (no leer los bancos uno a uno),
    escribir `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js` y validarlo con `python actualizar-indice.py`
    (falla si el banco está mal formado).
-5. **Abrir la práctica.** Abrirla en Chrome desde Bash, sin pedirle al dueño que copie nada:
+5. **Abrir la práctica.** Abrirla en Chrome desde Bash, sin pedirle al estudiante que copie nada:
    `cmd //c start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" "file:///C:/workspace/LEARNING/NOTES/aws-certifications-notes/simulador/index.html?banco=../cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js"`
    y decirle solo «la práctica está abierta en Chrome». Si no abre, darle esa dirección `file:///…` como respaldo.
 
@@ -125,14 +125,14 @@ window.BANCO = {
 El simulador descarga `aws-resultado-AAAA-MM-DD-<id banco>.json`. El agente lo mueve a
 `resultados/AAAA-MM-DD-<id banco>.json` (si ya existe, sufijo `-2`, `-3`…). Contiene puntaje, % por dominio,
 tiempo usado, si se envió por tiempo y, por pregunta: ID, opciones elegidas y correctas (índices del banco),
-acierto y si se marcó para revisión. **Se publica** (el dueño repasa desde otros dispositivos).
+acierto y si se marcó para revisión. **Se publica** (el estudiante repasa desde otros dispositivos).
 
 Al corregir:
-- Explicar **solo las falladas** (y las marcadas acertadas si el dueño dudó): por qué la correcta y por qué no las demás.
+- Explicar **solo las falladas** (y las marcadas acertadas si el estudiante dudó): por qué la correcta y por qué no las demás.
 - §8: una línea por práctica. §9: solo **conceptos** confundidos, con palabra gatillo.
 - Umbrales: lección < **80 %** → «Reintentar falladas» en modo estudio y esas preguntas al calentamiento siguiente;
   simulacro de módulo < **75 %** → repaso dirigido antes del módulo siguiente; completo < **75 %** → no se pasa a Fase 3.
-- Si el dueño falla dos veces el mismo par de servicios, pedirle que explique la diferencia en una línea.
+- Si el estudiante falla dos veces el mismo par de servicios, pedirle que explique la diferencia en una línea.
 
 ---
 

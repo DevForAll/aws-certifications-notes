@@ -6,11 +6,23 @@
 
 ## Dónde quedamos
 
-- **Fecha:** 2026-10-15
-- **Hecho:** plan confirmado con la captura del Exam Prep Plan, horario, decisiones (§2, §6) y flujo de trabajo por sesión (§5).
-  Decisiones del dueño (2026-10-15): **25 preguntas por lección, lo más real posible**, y **simulacro de 20 preguntas al cerrar cada módulo** (§5).
-- **Estado:** ✅ **definición cerrada** (los 8 puntos, 2026-10-15). **Examen objetivo: lun 28 dic 2026**, centro en Lima.
-  «Antes de la sesión 1» hecho el 2026-10-15 (ver abajo).
+- **Fecha:** 2026-10-15 (última sesión de preparación; todo commiteado y **subido a GitHub**).
+- **Estado:** ✅ **plan definido y herramientas listas.** Examen objetivo: **lun 28 dic 2026**, centro Pearson VUE en Lima.
+  Aún **no se ha estudiado nada**: la sesión 1 es la primera de estudio.
+- **Cómo retomar (dueño):** abrir Claude Code en esta carpeta y escribir **«retomemos AWS»**. El agente lee este archivo
+  y `CLAUDE.md`, que tienen todo el flujo; no hace falta repetir contexto.
+- **Antes del sábado (dueño, 2 min):** verificar en Chrome con doble clic que el simulador abre y que «Guardar resultado»
+  deja `aws-resultado-….json` en Descargas. Dirección de prueba:
+  `file:///C:/workspace/LEARNING/NOTES/aws-certifications-notes/simulador/index.html?banco=ejemplo/banco-ejemplo.js`.
+  Si algo falla, decirlo al empezar la sesión 1 y el agente lo corrige primero.
+- **Notas para el agente al retomar:**
+  - Hoy no existe ningún banco real ni resultado: `cloud-practitioner/*/practicas/` y `resultados/` están vacíos.
+  - Al generar el primer banco (M1 L1): seguir el formato de `CLAUDE.md`, validar con `python actualizar-indice.py`
+    y dar el enlace `simulador/index.html?banco=../cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/leccion-01.js`.
+  - La nota de M1 L1 ya existe: `cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 1- Introducción a AWS Cloud Practitioner Essentials.md`
+    (se mejora, no se rehace). §8 y §9 se llenan desde la sesión 1.
+  - El push normalmente lo hace el dueño; el agente solo lo hace si el dueño lo pide en el chat.
+  - Las descripciones de M6–M13 en `portal.json` son provisionales: ajustarlas al llegar a cada módulo.
 - **Agenda de definición (cerrada):**
   1. ✅ Días de estudio (2026-10-15): **7 días por semana** (domingo ligero, punto 8), inicio sáb 17 oct (§6).
   2. ✅ Diseño del simulador (2026-10-15): envío automático al acabar el tiempo, pausa guardada en el navegador,

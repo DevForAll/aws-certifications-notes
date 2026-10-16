@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulador CLF-C02</title>
+  <script>
+    try { if (localStorage.getItem('aws-theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) {}
+  </script>
+  <style>
+    :root {
+      --navy: #232f3e;
+      --orange: #ff9900;
+      --page-bg: #f2f3f3;
+      --card-bg: #ffffff;
+      --text: #16191f;
+      --text-muted: #5f6b7a;
+      --border: #d5dbdb;
+      --soft: #eef1f5;
+      --ok-bg: #e6f4ea;
+      --ok-border: #2e7d32;
+      --bad-bg: #fdecea;
+      --bad-border: #c62828;
+      --mark: #ff9900;
+      --explain-bg: #fff9c4;
+      --explain-text: #3e3a00;
+      --focus: #0972d3;
+    }
+    [data-theme="dark"] {
+      --page-bg: #151c25;
+      --card-bg: #1e2838;
+      --text: #e8eaed;
+      --text-muted: #9aabb8;
+      --border: #364858;
+      --soft: #283848;
+      --ok-bg: #173a26;
+      --ok-border: #5fbf6e;
+      --bad-bg: #431d1d;
+      --bad-border: #ef6b6b;
+      --explain-bg: #3a3820;
+      --explain-text: #f3eeb0;
+      --focus: #5aa9ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Amazon Ember', Arial, sans-serif; background: var(--page-bg); color: var(--text); min-height: 100vh; }
+    button { font: inherit; cursor: pointer; }
+    button:focus-visible, a:focus-visible, label:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+    header {
+      position: sticky; top: 0; z-index: 10; background: var(--navy); color: #fff;
+      display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 1rem; flex-wrap: wrap;
+    }
+    .back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .back:hover { color: var(--orange); }
+    .h-title { flex: 1; min-width: 0; font-size: 0.9rem; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .timer { font-variant-numeric: tabular-nums; font-weight: 700; background: rgba(255,255,255,0.1); padding: 0.25rem 0.6rem; border-radius: 4px; }
+    .timer.low { background: #c62828; }
+    .theme { background: none; border: 1px solid #546e7a; color: #fff; border-radius: 4px; padding: 0.2rem 0.5rem; }
+    .progress { height: 4px; background: rgba(0,0,0,0.15); }
+    .progress > div { height: 100%; background: var(--orange); width: 0; transition: width 0.2s; }
+
+    main { max-width: 820px; margin: 0 auto; padding: 1.25rem 1rem 6rem; }
+    .card { background: var(--card-bg); border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); padding: 1.25rem; margin-bottom: 1rem; }
+    h1 { font-size: 1.3rem; margin-bottom: 0.5rem; }
+    h2 { font-size: 1.05rem; margin: 1.2rem 0 0.6rem; }
+    .muted { color: var(--text-muted); font-size: 0.88rem; line-height: 1.6; }
+    .row { display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center; }
+    .spacer { flex: 1; }
+
+    .btn { border: 1px solid var(--border); background: var(--soft); color: var(--text); padding: 0.55rem 1rem; border-radius: 6px; font-weight: 600; font-size: 0.9rem; }
+    .btn:hover { filter: brightness(0.96); }
+    .btn.primary { background: var(--orange); border-color: var(--orange); color: #111; }
+    .btn.danger { background: var(--bad-border); border-color: var(--bad-border); color: #fff; }
+    .btn.marked { border-color: var(--mark); color: var(--mark); }
+    .btn:disabled { opacity: 0.45; cursor: default; }
+
+    .q-meta { display: flex; justify-content: space-between; gap: 0.5rem; font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem; }
+    .flag { color: var(--mark); font-weight: 700; }
+    .stem { font-size: 1.02rem; line-height: 1.65; margin-bottom: 0.5rem; white-space: pre-line; }
+    .choose { font-weight: 700; font-size: 0.9rem; margin-bottom: 0.75rem; }
+    .opt {
+      display: flex; gap: 0.7rem; align-items: flex-start; border: 1px solid var(--border); border-radius: 6px;
+      padding: 0.75rem 0.9rem; margin-bottom: 0.55rem; cursor: pointer; line-height: 1.5; background: var(--card-bg);
+    }
+    .opt:hover { border-color: var(--orange); }
+    .opt input { margin-top: 0.25rem; accent-color: var(--orange); flex-shrink: 0; }
+    .opt.sel { border-color: var(--orange); box-shadow: inset 3px 0 0 var(--orange); }
+    .opt.ok { background: var(--ok-bg); border-color: var(--ok-border); }
+    .opt.bad { background: var(--bad-bg); border-color: var(--bad-border); }
+    .opt.static { cursor: default; }
+    .opt .why { display: block; font-size: 0.84rem; color: var(--text-muted); margin-top: 0.3rem; }
+    .letter { font-weight: 700; min-width: 1.2rem; }
+    .explain { background: var(--explain-bg); color: var(--explain-text); border-radius: 6px; padding: 0.75rem 0.9rem; font-size: 0.9rem; line-height: 1.55; margin-top: 0.6rem; }
+
+    .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card-bg); border-top: 1px solid var(--border); padding: 0.6rem 1rem; }
+    .nav .row { max-width: 820px; margin: 0 auto; }
+
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 0.45rem; margin: 0.8rem 0; }
+    .tile { position: relative; border: 2px solid var(--border); background: var(--card-bg); color: var(--text); border-radius: 6px; padding: 0.55rem 0; font-weight: 700; }
+    .tile.answered { background: var(--soft); border-color: var(--text-muted); }
+    .tile.marked::after { content: '⚑'; position: absolute; top: -0.45rem; right: -0.3rem; color: var(--mark); font-size: 0.9rem; }
+    .legend { display: flex; gap: 1rem; flex-wrap: wrap; font-size: 0.82rem; color: var(--text-muted); }
+
+    .score { font-size: 2.4rem; font-weight: 700; }
+    .pass { color: var(--ok-border); }
+    .fail { color: var(--bad-border); }
+    .dom { margin: 0.4rem 0; font-size: 0.88rem; }
+    .bar { height: 8px; background: var(--soft); border-radius: 4px; overflow: hidden; margin-top: 0.2rem; }
+    .bar > div { height: 100%; background: var(--orange); }
+    .badge { font-size: 0.75rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 10px; }
+    .badge.ok { background: var(--ok-bg); color: var(--ok-border); }
+    .badge.bad { background: var(--bad-bg); color: var(--bad-border); }
+    .badge.mk { background: var(--soft); color: var(--mark); }
+    textarea { width: 100%; min-height: 160px; font-family: monospace; font-size: 0.8rem; margin-top: 0.6rem; background: var(--soft); color: var(--text); border: 1px solid var(--border); border-radius: 6px; padding: 0.5rem; }
+    .error { border-left: 4px solid var(--bad-border); }
+
+    @media (max-width: 600px) {
+      main { padding: 1rem 0.75rem 7rem; }
+      .card { padding: 1rem; }
+      .btn { padding: 0.5rem 0.75rem; font-size: 0.85rem; }
+      .nav { padding: 0.5rem 0.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back" href="../index.html">← Portal</a>
+    <span class="h-title" id="h-title">Simulador CLF-C02</span>
+    <span class="timer" id="timer" hidden></span>
+    <button class="theme" id="theme" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
+  </header>
+  <div class="progress"><div id="progress"></div></div>
+  <main id="app"><div class="card"><p class="muted">Cargando…</p></div></main>
+  <div class="nav" id="nav" hidden></div>
+  <script src="motor.js"></script>
+</body>
+</html>

@@ -10,7 +10,7 @@
 - **Hecho:** plan confirmado con la captura del Exam Prep Plan, horario, decisiones (§2, §6) y flujo de trabajo por sesión (§5).
   Decisiones del dueño (2026-10-15): **25 preguntas por lección, lo más real posible**, y **simulacro de 20 preguntas al cerrar cada módulo** (§5).
 - **Estado:** ✅ **definición cerrada** (los 8 puntos, 2026-10-15). **Examen objetivo: lun 28 dic 2026**, centro en Lima.
-  Falta que el agente haga «Antes de la sesión 1».
+  «Antes de la sesión 1» hecho el 2026-10-15 (ver abajo).
 - **Agenda de definición (cerrada):**
   1. ✅ Días de estudio (2026-10-15): **7 días por semana** (domingo ligero, punto 8), inicio sáb 17 oct (§6).
   2. ✅ Diseño del simulador (2026-10-15): envío automático al acabar el tiempo, pausa guardada en el navegador,
@@ -28,17 +28,18 @@
      `_crudo/`; notas renderizadas desde `.md` en el navegador; push por el dueño; flujo técnico en §12.
   8. ✅ Otros ajustes (2026-10-15): **domingo ligero** (simulacro de módulo pendiente + reintentar falladas +
      cuaderno de errores, sin lecciones nuevas); por eso el examen pasa del 22 al **28 dic** (§5, §6).
-- **Antes de la sesión 1 (lo hace el agente, fuera del horario de estudio):**
-  1. Reescribir el `CLAUDE.md` del repo: hoy describe la sincronización vieja desde Obsidian con **push autónomo**;
-     pasa a ser el tutor de estudio (contenido de `GEMINI.md` + flujo de §5) y **el push lo hace el dueño**.
-  2. Construir el **motor del simulador** (`simulador/`, ver §5) y probarlo con un banco de ejemplo,
-     en local (doble clic) y en GitHub Pages.
-  3. Script `simulador/listar-preguntas.py`: lista los enunciados ya usados para no repetir preguntas
-     sin que el agente relea todos los bancos (ahorro de tokens).
-  4. Portal nuevo (§12): `visor/` para `.md`, `contenido.js` + `actualizar-indice.py`, historial de resultados y
-     modo `?resultado=` del simulador. Las notas viejas de M1–M5 deben verse en el visor.
-  5. Crear `_entrada/leccion.md` (plantilla con secciones: texto, transcripción, comprobación, dudas) y agregar
-     `_entrada/` al `.gitignore` (`_crudo/` ya está).
+- **Antes de la sesión 1 — ✅ hecho 2026-10-15 por el agente:**
+  1. ✅ `CLAUDE.md` reescrito como tutor de estudio (reglas del `GEMINI.md`, comandos, formato de banco y resultado; push del dueño).
+  2. ✅ Motor del simulador (`simulador/index.html` + `motor.js`) con banco de ejemplo en `simulador/ejemplo/`.
+     Probado en servidor local (equivale a GitHub Pages): modo examen, pausa guardada, revisión, envío, resultado,
+     reintentar falladas, modo estudio y revisión de intentos.
+     **Pendiente de verificar por el dueño:** doble clic (`file://`) y que «Guardar resultado» deje el `.json` en Descargas
+     (el panel de pruebas del agente no permite ninguna de las dos cosas).
+  3. ✅ `simulador/listar-preguntas.py` (con `--modulo`, `--buscar`, `--largo`) y validación de bancos en `simulador/bancos.py`.
+  4. ✅ Portal nuevo: `index.html` lee `contenido.js`; `visor/` muestra las 31 notas de M1–M5 y los resúmenes;
+     `actualizar-indice.py` regenera `contenido.js` y `notas.js`; historial de resultados; `portal.json` con módulos,
+     descripciones y fecha del examen. Los `leccion-NN-notas.html` y `generate-notes.ps1` quedan como archivo.
+  5. ✅ `_entrada/leccion.md` (copia de `_entrada/plantilla.md`) y `.gitignore` actualizado.
 - **Siguiente (sesión 1 de estudio: sábado 2026-10-17, 10:00–12:00):**
   1. Ver *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min) en Skill Builder.
   2. Dar el **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta** y registrar el puntaje en §8.

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nota — AWS Cloud Practitioner</title>
+  <script>
+    try { if (localStorage.getItem('aws-theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark'); } catch (e) {}
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@9.1.6/marked.min.js"></script>
+  <script src="../contenido.js"></script>
+  <script src="../notas.js"></script>
+  <style>
+    :root {
+      --navy: #232f3e; --orange: #ff9900; --page-bg: #f4f6f8; --card-bg: #ffffff; --text: #16191f;
+      --text-muted: #555; --h2-bg: #eef1f5; --quote-bg: #fff9ee; --code-bg: #e4e8ef; --row-even: #f5f7fa;
+      --row-border: #e4e8ee; --strong: #232f3e;
+    }
+    [data-theme="dark"] {
+      --page-bg: #151c25; --card-bg: #1e2838; --text: #e8eaed; --text-muted: #9aabb8; --h2-bg: #1e2838;
+      --quote-bg: #1e2830; --code-bg: #283848; --row-even: #253545; --row-border: #2a3a4a; --strong: #c8d8ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: Arial, sans-serif; background: var(--page-bg); color: var(--text); }
+    header { position: sticky; top: 0; z-index: 10; background: var(--navy); padding: 0.7rem 1.2rem; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .back { color: #aab7b8; text-decoration: none; font-size: 0.85rem; white-space: nowrap; }
+    .back:hover { color: var(--orange); }
+    .title { flex: 1; color: #fff; font-size: 0.9rem; font-weight: 600; min-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .act { background: var(--orange); color: #111; padding: 0.35rem 0.85rem; border-radius: 5px; text-decoration: none; font-size: 0.82rem; font-weight: 700; white-space: nowrap; }
+    .act.sec { background: transparent; color: #aab7b8; border: 1px solid #546e7a; font-weight: 600; }
+    .theme { background: none; border: 1px solid #546e7a; color: #fff; border-radius: 4px; padding: 0.2rem 0.5rem; cursor: pointer; }
+    main { max-width: 780px; margin: 0 auto; padding: 1.5rem 1rem 4rem; }
+    #md h1 { font-size: 1.4rem; color: var(--strong); margin: 1.5rem 0 0.8rem; padding-bottom: 0.4rem; border-bottom: 3px solid var(--orange); }
+    #md h2 { font-size: 1.1rem; color: var(--strong); background: var(--h2-bg); padding: 0.5rem 0.85rem; border-radius: 5px; margin: 1.8rem 0 0.7rem; border-left: 4px solid var(--orange); }
+    #md h3 { font-size: 1rem; margin: 1.2rem 0 0.5rem; }
+    #md h4 { font-size: 0.95rem; color: var(--text-muted); margin: 1rem 0 0.4rem; }
+    #md p { line-height: 1.75; margin-bottom: 0.8rem; }
+    #md strong { color: var(--strong); }
+    #md ul, #md ol { margin: 0.4rem 0 0.8rem 1.5rem; }
+    #md li { line-height: 1.75; margin-bottom: 0.25rem; }
+    #md hr { border: none; border-top: 1px solid var(--row-border); margin: 1.5rem 0; }
+    #md blockquote { border-left: 4px solid var(--orange); background: var(--quote-bg); padding: 0.8rem 1rem; margin: 1rem 0; border-radius: 0 6px 6px 0; }
+    #md blockquote p { margin-bottom: 0; }
+    #md code { background: var(--code-bg); padding: 0.15rem 0.4rem; border-radius: 3px; font-size: 0.87em; }
+    #md pre { background: #1e2430; color: #e0e6f0; padding: 1rem; border-radius: 6px; overflow-x: auto; margin: 1rem 0; white-space: pre-wrap; }
+    #md pre code { background: none; color: inherit; padding: 0; }
+    #md img { max-width: 100%; border-radius: 6px; margin: 0.5rem 0; }
+    .table-wrap { overflow-x: auto; margin: 1rem 0; border-radius: 6px; box-shadow: 0 1px 5px rgba(0,0,0,0.09); }
+    #md table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+    #md th { background: var(--navy); color: #fff; padding: 0.5rem 0.75rem; text-align: left; }
+    #md td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--row-border); vertical-align: top; }
+    #md tr:nth-child(even) td { background: var(--row-even); }
+    .pager { display: flex; justify-content: space-between; gap: 1rem; margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--row-border); font-size: 0.85rem; }
+    .pager a { color: var(--text-muted); text-decoration: none; max-width: 48%; }
+    .pager a:hover { color: var(--orange); }
+    @media (max-width: 600px) {
+      header { padding: 0.6rem 0.9rem; gap: 0.5rem; }
+      main { padding: 1rem 0.75rem 4rem; }
+      #md h1 { font-size: 1.15rem; }
+      #md table { font-size: 0.78rem; }
+      #md th, #md td { padding: 0.3rem 0.45rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a class="back" href="../index.html">← Portal</a>
+    <span class="title" id="title">Nota</span>
+    <span id="acts" style="display:flex;gap:.45rem"></span>
+    <button class="theme" id="theme" title="Cambiar tema" aria-label="Cambiar tema">◐</button>
+  </header>
+  <main><div id="md"></div><nav class="pager" id="pager"></nav></main>
+  <script>
+    (function () {
+      function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+      function enlace(ruta) { return '../' + ruta.split('/').map(encodeURIComponent).join('/'); }
+
+      document.getElementById('theme').onclick = function () {
+        var r = document.documentElement, d = r.getAttribute('data-theme') === 'dark';
+        r.setAttribute('data-theme', d ? 'light' : 'dark');
+        try { localStorage.setItem('aws-theme', d ? 'light' : 'dark'); } catch (e) {}
+      };
+
+      var ruta = new URLSearchParams(location.search).get('nota') || '';
+      var cont = document.getElementById('md');
+      var md = window.NOTAS && window.NOTAS[ruta];
+      if (md == null) {
+        cont.innerHTML = '<p>No se encontró la nota <code>' + esc(ruta) + '</code>. Vuelve al <a href="../index.html">portal</a>.</p>';
+        return;
+      }
+
+      // Lección a la que pertenece la nota, para el título, la práctica y la navegación.
+      var lista = [], actual = -1, modulo = null;
+      ((window.CONTENIDO && window.CONTENIDO.modulos) || []).forEach(function (m) {
+        m.lecciones.forEach(function (l) {
+          [l.nota].concat(l.evalAntigua.filter(function (e) { return e.tipo === 'md'; }).map(function (e) { return e.ruta; }))
+            .forEach(function (r) {
+              if (!r) return;
+              if (r === ruta) { actual = lista.length; modulo = m; }
+              lista.push({ ruta: r, lec: l, mod: m, eval: r !== l.nota });
+            });
+        });
+      });
+      ((window.CONTENIDO && window.CONTENIDO.repaso) || []).forEach(function (x) {
+        if (!x.nota) return;
+        if (x.nota === ruta) actual = lista.length;
+        lista.push({ ruta: x.nota, lec: x, mod: null, eval: false });
+      });
+      var it = lista[actual];
+      var titulo = it ? (it.mod ? 'M' + it.mod.num + ' L' + it.lec.num + ' — ' : '') + (it.eval ? 'Evaluación antigua' : it.lec.titulo) : ruta.split('/').pop().replace(/\.md$/, '');
+      document.title = titulo + ' — AWS Cloud Practitioner';
+      document.getElementById('title').textContent = titulo;
+
+      var acts = '';
+      if (it && it.lec.practica) acts += '<a class="act" href="../simulador/index.html?banco=' + encodeURIComponent('../' + it.lec.practica.ruta) + '">Practicar</a>';
+      if (it) it.lec.evalAntigua.forEach(function (e) {
+        if (e.tipo === 'html') acts += '<a class="act sec" href="' + enlace(e.ruta) + '">Eval antigua</a>';
+      });
+      document.getElementById('acts').innerHTML = acts;
+
+      var dir = ruta.split('/').slice(0, -1).join('/');
+      if (window.marked) {
+        marked.setOptions({ breaks: true, gfm: true });
+        cont.innerHTML = marked.parse(md).replace(/<table>/g, '<div class="table-wrap"><table>').replace(/<\/table>/g, '</table></div>');
+        cont.querySelectorAll('img').forEach(function (img) {
+          var src = img.getAttribute('src');
+          if (src && !/^(https?:|data:|\/|\.\.\/)/.test(src)) img.src = enlace(dir + '/' + decodeURIComponent(src));
+        });
+      } else {
+        cont.innerHTML = '<p><em>Sin conexión para dar formato; se muestra el texto plano.</em></p><pre>' + esc(md) + '</pre>';
+      }
+
+      var pager = '';
+      function link(x, flecha) {
+        var t = (x.mod ? 'M' + x.mod.num + ' L' + x.lec.num + ' ' : '') + (x.eval ? 'Evaluación antigua' : x.lec.titulo);
+        return '<a href="?nota=' + encodeURIComponent(x.ruta) + '">' + (flecha === '←' ? '← ' + esc(t) : esc(t) + ' →') + '</a>';
+      }
+      if (actual > 0) pager += link(lista[actual - 1], '←'); else pager += '<span></span>';
+      if (actual >= 0 && actual < lista.length - 1) pager += link(lista[actual + 1], '→');
+      document.getElementById('pager').innerHTML = pager;
+    })();
+  </script>
+</body>
+</html>

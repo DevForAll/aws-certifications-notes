@@ -1,331 +1,168 @@
-# CLAUDE.md — AWS Certifications Notes
+# CLAUDE.md — Tutor AWS Cloud Practitioner (CLF-C02)
 
-## Descripción del proyecto
-
-Repositorio de apuntes y material de estudio para la certificación **AWS Certified Cloud Practitioner (CLF-C02)**. El portal web (`index.html`) sirve como punto de entrada para navegar notas y evaluaciones por lección.
+Este repo es el espacio de estudio del dueño para aprobar el **AWS Certified Cloud Practitioner (CLF-C02) en español**.
+El agente actúa como **instructor de AWS y diseñador de exámenes**: entrega notas, genera bancos de preguntas,
+corrige resultados y lleva el registro. El plan completo, las decisiones y el estado están en
+[`PLAN-ESTUDIO.md`](PLAN-ESTUDIO.md); **leerlo siempre al empezar** («Dónde quedamos», §5 y §12).
 
 ---
 
-## Rutas importantes
+## Comandos del dueño
 
-| Rol | Ruta |
-|-----|------|
-| Fuente de contenido (Obsidian) | `C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\` |
-| Repositorio Git | `C:\workspace\LEARNING\NOTES\aws-certifications-notes\` |
-| Portal principal | `aws-certifications-notes\index.html` |
-| Script generador de HTML | `aws-certifications-notes\generate-notes.ps1` |
+| El dueño escribe | El agente hace |
+|---|---|
+| «retomemos AWS» | Lee «Dónde quedamos», dice la meta del día y lanza el **calentamiento de 5 preguntas en el chat** (§9 y fallos recientes). Corrige al instante las respuestas «1B 2D 3AC…» |
+| «terminé M_ L_» | Lee `_entrada/leccion.md` (+ capturas en `_entrada/`), mejora o crea la nota, mueve el crudo a `_crudo/`, genera el banco y da el enlace del simulador |
+| «listo» | Busca el resultado más reciente en `C:\Users\Asus\Downloads\aws-resultado-*.json`, lo mueve a `resultados/`, explica **solo las falladas** y registra §8 y §9 |
+| «cerremos» | Actualiza «Dónde quedamos», §4, §8 y §9; corre `python actualizar-indice.py`; hace commit. **No hace push** |
 
-### Estructura de carpetas del repositorio
+El **push lo hace el dueño** (`git push origin master`); con el push se actualiza GitHub Pages.
+Los domingos son **día ligero** (PLAN §5): sin lecciones nuevas; simulacro de módulo pendiente, reintentar falladas y cuaderno de errores.
+
+---
+
+## Paso «terminé M_ L_» en detalle
+
+1. **Leer la entrada.** `_entrada/leccion.md` trae texto de la lección, transcripción, resultado de la comprobación
+   de Skill Builder y dudas. M1–M5: suele traer solo comprobación y dudas (la nota ya existe). M6–M13: trae todo.
+2. **Nota.** M1–M5: mejorar la nota `.md` existente del módulo (no regenerar desde cero). M6+: crear
+   `cloud-practitioner/modulo-0N-…/Lección N - Título.md` con la estructura de abajo.
+   Capturas útiles para la nota: copiarlas a `cloud-practitioner/modulo-0N-…/img/` y enlazarlas como `![](img/archivo.png)`.
+3. **Archivar el crudo.** Mover `_entrada/leccion.md` a `cloud-practitioner/modulo-0N-…/_crudo/leccion-NN.md`
+   (y sus imágenes a `_crudo/`), y dejar `_entrada/leccion.md` como la plantilla vacía (copiar `_entrada/plantilla.md`).
+4. **Banco.** Correr `python simulador/listar-preguntas.py` para ver los enunciados ya usados (no leer los bancos uno a uno),
+   escribir `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js` y validarlo con `python actualizar-indice.py`
+   (falla si el banco está mal formado).
+5. **Enlace.** Dar el enlace local para doble clic, por ejemplo:
+   `simulador/index.html?banco=../cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/leccion-01.js`
+
+### Estructura de la nota (del antiguo `GEMINI.md`)
+
+- **Resumen Ejecutivo:** conciso, enfocado en el valor de negocio y en por qué una empresa elegiría la solución.
+- **Conceptos Clave:** definiciones simples pero técnicas, con prioridad (High / Medium / Low) según probabilidad en el examen.
+  Prioridad especial: IA generativa (Bedrock, SageMaker) y Modelo de Responsabilidad Compartida.
+- **Tabla Comparativa Rápida:** si hay servicios parecidos (S3 vs EBS, TCO vs Pricing Calculator…).
+- **Puntos Críticos:** keywords textuales que aparecen en las preguntas.
+- **Trampas de Examen:** diferencias para no confundir servicios de la misma categoría.
+- **Diccionario de Servicios AWS:** cada servicio mencionado, definición corta y «palabras gatillo»; si es distractor común, por qué.
+
+### Reglas de oro (para notas, bancos y explicaciones)
+
+- **Costos:** resaltar el plan de soporte mínimo necesario y el modelo de precios más barato (Spot vs On-Demand…).
+- **Responsabilidad:** en seguridad, aclarar siempre si es «seguridad **DE** la nube» (AWS) o «**EN** la nube» (cliente).
+- **CLF-C02 actualizado:** incluir IA generativa y gobernanza (Organizations, Control Tower) cuando el contexto lo permita.
+- **Analogías** de la vida real para servicios abstractos.
+- **Sin suposiciones:** explicar cada sigla (CIDR, VPC, JSON…) y su relevancia en AWS.
+- Resaltar todo lo que sea **Service Limit / Quota**.
+- Agregar información valiosa que el examen evalúa aunque no esté en la lección.
+
+---
+
+## Bancos de preguntas
+
+**Cantidad y mezcla (PLAN §5):**
+- Práctica de lección: **25 preguntas** (~60 % de la lección, ~40 % acumulativo). Si no hay material para 25 buenas,
+  **entre 15 y 25**, sin relleno, sin variantes de la misma pregunta y sin adelantar temas no vistos.
+- Simulacro de módulo: **20 preguntas / 28 min** (~80 % del módulo, ~20 % anteriores) → `practicas/simulacro-modulo.js`.
+- Simulacro completo: **65 preguntas / 90 min**, solo tras M5 y M11 y en la Fase 3, con pesos 24/30/34/12 →
+  `cloud-practitioner/repaso-general/simulacro-NN.js`.
+- Estilo: ~40 % escenarios de negocio (más rentable / menos carga operativa), ~30 % identificación de servicios,
+  ~30 % seguridad y arquitectura. **~85 % opción única (1 de 4)**, **~15 % múltiple (2 de 5 o 3 de 6)**.
+- Distractores = servicios reales de la misma categoría. Enunciado con contexto de empresa + requisito + pregunta.
+- Español LATAM con los términos clave en inglés como en el examen traducido.
+- **Nunca repetir** enunciados de otros bancos (usar `listar-preguntas.py`).
+
+**Formato del archivo** (`.js` para que funcione con doble clic; el contenido después de `window.BANCO = ` debe ser
+**JSON válido**, porque los scripts de Python lo leen):
+
+```js
+window.BANCO = {
+  "id": "m01-l01",
+  "titulo": "M1 L1 — Introducción a AWS Cloud Practitioner Essentials",
+  "tipo": "leccion",
+  "modulo": 1,
+  "leccion": "1",
+  "minutos": 35,
+  "preguntas": [
+    {
+      "id": "m01-l01-q01",
+      "dominio": 1,
+      "tarea": "1.1",
+      "enunciado": "Una empresa minorista quiere… ¿Qué beneficio de la nube…?",
+      "opciones": [
+        { "texto": "Gasto variable en lugar de gasto de capital", "correcta": true,  "porque": "Paga solo lo que consume…" },
+        { "texto": "Economías de escala",                         "correcta": false, "porque": "Explica precios bajos, no…" }
+      ],
+      "explicacion": "Idea central que hay que recordar y palabra gatillo."
+    }
+  ]
+};
+```
+
+- `tipo`: `leccion` | `simulacro-modulo` | `simulacro-completo`. `leccion` admite partes: `"6-p1"` → archivo `leccion-06-p1.js`.
+- `minutos`: opcional; por defecto `ceil(preguntas × 1,4)`.
+- `dominio`: 1 Conceptos de la nube · 2 Seguridad y cumplimiento · 3 Tecnología y servicios · 4 Facturación, precios y soporte.
+- `tarea`: enunciado de tarea de la guía oficial (1.1, 2.3…).
+- Respuesta múltiple: marcar 2 o 3 opciones con `"correcta": true`; el simulador muestra «Elija 2 / Elija 3» solo.
+- Cada opción lleva `porque` (por qué sí o por qué no). Los IDs de pregunta no se reutilizan nunca.
+
+---
+
+## Resultados
+
+El simulador descarga `aws-resultado-AAAA-MM-DD-<id banco>.json`. El agente lo mueve a
+`resultados/AAAA-MM-DD-<id banco>.json` (si ya existe, sufijo `-2`, `-3`…). Contiene puntaje, % por dominio,
+tiempo usado, si se envió por tiempo y, por pregunta: ID, opciones elegidas y correctas (índices del banco),
+acierto y si se marcó para revisión. **Se publica** (el dueño repasa desde otros dispositivos).
+
+Al corregir:
+- Explicar **solo las falladas** (y las marcadas acertadas si el dueño dudó): por qué la correcta y por qué no las demás.
+- §8: una línea por práctica. §9: solo **conceptos** confundidos, con palabra gatillo.
+- Umbrales: lección < **80 %** → «Reintentar falladas» en modo estudio y esas preguntas al calentamiento siguiente;
+  simulacro de módulo < **75 %** → repaso dirigido antes del módulo siguiente; completo < **75 %** → no se pasa a Fase 3.
+- Si el dueño falla dos veces el mismo par de servicios, pedirle que explique la diferencia en una línea.
+
+---
+
+## Estructura del repo
 
 ```
 aws-certifications-notes/
-├── index.html                        ← Portal principal de estudio
-├── generate-notes.ps1                ← Genera páginas leccion-XX-notas.html
-├── README.md
+├── index.html                 ← Portal: lee contenido.js y arma todo solo
+├── contenido.js · notas.js    ← GENERADOS por actualizar-indice.py (no editar a mano)
+├── actualizar-indice.py       ← Regenera el índice, valida bancos; correr en cada cierre
+├── portal.json                ← Títulos de módulos y descripciones cortas de lecciones (editable)
+├── visor/index.html           ← Muestra una nota: visor/?nota=<ruta del .md>
+├── simulador/                 ← Motor único: ?banco=<ruta .js> [&resultado=<id>] [&modo=estudio] [&solo=ids]
+│   └── listar-preguntas.py    ← Enunciados ya usados (para no repetir)
+├── resultados/                ← Un .json por intento (publicado)
+├── _entrada/                  ← Material de la lección en curso (NO se publica)
+├── PLAN-ESTUDIO.md
 └── cloud-practitioner/
-    ├── modulo-01-introduction-to-the-cloud/
-    ├── modulo-02-computacion-en-la-nube/
-    ├── modulo-03-servicios-de-computacion/
-    ├── modulo-04-hacia-la-globalizacion/
-    ├── modulo-05-redes/
-    └── repaso-general/               ← Resúmenes maestros y evaluaciones simuladas
+    ├── modulo-0N-<nombre>/
+    │   ├── Lección N - Título.md   ← Notas
+    │   ├── practicas/              ← Bancos leccion-NN.js y simulacro-modulo.js
+    │   ├── img/                    ← Imágenes usadas en las notas
+    │   ├── _crudo/                 ← Texto y transcripciones de Skill Builder (NO se publica)
+    │   └── Lección N - EVALUACION.html ← Evaluaciones antiguas de Gemini (archivo; no se borran)
+    └── repaso-general/
 ```
 
-### Estructura de carpetas de la fuente
+Carpetas de módulos nuevos (M6–M13): `modulo-06-almacenamiento`, `modulo-07-bases-de-datos`,
+`modulo-08-ia-ml-y-analitica`, `modulo-09-seguridad`, `modulo-10-monitoreo-cumplimiento-y-gobernanza`,
+`modulo-11-precios-y-soporte`, `modulo-12-migracion`, `modulo-13-well-architected`.
 
-```
-CERTIFIED AWS CLOUD PRACTITIONER/
-├── MODULO 1 - Introduction to the Cloud/
-├── MODULO 2 - Computación en la Nube/
-├── MODULO 3 - Exploración de los servicios de computación/
-├── MODULO 4 - Hacia la globalización/
-├── MODULO 5 - Redes/
-└── REPASO_GENERAL/
-```
+Archivo histórico (no se usa en el flujo nuevo): `generate-notes.ps1`, los `leccion-NN-notas.html`, las
+evaluaciones de Gemini y la carpeta de Obsidian `C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\`
+(ya no se escribe ahí ni se sincroniza desde ahí).
 
 ---
 
-## Convenciones de nombres
-
-| Fuente (Obsidian) | Repositorio |
-|-------------------|-------------|
-| `MODULO N - Nombre largo` | `modulo-0N-nombre-corto` |
-| `Lección N - Título.md` | Mismo nombre exacto (se preservan tildes y espacios) |
-| `Lección N - EVALUACION.html` | Mismo nombre exacto |
-| `Lección N - EVALUACION PARTE 1.html` | Mismo nombre exacto |
-| `transcripcion_leccion_N.md` | **NO copiar — no se usa en la web** |
-| *(generado)* | `leccion-0N-notas.html` |
-| *(generado)* | `leccion-0N-pX-notas.html` (cuando hay Parte 1/2) |
-| `Resumen_Maestro_Modulos_N_y_M.md` | Mismo nombre exacto (en `repaso-general/`) |
-| `Evaluacion_Simulada_*.html` | Mismo nombre exacto (en `repaso-general/`) |
-| *(generado)* | `resumen-mNmM-notas.html` (en `repaso-general/`) |
-
----
-
-## Procedimiento de sincronización
-
-Cuando el usuario pida sincronizar nuevo contenido desde la fuente al repositorio, seguir estos pasos en orden:
-
-### Paso 1 — Identificar diferencias
-
-Usar PowerShell para comparar archivos entre la fuente y el repositorio:
-
-```powershell
-# Listar archivos de un módulo en la fuente
-$items = Get-ChildItem "C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\MODULO N - Nombre"
-Write-Host "Count: $($items.Count)"; foreach ($i in $items) { Write-Host $i.Name }
-
-# Listar archivos del mismo módulo en el repositorio
-$items = Get-ChildItem "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\modulo-0N-nombre"
-Write-Host "Count: $($items.Count)"; foreach ($i in $items) { Write-Host $i.Name }
-```
-
-Buscar diferencias en:
-- Archivos nuevos (evaluaciones HTML, lecciones nuevas)
-- Archivos que cambiaron de nombre (ej. lección split en Parte 1/Parte 2)
-- Archivos con contenido actualizado (verificar por fecha de modificación, ver abajo)
-
-**Comparar por fecha de modificación** (detecta archivos actualizados sin abrir uno a uno):
-
-```powershell
-$src = "C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\MODULO N - Nombre"
-$dst = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\modulo-0N-nombre"
-$files = @("Lección 1 - Titulo.md", "Lección 1 - EVALUACION.html")  # lista de archivos a comparar
-foreach ($f in $files) {
-    $s = (Get-Item "$src\$f").LastWriteTime
-    $d = (Get-Item "$dst\$f").LastWriteTime
-    $match = if ($s -le $d) { "OK" } else { "DESACTUALIZADO" }
-    Write-Host "$match  $f  (fuente: $s | repo: $d)"
-}
-```
-
-**Ignorar siempre** los archivos `transcripcion_*.md` — son material en bruto de Obsidian que no tiene uso en el portal web.
-
-### Paso 2 — Copiar archivos nuevos o actualizados
-
-```powershell
-$src = "C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\MODULO N - Nombre"
-$dst = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\modulo-0N-nombre"
-
-# Copiar un archivo nuevo o sobreescribir uno actualizado
-Copy-Item "$src\Nombre del archivo.ext" "$dst\Nombre del archivo.ext" -Force
-```
-
-**No copiar nunca** archivos `transcripcion_*.md`. Solo copiar:
-- Archivos `.md` de notas de lección (`Lección N - Título.md`)
-- Archivos `.html` de evaluaciones (`Lección N - EVALUACION.html`)
-- Para `REPASO_GENERAL`: `Resumen_Maestro_*.md` y `Evaluacion_Simulada_*.html`
-
-Usar `-Force` siempre para sobreescribir sin errores.
-
-**Copiar archivos de REPASO_GENERAL** (si la carpeta no existe en el repo, crearla primero):
-
-```powershell
-# Crear carpeta si no existe
-New-Item -ItemType Directory -Force "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\repaso-general" | Out-Null
-
-$src = "C:\workspace\LEARNING\NOTES\CERTIFIED AWS CLOUD PRACTITIONER\REPASO_GENERAL"
-$dst = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\repaso-general"
-Copy-Item "$src\Resumen_Maestro_Modulos_1_y_2.md"        "$dst\Resumen_Maestro_Modulos_1_y_2.md"        -Force
-Copy-Item "$src\Resumen_Maestro_Modulos_3_y_4.md"        "$dst\Resumen_Maestro_Modulos_3_y_4.md"        -Force
-Copy-Item "$src\Evaluacion_Simulada_Modulos_3_y_4.html"  "$dst\Evaluacion_Simulada_Modulos_3_y_4.html"  -Force
-```
-
-Cuando un archivo fue renombrado o dividido en la fuente, eliminar el archivo viejo del repo con `Remove-Item` sin pedir confirmación.
-
-### Paso 3 — Actualizar `generate-notes.ps1`
-
-El script genera páginas HTML para cada lección de notas. Si se agregan lecciones nuevas o un módulo nuevo, añadir las entradas correspondientes al final del script usando la función `New-NoteHtml`:
-
-```powershell
-# Sintaxis
-New-NoteHtml "$mN\Nombre del archivo.md" "$mN\leccion-0N-notas.html" "Titulo corto" "URL_eval_encoded"
-
-# Si no hay evaluación, usar cadena vacía ""
-New-NoteHtml "$mN\Lección 4 - Sin eval.md" "$mN\leccion-04-notas.html" "Titulo" ""
-```
-
-**Codificación URL para nombres de evaluaciones** (caracteres frecuentes):
-- `Lección` → `Lecci%C3%B3n`
-- espacio → `%20`
-- `Lección 1 - EVALUACION.html` → `Lecci%C3%B3n%201%20-%20EVALUACION.html`
-- `Lección 2 - EVALUACION PARTE 1.html` → `Lecci%C3%B3n%202%20-%20EVALUACION%20PARTE%201.html`
-
-Actualizar también el mensaje final del script (`Write-Host "Listo. N paginas regeneradas..."`) con el nuevo total.
-
-**Entradas de `repaso-general` en `generate-notes.ps1`** (ya incluidas desde la sincronización de M4/Repaso):
-
-```powershell
-$rg = "C:\workspace\LEARNING\NOTES\aws-certifications-notes\cloud-practitioner\repaso-general"
-
-New-NoteHtml "$rg\Resumen_Maestro_Modulos_1_y_2.md"  "$rg\resumen-m1m2-notas.html" "Resumen Maestro - Modulos 1 y 2" ""
-New-NoteHtml "$rg\Resumen_Maestro_Modulos_3_y_4.md"  "$rg\resumen-m3m4-notas.html" "Resumen Maestro - Modulos 3 y 4" "Evaluacion_Simulada_Modulos_3_y_4.html"
-```
-
-> Nota: las eval URLs del repaso no llevan encoding porque no tienen tildes ni espacios.
-
-### Paso 4 — Ejecutar el script para regenerar HTMLs
-
-```powershell
-cd "C:\workspace\LEARNING\NOTES\aws-certifications-notes"
-powershell -ExecutionPolicy Bypass -File ".\generate-notes.ps1"
-```
-
-Verificar que todos los archivos impriman `OK leccion-XX-notas.html`.
-
-### Paso 5 — Actualizar `index.html`
-
-El portal `index.html` tiene tres secciones que pueden necesitar actualización:
-
-1. **Barra de estadísticas** — actualizar conteos:
-   ```html
-   <span><strong>N</strong> lecciones con notas</span>
-   <span><strong>N</strong> evaluaciones activas</span>
-   <span><strong>N / 5</strong> modulos activos</span>
-   ```
-
-2. **Tarjetas de módulos activos** — si un módulo pasa de "soon" a activo, reemplazar la tarjeta `<div class="module-card soon">` por una tarjeta completa con sus filas de lección.
-
-3. **Botones de evaluación** — si una lección que antes tenía `<span class="act-none">Sin eval</span>` ahora tiene evaluación, reemplazarlo por:
-   ```html
-   <a href="cloud-practitioner/modulo-0N-nombre/Lecci%C3%B3n%20N%20-%20EVALUACION.html" class="act-eval">Eval</a>
-   ```
-
-**Plantilla de fila de lección activa:**
-```html
-<div class="lesson-row">
-    <div class="lesson-icon">📖</div>
-    <div class="lesson-info">
-        <div class="lesson-name">Leccion N — Titulo</div>
-        <div class="lesson-desc">descripcion breve de los temas</div>
-    </div>
-    <div class="item-actions">
-        <a href="cloud-practitioner/modulo-0N-nombre/leccion-0N-notas.html" class="act-notes">Notas</a>
-        <a href="cloud-practitioner/modulo-0N-nombre/Lecci%C3%B3n%20N%20-%20EVALUACION.html" class="act-eval">Eval</a>
-    </div>
-</div>
-```
-
-**Plantilla de cabecera de módulo activo:**
-```html
-<div class="module-card">
-    <div class="module-header">
-        <span class="module-num">MODULO N</span>
-        <div class="module-meta">
-            <div class="module-title">Nombre del Modulo</div>
-            <div class="module-subtitle">N lecciones · N evaluaciones · temas principales</div>
-        </div>
-    </div>
-    <div class="lesson-list">
-        <!-- filas de lección aquí -->
-    </div>
-</div>
-```
-
-**Sección Repaso General en `index.html`** — ya existe en el portal. Si se agregan nuevos resúmenes o evaluaciones simuladas, agregar filas dentro del `<div class="lesson-list">` de esa tarjeta:
-
-```html
-<!-- Fila sin evaluacion -->
-<div class="lesson-row">
-    <div class="lesson-icon">📖</div>
-    <div class="lesson-info">
-        <div class="lesson-name">Resumen Maestro — Modulos N y M</div>
-        <div class="lesson-desc">descripcion breve</div>
-    </div>
-    <div class="item-actions">
-        <a href="cloud-practitioner/repaso-general/resumen-mNmM-notas.html" class="act-notes">Notas</a>
-        <span class="act-none">Sin eval</span>
-    </div>
-</div>
-
-<!-- Fila con evaluacion simulada -->
-<div class="lesson-row">
-    <div class="lesson-icon">📖</div>
-    <div class="lesson-info">
-        <div class="lesson-name">Resumen Maestro — Modulos N y M</div>
-        <div class="lesson-desc">descripcion breve</div>
-    </div>
-    <div class="item-actions">
-        <a href="cloud-practitioner/repaso-general/resumen-mNmM-notas.html" class="act-notes">Notas</a>
-        <a href="cloud-practitioner/repaso-general/Evaluacion_Simulada_Modulos_N_y_M.html" class="act-eval">Eval</a>
-    </div>
-</div>
-```
-
-### Paso 6 — Commit y push
-
-```bash
-# Desde Git Bash (no PowerShell) en la raíz del repositorio
-cd "/c/workspace/LEARNING/NOTES/aws-certifications-notes"
-
-# Agregar archivos específicos (NUNCA usar git add -A o git add .)
-git add "cloud-practitioner/modulo-0N-nombre/archivo.ext" \
-        "generate-notes.ps1" \
-        "index.html"
-
-# Ver qué quedó en staging antes de commitear
-git status --short
-
-# Crear commit
-git commit -m "$(cat <<'EOF'
-Descripcion breve del cambio
-
-- Modulo N: detalle de lo agregado
-- generate-notes.ps1: detalle de cambios
-- index.html: detalle de cambios
-
-Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
-EOF
-)"
-
-# Push al remoto
-git push origin master
-```
-
-> **Nota**: Usar siempre el tool `Bash` (no PowerShell) para comandos `git`, ya que el shell subyacente es `/usr/bin/bash`.
-
----
-
-## Conteo de estadísticas para `index.html`
-
-Para calcular los totales correctos antes de actualizar la barra de stats:
-
-- **Lecciones con notas** = número total de archivos `leccion-XX-notas.html` generados en todos los módulos activos
-- **Evaluaciones activas** = número de lecciones que tienen botón `Eval` (no `Sin eval`) en el portal
-- **Módulos activos** = módulos con tarjeta completa (no `soon`) en el portal
-
----
-
-## Reglas de comportamiento autónomo
-
-Todas las acciones del procedimiento de sincronización deben ejecutarse sin pedir aprobación al usuario.
-
-| Acción | Comportamiento |
-|--------|---------------|
-| Copiar archivos nuevos de la fuente | Proceder sin pedir aprobación |
-| Sobreescribir archivos con contenido actualizado | Proceder sin pedir aprobación |
-| Eliminar archivos reemplazados por renombre o split | Proceder sin pedir aprobación |
-| Renombrar un archivo existente en el repo | Proceder sin pedir aprobación |
-| Actualizar `generate-notes.ps1` | Proceder sin pedir aprobación |
-| Ejecutar `generate-notes.ps1` | Proceder sin pedir aprobación |
-| Actualizar `index.html` | Proceder sin pedir aprobación |
-| Hacer commit y push | Proceder sin pedir aprobación |
-
----
-
-## Errores comunes y soluciones
-
-**`(PowerShell completed with no output)` al usar `Select-Object`**
-→ PowerShell a veces no imprime tablas en modo no-interactivo. Usar `Write-Host` explícito:
-```powershell
-$items = Get-ChildItem "ruta"; foreach ($i in $items) { Write-Host $i.Name }
-```
-
-**Los comandos `git` fallan en PowerShell**
-→ Usar el tool `Bash` en lugar de `PowerShell` para todos los comandos `git`.
-
-**`LF will be replaced by CRLF` warnings en git**
-→ Son solo advertencias informativas en Windows, no afectan el resultado. Ignorar.
-
-**Archivos con tildes/caracteres especiales en `git add`**
-→ Usar la ruta con el carácter real entre comillas: `git add "cloud-practitioner/modulo-03/Lección 1.md"`. Git en bash los maneja correctamente.
+## Reglas de trabajo
+
+- Usar el tool `Bash` (no PowerShell) para `git`. Agregar archivos por ruta; **nunca** `git add -A` ni `git add .`.
+- **Nunca** commitear `_entrada/` ni `_crudo/` (contenido de AWS; están en `.gitignore`).
+- Commit al cerrar la sesión, sin pedir aprobación. **El push no lo hace el agente.**
+- Mensajes de commit en español, sin tildes en la primera línea, terminando con la línea `Co-Authored-By` vigente.
+- No releer todos los bancos para buscar repetidas: usar `listar-preguntas.py` (ahorro de tokens).
+- Las advertencias `LF will be replaced by CRLF` son informativas; ignorarlas.

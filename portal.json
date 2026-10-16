@@ -1,0 +1,118 @@
+{
+  "_nota": "Configuración editable del portal. Lo demás lo genera actualizar-indice.py. Las descripciones son opcionales (clave: carpeta/archivo .md).",
+  "examen": {
+    "fecha": "2026-12-28",
+    "lugar": "Centro Pearson VUE, Lima"
+  },
+  "modulos": [
+    {
+      "num": 1,
+      "carpeta": "modulo-01-introduction-to-the-cloud",
+      "titulo": "Introducción a la nube",
+      "temas": "Fundamentos, beneficios, infraestructura global y responsabilidad compartida"
+    },
+    {
+      "num": 2,
+      "carpeta": "modulo-02-computacion-en-la-nube",
+      "titulo": "Computación en la nube — Amazon EC2",
+      "temas": "Instancias, precios, escalado, ELB y mensajería"
+    },
+    {
+      "num": 3,
+      "carpeta": "modulo-03-servicios-de-computacion",
+      "titulo": "Exploración de servicios de computación",
+      "temas": "Serverless, Lambda, contenedores, ECS, EKS, Fargate"
+    },
+    {
+      "num": 4,
+      "carpeta": "modulo-04-hacia-la-globalizacion",
+      "titulo": "Hacia la globalización",
+      "temas": "Regiones, AZ, CloudFront y CloudFormation"
+    },
+    {
+      "num": 5,
+      "carpeta": "modulo-05-redes",
+      "titulo": "Redes",
+      "temas": "VPC, subredes, Security Groups, NACL, VPN, Direct Connect"
+    },
+    {
+      "num": 6,
+      "carpeta": "modulo-06-almacenamiento",
+      "titulo": "Almacenamiento",
+      "temas": "S3, EBS, EFS, Storage Gateway"
+    },
+    {
+      "num": 7,
+      "carpeta": "modulo-07-bases-de-datos",
+      "titulo": "Bases de datos",
+      "temas": "RDS, Aurora, DynamoDB, Redshift"
+    },
+    {
+      "num": 8,
+      "carpeta": "modulo-08-ia-ml-y-analitica",
+      "titulo": "IA/ML y analítica de datos",
+      "temas": "SageMaker, Bedrock, servicios de IA, analítica"
+    },
+    {
+      "num": 9,
+      "carpeta": "modulo-09-seguridad",
+      "titulo": "Seguridad",
+      "temas": "IAM, Organizations, Shield, WAF, KMS, GuardDuty"
+    },
+    {
+      "num": 10,
+      "carpeta": "modulo-10-monitoreo-cumplimiento-y-gobernanza",
+      "titulo": "Monitoreo, cumplimiento y gobernanza",
+      "temas": "CloudWatch, CloudTrail, Config, Artifact, Control Tower"
+    },
+    {
+      "num": 11,
+      "carpeta": "modulo-11-precios-y-soporte",
+      "titulo": "Precios y soporte",
+      "temas": "Modelos de precios, Budgets, Cost Explorer, planes de soporte"
+    },
+    {
+      "num": 12,
+      "carpeta": "modulo-12-migracion",
+      "titulo": "Migración a la nube de AWS",
+      "temas": "CAF, estrategias de migración, Snow Family"
+    },
+    {
+      "num": 13,
+      "carpeta": "modulo-13-well-architected",
+      "titulo": "Soluciones Well-Architected",
+      "temas": "Los 6 pilares del Well-Architected Framework"
+    }
+  ],
+  "descripciones": {
+    "modulo-01-introduction-to-the-cloud/Lección 1- Introducción a AWS Cloud Practitioner Essentials.md": "Modelo cliente-servidor, definicion de cloud, pago por uso",
+    "modulo-01-introduction-to-the-cloud/Lección 2 - Qué es la computación en la nube.md": "6 beneficios, CapEx vs OpEx, economias de escala",
+    "modulo-01-introduction-to-the-cloud/Lección 3 - Beneficios de la nube de AWS.md": "Agilidad, elasticidad, alcance global, ahorro de costos",
+    "modulo-01-introduction-to-the-cloud/Lección 4 - Introducción a la infraestructura global de AWS.md": "Regiones, AZs, Edge Locations, criterios de seleccion",
+    "modulo-01-introduction-to-the-cloud/Lección 5 - Modelo de responsabilidad compartida de AWS.md": "Security OF/IN the cloud, AWS Artifact, IAM, KMS",
+    "modulo-01-introduction-to-the-cloud/Lección 6 - Aplicación de Conceptos de la Nube a Casos de Uso de la Vida Real.md": "Escenarios empresariales, repaso completo del Modulo 1",
+    "modulo-02-computacion-en-la-nube/Leccion 5 - Precios de Amazon EC2.md": "On-Demand, Reserved, Spot, Savings Plans, Dedicated Hosts",
+    "modulo-02-computacion-en-la-nube/Lección 1 - Introducción a Amazon EC2.md": "Instancias virtuales, multitenencia, elasticidad, ciclo de vida",
+    "modulo-02-computacion-en-la-nube/Lección 2 - Tipos de instancias de Amazon EC2.md": "General Purpose, Compute, Memory, Storage, Accelerated",
+    "modulo-02-computacion-en-la-nube/Lección 3 - Como aprovisionar recursos de AWS.md": "Consola, CLI, SDK, CloudShell, APIs de AWS",
+    "modulo-02-computacion-en-la-nube/Lección 4 - Demostración, Lanzar una Instancia de EC2.md": "AMI, EBS, Security Groups, User Data, Elastic IP, Tenancy",
+    "modulo-02-computacion-en-la-nube/Lección 6 - Escalado de Amazon EC2 - PARTE 1.md": "Escalabilidad, elasticidad, Multi-AZ, SPOF, tolerancia a fallos",
+    "modulo-02-computacion-en-la-nube/Lección 6 - Escalado de Amazon EC2 - PARTE 2.md": "EC2 Auto Scaling, Launch Templates, Load Balancer, politicas",
+    "modulo-02-computacion-en-la-nube/Lección 7 - Dirección de tráfico con Elastic Load Balancing.md": "ALB, NLB, distribucion de trafico, integracion con Auto Scaling",
+    "modulo-02-computacion-en-la-nube/Lección 8 - Mensajeria y Colas.md": "Amazon SQS, SNS, arquitecturas desacopladas, pub/sub",
+    "modulo-03-servicios-de-computacion/Lección 1 - Introducción a la computación sin servidor.md": "Espectro de computo AWS, no administrado vs administrado vs serverless",
+    "modulo-03-servicios-de-computacion/Lección 2 - AWS Lambda - Parte 1.md": "Modelo event-driven, triggers, pago por uso, limite de 15 minutos",
+    "modulo-03-servicios-de-computacion/Lección 2 - AWS Lambda - Parte 2.md": "Casos de uso avanzados, integraciones, mejores practicas",
+    "modulo-03-servicios-de-computacion/Lección 3 - Contenedores y orquestación en AWS.md": "Docker, ECS, EKS, ECR, Fargate, portabilidad de aplicaciones",
+    "modulo-03-servicios-de-computacion/Lección 4 - Servicios de computación adicionales.md": "Elastic Beanstalk, AWS Batch, Lightsail, Outposts",
+    "modulo-04-hacia-la-globalizacion/Lección 1 - Introducción a la globalización.md": "Conceptos basicos de expansion, infraestructura y automatizacion global",
+    "modulo-04-hacia-la-globalizacion/Lección 2 - Elección de las regiones de AWS.md": "Cumplimiento, proximidad, disponibilidad de servicios y precios",
+    "modulo-04-hacia-la-globalizacion/Lección 3 - Profundizar en la infraestructura global de AWS.md": "AZs, Edge Locations, CloudFront, Route 53 y Outposts",
+    "modulo-04-hacia-la-globalizacion/Lección 4 - Infraestructura y automatización.md": "AWS CloudFormation, infraestructura como codigo (IaC) y beneficios",
+    "modulo-05-redes/Lección 1 - Introducción a las redes.md": "VPC, subnets publicas y privadas, Internet Gateway y conectividad basica",
+    "modulo-05-redes/Lección 2 - Organización de los recursos en la nube.md": "Subnets, tablas de enrutamiento, ACLs de red y grupos de seguridad",
+    "modulo-05-redes/Lección 3 - Más formas de conectarse a la nube de AWS.md": "VPN, AWS Direct Connect, AWS Transit Gateway y opciones de conectividad hibrida",
+    "repaso-general/Resumen_Maestro_Modulos_1_y_2.md": "Fundamentos de la nube y computacion EC2 integrados para el examen CLF-C02",
+    "repaso-general/Resumen_Maestro_Modulos_3_y_4.md": "Computacion serverless, contenedores e infraestructura global de AWS"
+  }
+}

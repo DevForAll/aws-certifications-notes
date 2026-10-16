@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AWS Certifications — Portal de Estudio</title>
+    <title>Portal CLF-C02</title>
     <style>
         :root {
             --aws-navy: #232f3e;
@@ -290,6 +290,36 @@
             .act-none { display: none; }
             .theme-toggle { width: 42px; height: 42px; font-size: 1.1rem; bottom: 1rem; right: 1rem; }
         }
+
+        /* ── PORTAL DINÁMICO ── */
+        .act-practice {
+            background: var(--aws-orange); color: #111; padding: 0.3rem 0.75rem; border-radius: 5px;
+            text-decoration: none; font-size: 0.8rem; font-weight: 700; white-space: nowrap;
+        }
+        .act-practice:hover { background: #e68a00; }
+        .act-old {
+            color: var(--text-muted); padding: 0.3rem 0.6rem; border-radius: 5px; text-decoration: none;
+            font-size: 0.75rem; white-space: nowrap; border: 1px dashed var(--btn-notes-border);
+        }
+        .act-old:hover { color: var(--text-primary); }
+        .chip { font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.55rem; border-radius: 10px; text-decoration: none; white-space: nowrap; }
+        .chip.pass { background: #e6f4ea; color: #2e7d32; }
+        .chip.fail { background: #fdecea; color: #c62828; }
+        [data-theme="dark"] .chip.pass { background: #173a26; color: #7fd88c; }
+        [data-theme="dark"] .chip.fail { background: #431d1d; color: #ff9a9a; }
+        .history { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        .history td { padding: 0.6rem 1.5rem; border-bottom: 1px solid var(--row-border); }
+        .history td:last-child { text-align: right; }
+        .history tr:last-child td { border-bottom: none; }
+        .empty { padding: 0.9rem 1.5rem; color: var(--text-muted); font-size: 0.85rem; }
+        @media (max-width: 600px) {
+            .act-practice, .act-old { font-size: 0.75rem; padding: 0.28rem 0.5rem; }
+            .act-old { display: none; }
+            .lesson-name { white-space: normal; font-size: 0.85rem; }
+            .item-actions { flex-wrap: wrap; justify-content: flex-end; }
+            .history td { padding: 0.55rem 1rem; }
+            .history .h-mode { display: none; }
+        }
     </style>
 </head>
 <body>
@@ -297,482 +327,134 @@
 <header>
     <div class="header-badge">Portal de Estudio</div>
     <h1>AWS <span>Cloud Practitioner</span></h1>
-    <p>CLF-C02 &nbsp;·&nbsp; Notas y evaluaciones por leccion con retroalimentacion inmediata</p>
+    <p>CLF-C02 &nbsp;·&nbsp; Notas, prácticas tipo examen y resultados por lección</p>
 </header>
 
-<div class="stats-bar">
-    <span><strong>29</strong> lecciones con notas</span>
-    <span><strong>27</strong> evaluaciones activas</span>
-    <span><strong>5 / 5</strong> modulos activos</span>
-</div>
+<div class="stats-bar" id="stats"></div>
 
-<div class="container">
-
-    <p class="section-label">Modulos activos</p>
-
-    <!-- MODULO 1 -->
-    <div class="module-card">
-        <div class="module-header">
-            <span class="module-num">MODULO 1</span>
-            <div class="module-meta">
-                <div class="module-title">Introduccion a la Nube</div>
-                <div class="module-subtitle">6 lecciones · 5 evaluaciones · Fundamentos, infraestructura global y responsabilidad compartida</div>
-            </div>
-        </div>
-        <div class="lesson-list">
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 1 — Introduccion a AWS</div>
-                    <div class="lesson-desc">Modelo cliente-servidor, definicion de cloud, pago por uso</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-01-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/Lecci%C3%B3n%201%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 2 — Computacion en la Nube</div>
-                    <div class="lesson-desc">6 beneficios, CapEx vs OpEx, economias de escala</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-02-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/Lecci%C3%B3n%202%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 3 — Beneficios de la Nube</div>
-                    <div class="lesson-desc">Agilidad, elasticidad, alcance global, ahorro de costos</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-03-notas.html" class="act-notes">Notas</a>
-                    <span class="act-none">Sin eval</span>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 4 — Infraestructura Global</div>
-                    <div class="lesson-desc">Regiones, AZs, Edge Locations, criterios de seleccion</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-04-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/Lecci%C3%B3n%204%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 5 — Responsabilidad Compartida</div>
-                    <div class="lesson-desc">Security OF/IN the cloud, AWS Artifact, IAM, KMS</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-05-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/Lecci%C3%B3n%205%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 6 — Casos de Uso Reales</div>
-                    <div class="lesson-desc">Escenarios empresariales, repaso completo del Modulo 1</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/leccion-06-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-01-introduction-to-the-cloud/Lecci%C3%B3n%206%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- MODULO 2 -->
-    <div class="module-card">
-        <div class="module-header">
-            <span class="module-num">MODULO 2</span>
-            <div class="module-meta">
-                <div class="module-title">Computacion en la Nube — Amazon EC2</div>
-                <div class="module-subtitle">9 lecciones · 9 evaluaciones · Instancias, precios, escalado, ELB y mensajeria</div>
-            </div>
-        </div>
-        <div class="lesson-list">
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 1 — Amazon EC2</div>
-                    <div class="lesson-desc">Instancias virtuales, multitenencia, elasticidad, ciclo de vida</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-01-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%201%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 2 — Tipos de Instancias EC2</div>
-                    <div class="lesson-desc">General Purpose, Compute, Memory, Storage, Accelerated</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-02-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%202%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 3 — Aprovisionamiento de Recursos</div>
-                    <div class="lesson-desc">Consola, CLI, SDK, CloudShell, APIs de AWS</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-03-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%203%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 4 — Lanzar una Instancia EC2</div>
-                    <div class="lesson-desc">AMI, EBS, Security Groups, User Data, Elastic IP, Tenancy</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-04-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%204%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 5 — Precios de Amazon EC2</div>
-                    <div class="lesson-desc">On-Demand, Reserved, Spot, Savings Plans, Dedicated Hosts</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-05-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%205%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 6 — Escalado y Alta Disponibilidad (P1)</div>
-                    <div class="lesson-desc">Escalabilidad, elasticidad, Multi-AZ, SPOF, tolerancia a fallos</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-06-p1-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%206%20-%20EVALUACION%20PARTE%201.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 6 — Auto Scaling y ELB (P2)</div>
-                    <div class="lesson-desc">EC2 Auto Scaling, Launch Templates, Load Balancer, politicas</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-06-p2-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%206%20-%20EVALUACION%20PARTE%202.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 7 — Elastic Load Balancing</div>
-                    <div class="lesson-desc">ALB, NLB, distribucion de trafico, integracion con Auto Scaling</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-07-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%207%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 8 — Mensajeria y Colas</div>
-                    <div class="lesson-desc">Amazon SQS, SNS, arquitecturas desacopladas, pub/sub</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/leccion-08-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-02-computacion-en-la-nube/Lecci%C3%B3n%208%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- MODULO 3 -->
-    <div class="module-card">
-        <div class="module-header">
-            <span class="module-num">MODULO 3</span>
-            <div class="module-meta">
-                <div class="module-title">Exploracion de Servicios de Computacion</div>
-                <div class="module-subtitle">5 lecciones · 4 evaluaciones · Serverless, Lambda, Contenedores, ECS, EKS, Fargate</div>
-            </div>
-        </div>
-        <div class="lesson-list">
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 1 — Computacion Serverless</div>
-                    <div class="lesson-desc">Espectro de computo AWS, no administrado vs administrado vs serverless</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/leccion-01-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/Lecci%C3%B3n%201%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 2 — AWS Lambda (P1)</div>
-                    <div class="lesson-desc">Modelo event-driven, triggers, pago por uso, limite de 15 minutos</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/leccion-02-p1-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/Lecci%C3%B3n%202%20-%20EVALUACION%20PARTE%201.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 2 — AWS Lambda (P2)</div>
-                    <div class="lesson-desc">Casos de uso avanzados, integraciones, mejores practicas</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/leccion-02-p2-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/Lecci%C3%B3n%202%20-%20EVALUACION%20PARTE%202.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 3 — Contenedores y Orquestacion</div>
-                    <div class="lesson-desc">Docker, ECS, EKS, ECR, Fargate, portabilidad de aplicaciones</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/leccion-03-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/Lecci%C3%B3n%203%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 4 — Servicios de Computacion Adicionales</div>
-                    <div class="lesson-desc">Elastic Beanstalk, AWS Batch, Lightsail, Outposts</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/leccion-04-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-03-servicios-de-computacion/Lecci%C3%B3n%204%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- MODULO 4 -->
-    <div class="module-card">
-        <div class="module-header">
-            <span class="module-num">MODULO 4</span>
-            <div class="module-meta">
-                <div class="module-title">Hacia la Globalizacion</div>
-                <div class="module-subtitle">4 lecciones · 4 evaluaciones · Regiones, AZs, CloudFront y AWS CloudFormation</div>
-            </div>
-        </div>
-        <div class="lesson-list">
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 1 — Introduccion a la globalizacion</div>
-                    <div class="lesson-desc">Conceptos basicos de expansion, infraestructura y automatizacion global</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-04-hacia-la-globalizacion/leccion-01-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-04-hacia-la-globalizacion/Lecci%C3%B3n%201%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 2 — Eleccion de las regiones de AWS</div>
-                    <div class="lesson-desc">Cumplimiento, proximidad, disponibilidad de servicios y precios</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-04-hacia-la-globalizacion/leccion-02-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-04-hacia-la-globalizacion/Lecci%C3%B3n%202%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 3 — Profundizar en la infraestructura global</div>
-                    <div class="lesson-desc">AZs, Edge Locations, CloudFront, Route 53 y Outposts</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-04-hacia-la-globalizacion/leccion-03-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-04-hacia-la-globalizacion/Lecci%C3%B3n%203%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 4 — Infraestructura y automatización</div>
-                    <div class="lesson-desc">AWS CloudFormation, infraestructura como codigo (IaC) y beneficios</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-04-hacia-la-globalizacion/leccion-04-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-04-hacia-la-globalizacion/Lecci%C3%B3n%204%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <p class="section-label" style="margin-top: 1.5rem;">Repaso General</p>
-
-    <!-- REPASO GENERAL -->
-    <div class="module-card">
-        <div class="module-header">
-            <span class="module-num">REPASO</span>
-            <div class="module-meta">
-                <div class="module-title">Consolidado Maestro</div>
-                <div class="module-subtitle">2 resumenes · 1 evaluacion simulada · Modulos 1 a 4</div>
-            </div>
-        </div>
-        <div class="lesson-list">
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Resumen Maestro — Modulos 1 y 2</div>
-                    <div class="lesson-desc">Fundamentos de la nube y computacion EC2 integrados para el examen CLF-C02</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/repaso-general/resumen-m1m2-notas.html" class="act-notes">Notas</a>
-                    <span class="act-none">Sin eval</span>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Resumen Maestro — Modulos 3 y 4</div>
-                    <div class="lesson-desc">Computacion serverless, contenedores e infraestructura global de AWS</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/repaso-general/resumen-m3m4-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/repaso-general/Evaluacion_Simulada_Modulos_3_y_4.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- MODULO 5 -->
-    <div class="module-card">
-        <div class="module-header">
-            <span class="module-num">MODULO 5</span>
-            <div class="module-meta">
-                <div class="module-title">Redes en AWS</div>
-                <div class="module-subtitle">3 lecciones · 3 evaluaciones · VPC, Subnets, Security Groups, NACLs, VPN, Direct Connect</div>
-            </div>
-        </div>
-        <div class="lesson-list">
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 1 — Introduccion a las redes</div>
-                    <div class="lesson-desc">VPC, subnets publicas y privadas, Internet Gateway y conectividad basica</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-05-redes/leccion-01-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-05-redes/Lecci%C3%B3n%201%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 2 — Organizacion de recursos en la nube</div>
-                    <div class="lesson-desc">Subnets, tablas de enrutamiento, ACLs de red y grupos de seguridad</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-05-redes/leccion-02-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-05-redes/Lecci%C3%B3n%202%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-            <div class="lesson-row">
-                <div class="lesson-icon">📖</div>
-                <div class="lesson-info">
-                    <div class="lesson-name">Leccion 3 — Mas formas de conectarse a AWS</div>
-                    <div class="lesson-desc">VPN, AWS Direct Connect, AWS Transit Gateway y opciones de conectividad hibrida</div>
-                </div>
-                <div class="item-actions">
-                    <a href="cloud-practitioner/modulo-05-redes/leccion-03-notas.html" class="act-notes">Notas</a>
-                    <a href="cloud-practitioner/modulo-05-redes/Lecci%C3%B3n%203%20-%20EVALUACION.html" class="act-eval">Eval</a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-</div>
+<div class="container" id="app"></div>
 
 <footer>
     <p>AWS Certified Cloud Practitioner (CLF-C02) · Notas de estudio personales</p>
-    <p><a href="https://github.com/DevForAll/aws-certifications-notes" target="_blank">Ver en GitHub</a></p>
+    <p id="generado"></p>
+    <p><a href="https://github.com/DevForAll/aws-certifications-notes" target="_blank" rel="noopener">Ver en GitHub</a></p>
 </footer>
 
-<button id="theme-toggle" class="theme-toggle" title="Cambiar tema">🌙</button>
+<button id="theme-toggle" class="theme-toggle" title="Cambiar tema" aria-label="Cambiar tema">🌙</button>
 
+<script src="contenido.js"></script>
 <script>
-    (function() {
+    (function () {
         var btn = document.getElementById('theme-toggle');
         var html = document.documentElement;
-        if (localStorage.getItem('aws-theme') === 'dark') {
-            html.setAttribute('data-theme', 'dark');
-            btn.textContent = '☀️';
-        }
-        btn.addEventListener('click', function() {
-            var isDark = html.getAttribute('data-theme') === 'dark';
-            if (isDark) {
-                html.setAttribute('data-theme', 'light');
-                btn.textContent = '🌙';
-                localStorage.setItem('aws-theme', 'light');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                btn.textContent = '☀️';
-                localStorage.setItem('aws-theme', 'dark');
-            }
+        function pintarTema() { btn.textContent = html.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙'; }
+        try { if (localStorage.getItem('aws-theme') === 'dark') html.setAttribute('data-theme', 'dark'); } catch (e) {}
+        pintarTema();
+        btn.addEventListener('click', function () {
+            var dark = html.getAttribute('data-theme') === 'dark';
+            html.setAttribute('data-theme', dark ? 'light' : 'dark');
+            try { localStorage.setItem('aws-theme', dark ? 'light' : 'dark'); } catch (e) {}
+            pintarTema();
         });
+    })();
+
+    (function () {
+        var C = window.CONTENIDO;
+        var app = document.getElementById('app');
+        if (!C) {
+            app.innerHTML = '<p class="empty">Falta <code>contenido.js</code>. Corre <code>python actualizar-indice.py</code>.</p>';
+            return;
+        }
+        function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+        function archivo(ruta) { return ruta.split('/').map(encodeURIComponent).join('/'); }
+        function nota(ruta) { return 'visor/index.html?nota=' + encodeURIComponent(ruta); }
+        function practicar(ruta) { return 'simulador/index.html?banco=' + encodeURIComponent('../' + ruta); }
+        var porId = {};
+        C.resultados.forEach(function (r) { porId[r.id] = r; });
+        function revisar(r) { return practicar(r.banco) + '&resultado=' + encodeURIComponent(r.id); }
+        function chip(ids) {
+            var r = ids && ids.length ? porId[ids[0]] : null;
+            if (!r) return '';
+            return '<a class="chip ' + (r.porcentaje >= r.umbral ? 'pass' : 'fail') + '" href="' + revisar(r) +
+                '" title="Último intento: ' + esc(r.fecha.replace('T', ' ')) + '">' + r.porcentaje + ' %</a>';
+        }
+        function acciones(x) {
+            var h = '';
+            if (x.nota) h += '<a href="' + nota(x.nota) + '" class="act-notes">Notas</a>';
+            if (x.practica) h += '<a href="' + practicar(x.practica.ruta) + '" class="act-practice" title="' + x.practica.n + ' preguntas">Practicar</a>';
+            x.evalAntigua.forEach(function (e, i) {
+                var etiqueta = x.evalAntigua.length > 1 ? 'Eval antigua ' + (i + 1) : 'Eval antigua';
+                h += '<a href="' + (e.tipo === 'md' ? nota(e.ruta) : archivo(e.ruta)) + '" class="act-old">' + etiqueta + '</a>';
+            });
+            return h || '<span class="act-none">—</span>';
+        }
+        function fila(icono, nombre, desc, x) {
+            return '<div class="lesson-row"><div class="lesson-icon">' + icono + '</div><div class="lesson-info">' +
+                '<div class="lesson-name">' + esc(nombre) + '</div>' + (desc ? '<div class="lesson-desc">' + esc(desc) + '</div>' : '') +
+                '</div><div class="item-actions">' + chip(x.resultados) + acciones(x) + '</div></div>';
+        }
+
+        var nNotas = 0, nPract = 0, activos = 0, h = '<p class="section-label">Módulos</p>';
+        C.modulos.forEach(function (m) {
+            if (!m.lecciones.length && !m.simulacro) {
+                h += '<div class="module-card soon"><div class="module-header"><span class="module-num">MÓDULO ' + m.num + '</span>' +
+                    '<div class="module-meta"><div class="module-title">' + esc(m.titulo) + '</div><div class="module-subtitle">' + esc(m.temas) + '</div></div>' +
+                    '<span class="soon-tag">Próximamente</span></div></div>';
+                return;
+            }
+            activos++;
+            var notas = m.lecciones.filter(function (l) { return l.nota; }).length;
+            var pract = m.lecciones.filter(function (l) { return l.practica; }).length + (m.simulacro ? 1 : 0);
+            nNotas += notas; nPract += pract;
+            h += '<div class="module-card"><div class="module-header"><span class="module-num">MÓDULO ' + m.num + '</span>' +
+                '<div class="module-meta"><div class="module-title">' + esc(m.titulo) + '</div><div class="module-subtitle">' +
+                notas + ' notas · ' + pract + ' prácticas · ' + esc(m.temas) + '</div></div></div><div class="lesson-list">';
+            m.lecciones.forEach(function (l) {
+                h += fila(l.nota ? '📖' : '📝', 'Lección ' + l.num + ' — ' + l.titulo, l.desc, l);
+            });
+            if (m.simulacro) {
+                h += fila('🎯', 'Simulacro del módulo ' + m.num, m.simulacro.n + ' preguntas en modo examen',
+                    { nota: null, practica: m.simulacro, evalAntigua: [], resultados: m.simulacro.resultados });
+            }
+            h += '</div></div>';
+        });
+
+        if (C.repaso.length) {
+            h += '<p class="section-label" style="margin-top:2rem">Repaso general</p><div class="module-card"><div class="module-header">' +
+                '<span class="module-num">REPASO</span><div class="module-meta"><div class="module-title">Resúmenes y simulacros completos</div>' +
+                '<div class="module-subtitle">Simulacros de 65 preguntas tras M5, tras M11 y en la Fase 3</div></div></div><div class="lesson-list">';
+            C.repaso.forEach(function (x) {
+                nPract += x.practica ? 1 : 0;
+                h += fila(x.practica ? '🎯' : '📚', x.titulo, x.practica ? x.practica.n + ' preguntas' : '', x);
+            });
+            h += '</div></div>';
+        }
+
+        h += '<p class="section-label" style="margin-top:2rem">Historial de resultados</p><div class="module-card">';
+        if (C.resultados.length) {
+            h += '<table class="history">';
+            C.resultados.forEach(function (r) {
+                h += '<tr><td>' + esc(r.fecha.slice(0, 10)) + '</td><td>' + esc(r.titulo) + '</td><td class="h-mode">' + esc(r.modo) + '</td>' +
+                    '<td><a class="chip ' + (r.porcentaje >= r.umbral ? 'pass' : 'fail') + '" href="' + revisar(r) + '">' + r.porcentaje + ' % · Revisar</a></td></tr>';
+            });
+            h += '</table>';
+        } else {
+            h += '<p class="empty">Todavía no hay intentos registrados. Cada práctica guardada aparece aquí y se puede revisar desde cualquier dispositivo.</p>';
+        }
+        h += '</div>';
+        app.innerHTML = h;
+
+        var stats = '<span><strong>' + nNotas + '</strong> notas de lección</span><span><strong>' + nPract + '</strong> prácticas</span>' +
+            '<span><strong>' + C.resultados.length + '</strong> intentos</span><span><strong>' + activos + ' / ' + C.modulos.length + '</strong> módulos</span>';
+        if (C.examen && C.examen.fecha) {
+            var p = C.examen.fecha.split('-'), examen = new Date(+p[0], +p[1] - 1, +p[2]), hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            var dias = Math.round((examen - hoy) / 86400000);
+            var meses = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+            stats += '<span>Examen: <strong>' + (+p[2]) + ' ' + meses[+p[1] - 1] + ' ' + p[0] + '</strong>' + (dias >= 0 ? ' · faltan ' + dias + ' días' : '') + '</span>';
+        }
+        document.getElementById('stats').innerHTML = stats;
+        document.getElementById('generado').textContent = 'Índice actualizado: ' + C.generado;
     })();
 </script>
 

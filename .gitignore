@@ -4,3 +4,11 @@ Thumbs.db
 
 # Material crudo de lecciones (contenido de AWS, no se publica)
 _crudo/
+
+# Entrada de la lección en curso (contenido de AWS, no se publica); la plantilla sí
+_entrada/*
+!_entrada/plantilla.md
+
+# Python y configuración local
+__pycache__/
+.claude/launch.json

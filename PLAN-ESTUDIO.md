@@ -18,7 +18,8 @@
      (sin copiar y pegar), y **archivo único de entrada** `_entrada/leccion.md` para el material de cada lección (§5).
   3. ✅ Proporciones (2026-10-15): 25 por lección (60/40), **15–25 en lecciones cortas sin relleno**, simulacro de 20
      por módulo, **simulacros de 65 solo tras M5 y M11** → 3 días de colchón antes del examen (§5, §6).
-  4. Reglas de control: umbrales de 70 %, lecciones partidas entre sesiones, calentamiento, registro de resultados (§5).
+  4. ✅ Reglas de control (2026-10-15): umbrales **80 % lección / 75 % simulacros**, calentamiento de 5 en el chat;
+     se mantienen las lecciones partidas entre sesiones y el registro de resultados (§5).
   5. Suscripción de Skill Builder: si se contrata 1 mes y cuándo (§7).
   6. Logística del examen: en línea desde casa o en centro de Lima; cuándo reservar (§10).
   7. Portal web y repo: qué se publica, `CLAUDE.md` nuevo, push por el dueño (§5 «Dónde se guarda»).
@@ -209,12 +210,13 @@ Excepción: si el dueño falla dos veces el mismo par de servicios, el agente pi
 ### Reglas de control (agregadas 2026-10-15)
 - **Nunca se corta una práctica para «cumplir» la sesión.** Si a las 12:00 la práctica no terminó, se sigue
   al inicio de la sesión siguiente. Las lecciones pueden quedar partidas entre sesiones.
-- **Umbrales:**
-  - Práctica de lección < 70 %: «Reintentar falladas» en modo estudio (puede ser desde el celular) y esas
+- **Umbrales (decisión 2026-10-15):** más exigentes donde el tema está fresco.
+  - Práctica de lección < **80 %**: «Reintentar falladas» en modo estudio (puede ser desde el celular) y esas
     preguntas entran al calentamiento de la sesión siguiente.
-  - Simulacro de módulo < 70 %: repaso dirigido de los temas fallados antes de empezar el módulo siguiente.
-  - Simulacro completo < 70 %: no se avanza a Fase 3; se repasa el dominio más bajo.
-- **Calentamiento de apertura:** 5 preguntas en el chat, sacadas de los fallos más recientes y del cuaderno de errores.
+  - Simulacro de módulo < **75 %**: repaso dirigido de los temas fallados antes de empezar el módulo siguiente.
+  - Simulacro completo < **75 %**: no se avanza a Fase 3; se repasa el dominio más bajo.
+- **Calentamiento de apertura:** 5 preguntas **en el chat** (el dueño responde «1B 2D 3AC…» y el agente corrige al
+  instante, sin banco ni archivo), sacadas de los fallos más recientes y del cuaderno de errores.
 - **Sin repetir preguntas:** antes de generar un banco, el agente corre `listar-preguntas.py` y evita enunciados ya usados.
 - **Dónde va cada resultado:** el `.json` descargado se mueve a `resultados/AAAA-MM-DD-<banco>.json`; en §8 va una línea
   por práctica; en §9 solo **conceptos** confundidos (no cada pregunta), para que el cuaderno siga siendo legible.

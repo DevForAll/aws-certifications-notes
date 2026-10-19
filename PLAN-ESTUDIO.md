@@ -1,37 +1,40 @@
 # Plan de estudio — AWS Certified Cloud Practitioner (CLF-C02)
 
-> Creado: 2026-10-13 · Actualizado: 2026-10-16 (sesiones con Claude Code).
+> Creado: 2026-10-13 · Actualizado: 2026-10-19 (sesiones con Claude Code).
 > Objetivo: aprobar el CLF-C02 **en español** antes de fin de 2026, primer paso hacia AWS Solutions Architect.
 > Este archivo es el punto de retorno entre sesiones: al empezar, leer «Dónde quedamos»; al cerrar, actualizarlo.
 > **¿Qué hago yo exactamente?** → §0 «Tu flujo, paso a paso».
 
 ## Dónde quedamos
 
-- **Fecha:** 2026-10-16 (vie). Examen objetivo: **lun 28 dic 2026**, centro Pearson VUE en Lima.
-- **Estado:** ✅ plan definido, herramientas listas y **flujo probado de punta a punta** con M1 L1 (noche del 15 oct).
-  Tras la prueba, el estudiante pidió **simplificar**: solo estudia y el agente hace toda la operación (§0).
-- **Qué quedó de la prueba (M1 L1):**
-  - Calentamiento: 2/5 (falló Budgets vs. CUR, EC2 «Elija 2» incompleta y Fiabilidad vs. Excelencia operativa).
-  - Nota de M1 L1 **mejorada** y crudo archivado en `modulo-01-…/_crudo/leccion-01.md`.
-  - Banco `modulo-01-…/practicas/leccion-01.js` (**16 preguntas**, 23 min): el estudiante lo respondió en Chrome vía `file:///`
-    (abre bien), pero el **resultado no llegó a Descargas** (el simulador de esa pestaña aún pedía «Guardar resultado»).
-    Ese intento **no cuenta**: el banco se da de nuevo el sábado.
+- **Fecha:** 2026-10-19 (lun). Examen objetivo: **lun 28 dic 2026**, centro Pearson VUE en Lima.
+- **Estado:** el estudiante **no estudió el sáb 17 ni el dom 18** (sesión 1 perdida). El 19 pidió adelantar y hacer el
+  estudio **más interactivo**. Se hizo:
+  - **Taller interactivo** nuevo (`simulador/taller.html` + `taller.js`): tarjetas, clasificar, unir parejas, ordenar e
+    identificar (con soporte de **íconos de servicios AWS**). Va **antes** de la práctica tipo examen, que no cambia (§5).
+  - **M1 L2 preparada por adelantado** (sin ver aún la lección): nota reescrita (definición, 3 modelos de implementación,
+    IaaS/PaaS/SaaS, casos reales), `taller-02.js` (7 ejercicios) y `leccion-02.js` (**20 preguntas**, 28 min).
+  - Portal con botón morado **«Taller»** por lección.
+- **Recuperación del sábado (decisión 2026-10-19):** la sesión 1 se hace hoy lunes 19 y el calendario se corre una sesión;
+  el **dom 25 oct pasa a ser sesión completa** para recuperarla (regla de §5). Colchón: sigue en ~1–2 sesiones.
 - **Pendientes para el agente al retomar:**
-  1. Si hay un `aws-resultado-*-m01-l01.json` en Descargas, procesarlo como «listo»; si no, abrir `leccion-01.js` en
-     Chrome cuando toque (no hace falta volver a ver la lección M1 L1).
-  2. **Primera descarga automática del resultado** sin verificar en Chrome real: confirmarla en esa práctica.
+  1. Si hay un `aws-resultado-*-m01-l01.json` o `-m01-l02.json` en Descargas, procesarlo como «listo».
+  2. **Primera descarga automática del resultado** sin verificar en Chrome real: confirmarla en la primera práctica.
   3. El estudiante debe **explicar en una línea Excelencia operativa vs. Fiabilidad** (segundo fallo del par, regla de §5).
-     Pedírselo en el calentamiento si no lo hizo.
-  4. Las descripciones de M6–M13 en `portal.json` son provisionales: ajustarlas al llegar a cada módulo.
-- **Siguiente (sesión 1 de estudio: sáb 2026-10-17, 10:00–12:00):**
+  4. **Íconos oficiales de AWS:** el motor ya los muestra (`simulador/iconos/<servicio>.svg`, con respaldo de texto si
+     falta el archivo). Falta que el estudiante autorice descargar el paquete oficial *AWS Architecture Icons*; se usan
+     desde M2 (EC2) en ejercicios «Identifica el servicio por su ícono».
+  5. Al hacer M1 L2 en Skill Builder: «terminé M1 L2» ajusta la nota con la comprobación y las dudas (la nota se escribió
+     sin ver la lección; el banco no se regenera salvo que la lección traiga algo que no cubra).
+  6. Las descripciones de M6–M13 en `portal.json` son provisionales: ajustarlas al llegar a cada módulo.
+- **Siguiente (sesión 1 de estudio, recuperada: lun 2026-10-19 o la próxima sesión):**
   1. «retomemos AWS» → calentamiento de 5 (incluir los 3 fallos de la prueba).
   2. Skill Builder: *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min).
-  3. **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta**; el estudiante dice el puntaje en el chat y va a §8.
+  3. **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta**; el puntaje va a §8.
   4. Práctica de **M1 L1** (banco ya hecho) → «listo».
-  5. Seguir con **M1 L2** con el flujo de §0.
-- **Historial de la preparación (cerrado 2026-10-15):** agenda de 8 decisiones (días, simulador, proporciones, reglas de
-  control, suscripción, logística, portal y domingo ligero), todas registradas en §5–§10 y §12; `CLAUDE.md` de tutor,
-  simulador, portal, visor y scripts hechos y probados. 2026-10-15 (noche): prueba con M1 L1 y flujo simplificado.
+  5. **M1 L2**: ver la lección en Skill Builder → abrir el **Taller** → práctica tipo examen → «listo».
+- **Historial:** preparación cerrada 2026-10-15 (8 decisiones, herramientas y `CLAUDE.md`); 2026-10-15 (noche) prueba con
+  M1 L1 y flujo simplificado; 2026-10-19 taller interactivo, M1 L2 adelantada y recuperación del sábado.
 
 ---
 
@@ -58,8 +61,10 @@ el agente. Solo escribes **tres frases** en el chat: «retomemos AWS», «termin
    - Capturas (Win + Shift + S): guárdalas en la carpeta `_entrada\`. No hace falta renombrarlas.
    - Guarda con **Ctrl + S**.
 8. Escribe en el chat **`terminé M1 L2`** (con el módulo y la lección que hiciste).
-9. Espera 2–3 min: el agente mejora la nota, genera la práctica y **te abre la práctica en Chrome**.
-10. Lee la nota si quieres (el agente te dice dónde está; también sale en el portal).
+9. Espera 2–3 min: el agente mejora la nota, genera el taller y la práctica y **te abre el Taller en Chrome**.
+10. Lee la nota si quieres (el agente te dice dónde está; también sale en el portal). Luego haz el **Taller interactivo**
+    (~10 min: tarjetas, clasificar, unir, ordenar, identificar; equivocarse es parte del juego) y al final pulsa
+    **«Ir a la práctica tipo examen →»**.
 11. En Chrome: pulsa **«Empezar modo examen»**, responde sin mirar apuntes (usa «Marcar para revisión» en las dudosas),
     luego **«Revisar y enviar»** → **«Enviar examen»**. El resultado **se descarga solo**.
 12. Escribe en el chat **`listo`**.
@@ -151,7 +156,7 @@ Las notas existentes de M1–M5 se **reutilizan y mejoran**, no se regeneran des
 
 | Módulo | Material previo | Vuelta 2026 |
 |---|---|---|
-| 1 Introducción a la nube | ✅ notas + evaluaciones | 🔄 L1: nota y banco listos, práctica pendiente |
+| 1 Introducción a la nube | ✅ notas + evaluaciones | 🔄 L1: nota y banco listos, práctica pendiente · L2: nota, taller y banco **adelantados**, lección pendiente |
 | 2 Computación en la nube (EC2, escalado, ELB, colas) | ✅ | ⬜ |
 | 3 Servicios de computación (Lambda, contenedores) | ✅ | ⬜ |
 | 4 Hacia la globalización | ✅ | ⬜ |
@@ -185,7 +190,8 @@ Ya están en el cuaderno de errores (§9).
 | 1 | Estudiante | Ve la lección en Skill Builder (texto + video) y hace su **comprobación de conocimientos** | 15–20 min |
 | 2 | Estudiante → agente | Escribe «terminé M_ L_» y pasa los datos de la tabla «Qué pasa el estudiante» | 2 min |
 | 3 | Agente | Entrega la **nota** (M1–M5: la existente mejorada; M6+: nueva). Estudiante la lee | 5–10 min |
-| 4 | Agente | Genera el **banco** de la lección (`practicas/`) y **abre la práctica en Chrome** él mismo | 2–3 min |
+| 4 | Agente | Genera el **taller** y el **banco** de la lección (`practicas/`) y **abre el taller en Chrome** él mismo | 3–4 min |
+| 4b | Estudiante | Hace el **Taller interactivo** (feedback inmediato; no cuenta para el plan) y desde ahí pasa a la práctica | ~10 min |
 | 5 | Estudiante | Da la práctica en el **simulador**, con cronómetro, **sin pistas**, y pulsa «Enviar examen» (el resultado se descarga solo) | ~35 min |
 | 6 | Estudiante → agente | Escribe «listo» en el chat | — |
 | 7 | Agente | Explica **solo las falladas** (por qué la correcta y por qué no las demás), registra puntaje (§8) y errores (§9) y hace el cierre (commit) | 10–15 min |
@@ -253,6 +259,25 @@ Excepción: si el estudiante falla dos veces el mismo par de servicios, el agent
   verificado activo 2026-10-15). El simulador lo elige por URL (`simulador/?banco=…`).
 - El respaldo «Copiar resultado» muestra el texto en un cuadro si el navegador bloquea el portapapeles.
 - El mismo motor sirve para los simulacros de 65 preguntas.
+
+### Taller interactivo (decisión del estudiante 2026-10-19)
+
+El estudiante pidió estimular más la memoria activa («leer no es para todos»). Cada lección tiene, **además** del banco
+tipo examen, un **taller** de 5–8 ejercicios cortos (`practicas/taller-NN.js`, motor `simulador/taller.html`):
+
+| Tipo | Qué hace | Para qué sirve |
+|---|---|---|
+| **Tarjetas** | Se giran; el estudiante marca «La sabía» o «Repasar» (vuelve al final) | Recuerdo activo de definiciones y gatillos |
+| **Clasificar** | Una ficha a la vez, se elige su caja (en computadora también se arrastra) | Distinguir categorías: modelos, responsabilidad AWS/cliente, CapEx/OpEx |
+| **Unir parejas** | Escenario ↔ servicio o concepto | Asociar palabra gatillo con la respuesta |
+| **Ordenar** | Flechas o arrastre | Flujos y escalas (cliente-servidor, IaaS→SaaS, pasos de migración) |
+| **Identificar** | Imagen, diagrama o **ícono oficial de AWS** → elegir | Reconocer servicios por su ícono y arquitecturas por su diagrama |
+
+- Va **después de la nota y antes de la práctica tipo examen**; tiene pistas y explicación al instante. **No cuenta** en §8
+  (el puntaje del plan sale solo de la práctica en modo examen, que no cambia: es la medición honesta).
+- **Progresivo:** M1 usa diagramas con emojis; desde M2 se agregan rondas de **íconos oficiales de AWS** (EC2, S3, Lambda…)
+  y cada nota trae una sección **«Casos reales»** con ejemplos públicos de clientes de AWS.
+- Guarda el avance y la mejor marca en el navegador; se puede repetir en el celular desde el portal.
 
 ### Simulacros
 - **Fin de cada módulo: simulacro de 20 preguntas / 28 min** (decisión del estudiante 2026-10-15), en modo examen.
@@ -359,7 +384,7 @@ Lunes a sábado: sesión completa. **Domingo: día ligero** (ver §5 «Día lige
 
 | Sesiones completas | Fechas | Fase |
 |---|---|---|
-| 1 | sáb 17 oct | Fase 0: overviews + línea base + inicio M1 |
+| 1 | ~~sáb 17 oct~~ → **lun 19 oct** (perdida el sábado; se recupera el dom 25) | Fase 0: overviews + línea base + inicio M1 |
 | 2–21 | 19 oct – 10 nov | Fase 1A: M1–M5 (+ completo tras M5) |
 | 22–52 | 11 nov – 16 dic | Fase 1B: M6–M13 (+ completo tras M11) |
 | 53–59 | 17 – 24 dic | Fases 2 y 3: Domain Reviews + 3 simulacros finales |
@@ -449,6 +474,7 @@ Este flujo pasa también al `CLAUDE.md` nuevo para que cualquier sesión del age
 | `contenido.js` | Índice de todo lo publicable (notas `.md`, bancos `.js`, resultados `.json`). Lo **regenera un script** del agente (`actualizar-indice.py`) en cada cierre |
 | `visor/` | Página única que recibe `?nota=<ruta del .md>`, lo convierte a HTML en el navegador (librería Markdown desde CDN) y muestra la nota |
 | `simulador/` | Motor único: `?banco=<ruta del .js>` para practicar; `?resultado=<ruta del .json>` para abrir un intento pasado y repasar sus falladas |
+| `simulador/taller.html` | Taller interactivo: `?taller=<ruta de practicas/taller-NN.js>`; al final enlaza a la práctica tipo examen. Íconos en `simulador/iconos/` |
 | `cloud-practitioner/modulo-0N-…/` | Notas `.md` y `practicas/*.js` de cada módulo |
 | `resultados/` | Un `.json` por intento, publicado |
 | `_entrada/` · `…/_crudo/` | Material copiado de Skill Builder; **no se publica** |
@@ -457,7 +483,8 @@ Este flujo pasa también al `CLAUDE.md` nuevo para que cualquier sesión del age
 
 1. El estudiante ve la lección y pega texto, transcripción, comprobación y dudas en `_entrada/leccion.md` (capturas en `_entrada/`).
 2. «terminé M_ L_» → el agente lee la entrada, mejora o crea la nota `.md` y mueve el crudo a `_crudo/`.
-3. El agente corre `listar-preguntas.py`, genera `practicas/leccion-NN.js` (15–25 preguntas) y abre la práctica en Chrome.
+3. El agente corre `listar-preguntas.py`, genera `practicas/taller-NN.js` y `practicas/leccion-NN.js` (15–25 preguntas)
+   y abre el taller en Chrome; el taller termina con el botón a la práctica tipo examen.
 4. El estudiante practica en modo examen y pulsa «Enviar examen» → el `.json` se descarga solo → escribe «listo».
 5. El agente mueve el `.json` a `resultados/`, explica las falladas y anota §8 y §9.
 6. En el mismo paso, el agente actualiza el plan, corre `actualizar-indice.py` y hace commit («cerremos» solo lo fuerza).

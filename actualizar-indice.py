@@ -12,7 +12,7 @@ from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent / "simulador"))
-from bancos import RAIZ, buscar_bancos, leer_banco, validar_banco  # noqa: E402
+from bancos import RAIZ, buscar_bancos, buscar_talleres, leer_banco, leer_taller, validar_banco, validar_taller  # noqa: E402
 
 sys.stdout.reconfigure(encoding="utf-8")
 
@@ -20,6 +20,7 @@ CP = RAIZ / "cloud-practitioner"
 RE_LECCION = re.compile(r"^Lecci[oó]n\s*(\d+)\s*[-–]\s*(.+)\.(md|html)$", re.I)
 RE_PARTE = re.compile(r"\s*[-–]?\s*\bparte\s*(\d+)\b", re.I)
 RE_BANCO = re.compile(r"^leccion-(\d+)(?:-p(\d+))?\.js$")
+RE_TALLER = re.compile(r"^taller-(\d+)(?:-p(\d+))?\.js$")
 RE_OBSIDIAN_IMG = re.compile(r"!\[\[([^\]|]+)(?:\|[^\]]*)?\]\]\n?")
 
 
@@ -66,6 +67,19 @@ def main():
         avisos += a
         bancos[rel(ruta)] = (ruta, b)
 
+    # ── talleres interactivos: validar todos ────────────────
+    talleres = {}
+    for ruta in buscar_talleres():
+        try:
+            tl = leer_taller(ruta)
+        except ValueError as e:
+            errores.append(str(e))
+            continue
+        e = validar_taller(tl, ruta)
+        errores += e
+        if not e:
+            talleres[rel(ruta)] = {"ruta": rel(ruta), "id": tl["id"], "titulo": tl["titulo"], "n": len(tl["ejercicios"])}
+
     # ── resultados ──────────────────────────────────────────
     resultados = []
     for ruta in sorted((RAIZ / "resultados").glob("*.json")):
@@ -90,7 +104,7 @@ def main():
         def leccion(num, parte):
             return lecciones.setdefault((num, parte), {
                 "num": num, "parte": parte, "titulo": None, "desc": "", "nota": None,
-                "practica": None, "evalAntigua": [], "resultados": []})
+                "practica": None, "taller": None, "evalAntigua": [], "resultados": []})
 
         if carpeta.is_dir():
             for f in sorted(carpeta.iterdir(), key=lambda p: nfc(p.name)):
@@ -116,6 +130,10 @@ def main():
             practicas = carpeta / "practicas"
             simulacro = None
             if practicas.is_dir():
+                for f in sorted(practicas.glob("taller-*.js")):
+                    m = RE_TALLER.match(f.name)
+                    if m and rel(f) in talleres:
+                        leccion(int(m.group(1)), int(m.group(2) or 0))["taller"] = talleres[rel(f)]
                 for f in sorted(practicas.glob("*.js")):
                     if rel(f) not in bancos:
                         continue
@@ -171,7 +189,8 @@ def main():
 
     n_lec = sum(1 for m in modulos for lec in m["lecciones"] if lec["nota"])
     n_prac = len(bancos)
-    print(f"OK contenido.js: {len(modulos)} módulos, {n_lec} notas de lección, {n_prac} bancos, {len(resultados)} resultados")
+    print(f"OK contenido.js: {len(modulos)} módulos, {n_lec} notas de lección, {n_prac} bancos, "
+          f"{len(talleres)} talleres, {len(resultados)} resultados")
     print(f"OK notas.js: {len(notas)} archivos .md")
     for a in avisos:
         print("AVISO", a)

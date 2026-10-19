@@ -9,13 +9,21 @@ from pathlib import Path
 RAIZ = Path(__file__).resolve().parent.parent
 TIPOS = {"leccion", "simulacro-modulo", "simulacro-completo"}
 _PREFIJO = re.compile(r"^\s*window\.BANCO\s*=\s*", re.S)
+_PREFIJO_TALLER = re.compile(r"^\s*window\.TALLER\s*=\s*", re.S)
+TIPOS_EJERCICIO = {"tarjetas": "tarjetas", "clasificar": "items", "emparejar": "pares", "ordenar": "pasos", "identificar": "rondas"}
 
 
 def buscar_bancos():
     """Todos los bancos publicables, ordenados por ruta (el de ejemplo del simulador no cuenta)."""
     cp = RAIZ / "cloud-practitioner"
-    rutas = list(cp.glob("*/practicas/*.js")) + list(cp.glob("repaso-general/simulacro-*.js"))
+    rutas = [r for r in cp.glob("*/practicas/*.js") if not r.name.startswith("taller-")]
+    rutas += list(cp.glob("repaso-general/simulacro-*.js"))
     return sorted(rutas, key=lambda p: p.as_posix())
+
+
+def buscar_talleres():
+    """Talleres interactivos (practicas/taller-NN.js), ordenados por ruta."""
+    return sorted((RAIZ / "cloud-practitioner").glob("*/practicas/taller-*.js"), key=lambda p: p.as_posix())
 
 
 def leer_banco(ruta):
@@ -28,6 +36,47 @@ def leer_banco(ruta):
         return json.loads(cuerpo)
     except json.JSONDecodeError as e:
         raise ValueError(f"{ruta}: JSON inválido después de 'window.BANCO =' (línea {e.lineno}): {e.msg}") from e
+
+
+def leer_taller(ruta):
+    texto = Path(ruta).read_text(encoding="utf-8")
+    m = _PREFIJO_TALLER.match(texto)
+    if not m:
+        raise ValueError(f"{ruta}: debe empezar con 'window.TALLER = '")
+    cuerpo = texto[m.end():].strip().rstrip(";").strip()
+    try:
+        return json.loads(cuerpo)
+    except json.JSONDecodeError as e:
+        raise ValueError(f"{ruta}: JSON inválido después de 'window.TALLER =' (línea {e.lineno}): {e.msg}") from e
+
+
+def validar_taller(t, ruta):
+    """Devuelve la lista de errores del taller (vacía si está bien)."""
+    nombre = Path(ruta).name
+    errores = [f"{nombre}: falta '{c}'" for c in ("id", "titulo", "ejercicios") if c not in t]
+    if errores:
+        return errores
+    for i, e in enumerate(t["ejercicios"], 1):
+        tipo = e.get("tipo")
+        if tipo not in TIPOS_EJERCICIO:
+            errores.append(f"{nombre} ejercicio {i}: tipo '{tipo}' no es uno de {sorted(TIPOS_EJERCICIO)}")
+            continue
+        lista = e.get(TIPOS_EJERCICIO[tipo]) or []
+        if len(lista) < 2:
+            errores.append(f"{nombre} ejercicio {i} ({tipo}): necesita al menos 2 elementos en '{TIPOS_EJERCICIO[tipo]}'")
+        if tipo == "clasificar":
+            n = len(e.get("grupos") or [])
+            if n < 2:
+                errores.append(f"{nombre} ejercicio {i}: 'grupos' necesita al menos 2")
+            errores += [f"{nombre} ejercicio {i}: ficha {k} con 'grupo' fuera de rango"
+                        for k, it in enumerate(lista, 1) if not isinstance(it.get("grupo"), int) or not 0 <= it["grupo"] < n]
+        if tipo == "identificar":
+            errores += [f"{nombre} ejercicio {i}: ronda {k} con 'correcta' fuera de rango"
+                        for k, r in enumerate(lista, 1)
+                        if not isinstance(r.get("correcta"), int) or not 0 <= r["correcta"] < len(r.get("opciones") or [])]
+    if t.get("siguiente") and not (Path(ruta).parent / t["siguiente"]).exists():
+        errores.append(f"{nombre}: 'siguiente' apunta a {t['siguiente']}, que no existe")
+    return errores
 
 
 def validar_banco(b, ruta, ids_vistos=None):

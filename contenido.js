@@ -1,5 +1,5 @@
 window.CONTENIDO = {
- "generado": "2026-10-16 01:24",
+ "generado": "2026-10-19 17:43",
  "examen": {
   "fecha": "2026-12-28",
   "lugar": "Centro Pearson VUE, Lima"
@@ -25,6 +25,7 @@ window.CONTENIDO = {
       "n": 16,
       "resultados": []
      },
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 1 - EVALUACION.html",
@@ -39,7 +40,20 @@ window.CONTENIDO = {
      "titulo": "Qué es la computación en la nube",
      "desc": "6 beneficios, CapEx vs OpEx, economias de escala",
      "nota": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 2 - Qué es la computación en la nube.md",
-     "practica": null,
+     "practica": {
+      "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/leccion-02.js",
+      "id": "m01-l02",
+      "titulo": "M1 L2 — ¿Qué es la computación en la nube?",
+      "tipo": "leccion",
+      "n": 20,
+      "resultados": []
+     },
+     "taller": {
+      "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/taller-02.js",
+      "id": "m01-l02-taller",
+      "titulo": "M1 L2 — Taller: ¿Qué es la computación en la nube?",
+      "n": 7
+     },
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 2 - EVALUACION.html",
@@ -55,6 +69,7 @@ window.CONTENIDO = {
      "desc": "Agilidad, elasticidad, alcance global, ahorro de costos",
      "nota": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 3 - Beneficios de la nube de AWS.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [],
      "resultados": []
     },
@@ -65,6 +80,7 @@ window.CONTENIDO = {
      "desc": "Regiones, AZs, Edge Locations, criterios de seleccion",
      "nota": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 4 - Introducción a la infraestructura global de AWS.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 4 - EVALUACION.html",
@@ -80,6 +96,7 @@ window.CONTENIDO = {
      "desc": "Security OF/IN the cloud, AWS Artifact, IAM, KMS",
      "nota": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 5 - Modelo de responsabilidad compartida de AWS.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 5 - EVALUACION.html",
@@ -95,6 +112,7 @@ window.CONTENIDO = {
      "desc": "Escenarios empresariales, repaso completo del Modulo 1",
      "nota": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 6 - Aplicación de Conceptos de la Nube a Casos de Uso de la Vida Real.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 6 - EVALUACION.html",
@@ -110,6 +128,7 @@ window.CONTENIDO = {
      "desc": "",
      "nota": null,
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 7 - EVALUACION.md",
@@ -125,6 +144,7 @@ window.CONTENIDO = {
      "desc": "",
      "nota": null,
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 8 - EVALUACION.md",
@@ -149,6 +169,7 @@ window.CONTENIDO = {
      "desc": "Instancias virtuales, multitenencia, elasticidad, ciclo de vida",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 1 - Introducción a Amazon EC2.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 1 - EVALUACION.html",
@@ -164,6 +185,7 @@ window.CONTENIDO = {
      "desc": "General Purpose, Compute, Memory, Storage, Accelerated",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 2 - Tipos de instancias de Amazon EC2.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 2 - EVALUACION.html",
@@ -179,6 +201,7 @@ window.CONTENIDO = {
      "desc": "Consola, CLI, SDK, CloudShell, APIs de AWS",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 3 - Como aprovisionar recursos de AWS.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 3 - EVALUACION.html",
@@ -194,6 +217,7 @@ window.CONTENIDO = {
      "desc": "AMI, EBS, Security Groups, User Data, Elastic IP, Tenancy",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 4 - Demostración, Lanzar una Instancia de EC2.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 4 - EVALUACION.html",
@@ -209,6 +233,7 @@ window.CONTENIDO = {
      "desc": "On-Demand, Reserved, Spot, Savings Plans, Dedicated Hosts",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Leccion 5 - Precios de Amazon EC2.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 5 - EVALUACION.html",
@@ -224,6 +249,7 @@ window.CONTENIDO = {
      "desc": "Escalabilidad, elasticidad, Multi-AZ, SPOF, tolerancia a fallos",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 6 - Escalado de Amazon EC2 - PARTE 1.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 6 - EVALUACION PARTE 1.html",
@@ -239,6 +265,7 @@ window.CONTENIDO = {
      "desc": "EC2 Auto Scaling, Launch Templates, Load Balancer, politicas",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 6 - Escalado de Amazon EC2 - PARTE 2.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 6 - EVALUACION PARTE 2.html",
@@ -254,6 +281,7 @@ window.CONTENIDO = {
      "desc": "ALB, NLB, distribucion de trafico, integracion con Auto Scaling",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 7 - Dirección de tráfico con Elastic Load Balancing.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 7 - EVALUACION.html",
@@ -269,6 +297,7 @@ window.CONTENIDO = {
      "desc": "Amazon SQS, SNS, arquitecturas desacopladas, pub/sub",
      "nota": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 8 - Mensajeria y Colas.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-02-computacion-en-la-nube/Lección 8 - EVALUACION.html",
@@ -293,6 +322,7 @@ window.CONTENIDO = {
      "desc": "Espectro de computo AWS, no administrado vs administrado vs serverless",
      "nota": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 1 - Introducción a la computación sin servidor.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 1 - EVALUACION.html",
@@ -308,6 +338,7 @@ window.CONTENIDO = {
      "desc": "Modelo event-driven, triggers, pago por uso, limite de 15 minutos",
      "nota": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 2 - AWS Lambda - Parte 1.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 2 - EVALUACION PARTE 1.html",
@@ -323,6 +354,7 @@ window.CONTENIDO = {
      "desc": "Casos de uso avanzados, integraciones, mejores practicas",
      "nota": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 2 - AWS Lambda - Parte 2.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 2 - EVALUACION PARTE 2.html",
@@ -338,6 +370,7 @@ window.CONTENIDO = {
      "desc": "Docker, ECS, EKS, ECR, Fargate, portabilidad de aplicaciones",
      "nota": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 3 - Contenedores y orquestación en AWS.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 3 - EVALUACION.html",
@@ -353,6 +386,7 @@ window.CONTENIDO = {
      "desc": "Elastic Beanstalk, AWS Batch, Lightsail, Outposts",
      "nota": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 4 - Servicios de computación adicionales.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 4 - EVALUACION.html",
@@ -368,6 +402,7 @@ window.CONTENIDO = {
      "desc": "",
      "nota": null,
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-03-servicios-de-computacion/Lección 5 - EVALUACION.md",
@@ -392,6 +427,7 @@ window.CONTENIDO = {
      "desc": "Conceptos basicos de expansion, infraestructura y automatizacion global",
      "nota": "cloud-practitioner/modulo-04-hacia-la-globalizacion/Lección 1 - Introducción a la globalización.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-04-hacia-la-globalizacion/Lección 1 - EVALUACION.html",
@@ -407,6 +443,7 @@ window.CONTENIDO = {
      "desc": "Cumplimiento, proximidad, disponibilidad de servicios y precios",
      "nota": "cloud-practitioner/modulo-04-hacia-la-globalizacion/Lección 2 - Elección de las regiones de AWS.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-04-hacia-la-globalizacion/Lección 2 - EVALUACION.html",
@@ -422,6 +459,7 @@ window.CONTENIDO = {
      "desc": "AZs, Edge Locations, CloudFront, Route 53 y Outposts",
      "nota": "cloud-practitioner/modulo-04-hacia-la-globalizacion/Lección 3 - Profundizar en la infraestructura global de AWS.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-04-hacia-la-globalizacion/Lección 3 - EVALUACION.html",
@@ -437,6 +475,7 @@ window.CONTENIDO = {
      "desc": "AWS CloudFormation, infraestructura como codigo (IaC) y beneficios",
      "nota": "cloud-practitioner/modulo-04-hacia-la-globalizacion/Lección 4 - Infraestructura y automatización.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-04-hacia-la-globalizacion/Lección 4 - EVALUACION.html",
@@ -461,6 +500,7 @@ window.CONTENIDO = {
      "desc": "VPC, subnets publicas y privadas, Internet Gateway y conectividad basica",
      "nota": "cloud-practitioner/modulo-05-redes/Lección 1 - Introducción a las redes.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-05-redes/Lección 1 - EVALUACION.html",
@@ -476,6 +516,7 @@ window.CONTENIDO = {
      "desc": "Subnets, tablas de enrutamiento, ACLs de red y grupos de seguridad",
      "nota": "cloud-practitioner/modulo-05-redes/Lección 2 - Organización de los recursos en la nube.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-05-redes/Lección 2 - EVALUACION.html",
@@ -491,6 +532,7 @@ window.CONTENIDO = {
      "desc": "VPN, AWS Direct Connect, AWS Transit Gateway y opciones de conectividad hibrida",
      "nota": "cloud-practitioner/modulo-05-redes/Lección 3 - Más formas de conectarse a la nube de AWS.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-05-redes/Lección 3 - EVALUACION.html",
@@ -506,6 +548,7 @@ window.CONTENIDO = {
      "desc": "",
      "nota": "cloud-practitioner/modulo-05-redes/Lección 4 - Subredes, grupos de seguridad y listas de control de acceso a la red.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [],
      "resultados": []
     },
@@ -516,6 +559,7 @@ window.CONTENIDO = {
      "desc": "",
      "nota": "cloud-practitioner/modulo-05-redes/Lección 5 – Demostración de Amazon VPC.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [],
      "resultados": []
     },
@@ -526,6 +570,7 @@ window.CONTENIDO = {
      "desc": "",
      "nota": "cloud-practitioner/modulo-05-redes/Lección 6 - Redes Globales.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [],
      "resultados": []
     },
@@ -536,6 +581,7 @@ window.CONTENIDO = {
      "desc": "",
      "nota": "cloud-practitioner/modulo-05-redes/Lección 7 - Arquitecturas globales.md",
      "practica": null,
+     "taller": null,
      "evalAntigua": [],
      "resultados": []
     }

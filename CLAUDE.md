@@ -14,7 +14,8 @@ Lo que hace el estudiante, paso a paso, está en **PLAN §0**: si cambia el fluj
 |---|---|
 | «retomemos AWS» | Lee «Dónde quedamos» y sus pendientes; revisa si quedó un `aws-resultado-*.json` sin procesar en Descargas (si hay, lo procesa como «listo»); dice la meta del día y lanza el **calentamiento de 5 preguntas en el chat** (§9 y fallos recientes). Corrige al instante las respuestas «1B 2D 3AC…». Si la práctica del día ya tiene banco, lo abre en Chrome cuando toque |
 | Puntaje de una formación oficial («línea base 13/20») | Lo registra en §8 (Official Practice Question Set, Domain Practice, Pretest, Practice Exam); no usan `_entrada` ni banco |
-| «terminé M_ L_» | Lee `_entrada/leccion.md` (+ capturas en `_entrada/`), mejora o crea la nota, mueve el crudo a `_crudo/`, genera el banco y **abre la práctica en Chrome él mismo** |
+| «terminé M_ L_» | Lee `_entrada/leccion.md` (+ capturas en `_entrada/`), mejora o crea la nota, mueve el crudo a `_crudo/`, genera el **taller** y el banco y **abre el taller en Chrome él mismo** (el taller termina con el botón a la práctica) |
+| «adelantemos M_ L_» | Prepara nota, taller y banco **sin** entrada (lección aún no vista), con lo que ya está en el repo y el temario oficial; al hacer luego «terminé» solo se ajusta la nota con la comprobación y las dudas |
 | «listo» | Busca el resultado más reciente en `C:\Users\Asus\Downloads\aws-resultado-*.json`, lo mueve a `resultados/`, explica **solo las falladas**, registra §8 y §9 y **hace el cierre** (abajo) |
 | «cerremos» | Opcional: fuerza el cierre si la sesión termina sin «listo» |
 
@@ -44,9 +45,12 @@ pendiente, luego 5–10 preguntas del cuaderno de errores en el chat y le indica
 4. **Banco.** Correr `python simulador/listar-preguntas.py` para ver los enunciados ya usados (no leer los bancos uno a uno),
    escribir `cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js` y validarlo con `python actualizar-indice.py`
    (falla si el banco está mal formado).
-5. **Abrir la práctica.** Abrirla en Chrome desde Bash, sin pedirle al estudiante que copie nada:
-   `cmd //c start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" "file:///C:/workspace/LEARNING/NOTES/aws-certifications-notes/simulador/index.html?banco=../cloud-practitioner/modulo-0N-…/practicas/leccion-NN.js"`
-   y decirle solo «la práctica está abierta en Chrome». Si no abre, darle esa dirección `file:///…` como respaldo.
+5. **Taller.** Escribir `practicas/taller-NN.js` (formato abajo) con 5–8 ejercicios y `"siguiente": "leccion-NN.js"`;
+   `actualizar-indice.py` también lo valida.
+6. **Abrir el taller.** Abrirlo en Chrome desde Bash, sin pedirle al estudiante que copie nada:
+   `cmd //c start "" "C:\Program Files\Google\Chrome\Application\chrome.exe" "file:///C:/workspace/LEARNING/NOTES/aws-certifications-notes/simulador/taller.html?taller=../cloud-practitioner/modulo-0N-…/practicas/taller-NN.js"`
+   y decirle solo «el taller está abierto en Chrome; al final te lleva a la práctica». Si no abre, darle esa dirección
+   `file:///…` como respaldo. (Sin taller: `simulador/index.html?banco=../…/leccion-NN.js`.)
 
 ### Estructura de la nota (del antiguo `GEMINI.md`)
 
@@ -57,6 +61,8 @@ pendiente, luego 5–10 preguntas del cuaderno de errores en el chat y le indica
 - **Puntos Críticos:** keywords textuales que aparecen en las preguntas.
 - **Trampas de Examen:** diferencias para no confundir servicios de la misma categoría.
 - **Diccionario de Servicios AWS:** cada servicio mencionado, definición corta y «palabras gatillo»; si es distractor común, por qué.
+- **🌎 Casos reales:** 2–3 ejemplos de cómo empresas usan lo visto. Solo hechos públicos y conocidos (p. ej. Netflix migró
+  a AWS); si es un ejemplo inventado, presentarlo como patrón típico, nunca como cliente real. Sin cifras que no se puedan verificar.
 
 ### Reglas de oro (para notas, bancos y explicaciones)
 
@@ -120,6 +126,37 @@ window.BANCO = {
 
 ---
 
+## Talleres interactivos (decisión del estudiante 2026-10-19)
+
+Ejercicios activos con feedback inmediato, **antes** de la práctica tipo examen. No cuentan en §8. Archivo
+`practicas/taller-NN.js` (`window.TALLER = ` + JSON válido); motor `simulador/taller.html?taller=<ruta>`.
+
+```js
+window.TALLER = {
+  "id": "m01-l02-taller", "titulo": "M1 L2 — Taller: …", "modulo": 1, "leccion": "2",
+  "siguiente": "leccion-02.js",
+  "ejercicios": [
+    { "tipo": "tarjetas",    "titulo": "…", "tarjetas": [{ "frente": "…", "reverso": "…", "icono": "ec2" }] },
+    { "tipo": "clasificar",  "titulo": "…", "grupos": [{ "nombre": "☁️ Nube", "desc": "…" }, "On-premises"],
+      "items": [{ "texto": "…", "grupo": 0, "porque": "…", "icono": "s3" }], "explicacion": "…" },
+    { "tipo": "emparejar",   "titulo": "…", "pares": [{ "izq": "escenario", "der": "servicio", "porque": "…", "iconoDer": "lambda" }] },
+    { "tipo": "ordenar",     "titulo": "…", "pasos": ["primero", "segundo", "…"], "explicacion": "…" },
+    { "tipo": "identificar", "titulo": "…", "rondas": [{ "icono": "ec2", "visual": "🏢 ⇄ ☁️", "pie": "…",
+      "pregunta": "…", "opciones": ["correcta", "otra", "…"], "correcta": 0, "porque": "…" }] }
+  ]
+};
+```
+
+- `instruccion` opcional por ejercicio (si falta, el motor pone una genérica). En `ordenar` los pasos van **en el orden
+  correcto** y en `emparejar` cada par va unido: el motor los mezcla.
+- **Mezcla por taller:** 1 de tarjetas (5–8), 1–2 de clasificar, 1 de emparejar, 1 de ordenar, 1 de identificar;
+  ~70 % de la lección y un ejercicio de repaso de lecciones anteriores.
+- **Íconos:** `"icono": "ec2"` carga `simulador/iconos/ec2.svg`; si el archivo no existe, se muestra una ficha con el nombre.
+  Desde M2, cada taller con servicios nuevos lleva una ronda de «Identifica el servicio por su ícono». Los íconos son los
+  oficiales de *AWS Architecture Icons*, sin modificar, con nombre de archivo en minúsculas y guiones (`ec2`, `s3`, `lambda`…).
+
+---
+
 ## Resultados
 
 El simulador descarga `aws-resultado-AAAA-MM-DD-<id banco>.json`. El agente lo mueve a
@@ -146,6 +183,8 @@ aws-certifications-notes/
 ├── portal.json                ← Títulos de módulos y descripciones cortas de lecciones (editable)
 ├── visor/index.html           ← Muestra una nota: visor/?nota=<ruta del .md>
 ├── simulador/                 ← Motor único: ?banco=<ruta .js> [&resultado=<id>] [&modo=estudio] [&solo=ids]
+│   ├── taller.html · taller.js← Taller interactivo: ?taller=<ruta practicas/taller-NN.js>
+│   ├── iconos/                ← Íconos oficiales de AWS (<servicio>.svg)
 │   └── listar-preguntas.py    ← Enunciados ya usados (para no repetir)
 ├── resultados/                ← Un .json por intento (publicado)
 ├── _entrada/                  ← Material de la lección en curso (NO se publica)
@@ -153,7 +192,7 @@ aws-certifications-notes/
 └── cloud-practitioner/
     ├── modulo-0N-<nombre>/
     │   ├── Lección N - Título.md   ← Notas
-    │   ├── practicas/              ← Bancos leccion-NN.js y simulacro-modulo.js
+    │   ├── practicas/              ← Bancos leccion-NN.js, talleres taller-NN.js y simulacro-modulo.js
     │   ├── img/                    ← Imágenes usadas en las notas
     │   ├── _crudo/                 ← Texto y transcripciones de Skill Builder (NO se publica)
     │   └── Lección N - EVALUACION.html ← Evaluaciones antiguas de Gemini (archivo; no se borran)

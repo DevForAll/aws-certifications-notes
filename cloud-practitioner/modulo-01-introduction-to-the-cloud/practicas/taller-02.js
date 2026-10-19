@@ -105,6 +105,19 @@ window.TALLER = {
         { "visual": "☁️ AWS  +  ☁️ otro proveedor", "pie": "dos proveedores de nube pública a la vez", "pregunta": "¿Cómo se llama y es un modelo de implementación de la guía de AWS?", "opciones": ["Multinube; no es uno de los 3 modelos de la guía", "Híbrida; sí es un modelo de la guía", "On-premises; sí es un modelo de la guía", "Nube privada; sí es un modelo de la guía"], "correcta": 0, "porque": "Trampa clásica: híbrida exige on-premises + nube. Dos nubes públicas son multinube." },
         { "visual": "📈 demanda   ▬▬▬ capacidad comprada", "pie": "la línea de capacidad queda muy por encima de la demanda casi todo el año", "pregunta": "¿Qué problema muestra y qué lo resuelve?", "opciones": ["Capacidad ociosa; lo resuelve dejar de adivinar la capacidad", "Falta de seguridad; lo resuelve el cifrado", "Latencia alta; lo resuelve otra Región", "Falta de capacidad; lo resuelve comprar más servidores"], "correcta": 0, "porque": "Comprar de más deja servidores sin usar. En la nube se escala con la demanda real." }
       ]
+    },
+    {
+      "tipo": "identificar",
+      "titulo": "¿Qué servicio es este ícono?",
+      "instruccion": "Íconos oficiales de AWS: los verás en diagramas de arquitectura y en la consola. Reconócelos por su forma y su color de categoría.",
+      "rondas": [
+        { "icono": "ec2", "pie": "naranja = cómputo", "pregunta": "¿Qué servicio es?", "opciones": ["Amazon EC2", "AWS Elastic Beanstalk", "AWS Outposts", "AWS Direct Connect"], "correcta": 0, "porque": "Amazon EC2: servidores virtuales (IaaS). El chip dentro del cuadro naranja de cómputo." },
+        { "icono": "elastic-beanstalk", "pie": "naranja = cómputo", "pregunta": "¿Qué servicio es?", "opciones": ["AWS Elastic Beanstalk", "Amazon EC2", "AWS Site-to-Site VPN", "AWS Outposts"], "correcta": 0, "porque": "AWS Elastic Beanstalk: subes tu código y AWS gestiona el entorno (PaaS)." },
+        { "icono": "outposts", "pie": "naranja = cómputo", "pregunta": "¿Qué servicio es?", "opciones": ["AWS Outposts", "AWS Direct Connect", "Amazon EC2", "AWS Elastic Beanstalk"], "correcta": 0, "porque": "AWS Outposts: hardware y servicios de AWS dentro del centro de datos del cliente." },
+        { "icono": "direct-connect", "pie": "morado = redes y entrega de contenido", "pregunta": "¿Qué servicio es?", "opciones": ["AWS Direct Connect", "AWS Site-to-Site VPN", "AWS Outposts", "Amazon EC2"], "correcta": 0, "porque": "AWS Direct Connect: línea privada y dedicada entre tu centro de datos y AWS." },
+        { "icono": "site-to-site-vpn", "pie": "morado = redes y entrega de contenido", "pregunta": "¿Qué servicio es?", "opciones": ["AWS Site-to-Site VPN", "AWS Direct Connect", "AWS Elastic Beanstalk", "AWS Outposts"], "correcta": 0, "porque": "AWS Site-to-Site VPN: túnel cifrado por Internet; la conexión híbrida más rápida y barata de montar." }
+      ],
+      "explicacion": "Truco de colores: naranja = cómputo, verde = almacenamiento, fucsia = bases de datos, morado = redes, rojo = seguridad, rosa = gestión e integración de aplicaciones, verde azulado = IA y machine learning."
     }
   ]
 };

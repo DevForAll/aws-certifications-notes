@@ -13,7 +13,7 @@
   - **Taller interactivo** nuevo (`simulador/taller.html` + `taller.js`): tarjetas, clasificar, unir parejas, ordenar e
     identificar (con soporte de **íconos de servicios AWS**). Va **antes** de la práctica tipo examen, que no cambia (§5).
   - **M1 L2 preparada por adelantado** (sin ver aún la lección): nota reescrita (definición, 3 modelos de implementación,
-    IaaS/PaaS/SaaS, casos reales), `taller-02.js` (7 ejercicios) y `leccion-02.js` (**20 preguntas**, 28 min).
+    IaaS/PaaS/SaaS, casos reales), `taller-02.js` (8 ejercicios, uno con íconos oficiales de AWS) y `leccion-02.js` (**20 preguntas**, 28 min).
   - Portal con botón morado **«Taller»** por lección.
 - **Recuperación del sábado (decisión 2026-10-19):** la sesión 1 se hace hoy lunes 19 y el calendario se corre una sesión;
   el **dom 25 oct pasa a ser sesión completa** para recuperarla (regla de §5). Colchón: sigue en ~1–2 sesiones.
@@ -21,9 +21,8 @@
   1. Si hay un `aws-resultado-*-m01-l01.json` o `-m01-l02.json` en Descargas, procesarlo como «listo».
   2. **Primera descarga automática del resultado** sin verificar en Chrome real: confirmarla en la primera práctica.
   3. El estudiante debe **explicar en una línea Excelencia operativa vs. Fiabilidad** (segundo fallo del par, regla de §5).
-  4. **Íconos oficiales de AWS:** el motor ya los muestra (`simulador/iconos/<servicio>.svg`, con respaldo de texto si
-     falta el archivo). Falta que el estudiante autorice descargar el paquete oficial *AWS Architecture Icons*; se usan
-     desde M2 (EC2) en ejercicios «Identifica el servicio por su ícono».
+  4. **Íconos oficiales de AWS: listos** (2026-10-19, con permiso del estudiante): 316 íconos en `simulador/iconos/`
+     (lista en `LEEME.md`). M1 L2 ya tiene la ronda «¿Qué servicio es este ícono?»; desde M2 cada taller lleva una.
   5. Al hacer M1 L2 en Skill Builder: «terminé M1 L2» ajusta la nota con la comprobación y las dudas (la nota se escribió
      sin ver la lección; el banco no se regenera salvo que la lección traiga algo que no cubra).
   6. Las descripciones de M6–M13 en `portal.json` son provisionales: ajustarlas al llegar a cada módulo.

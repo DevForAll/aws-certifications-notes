@@ -1,5 +1,5 @@
 window.CONTENIDO = {
- "generado": "2026-10-19 17:43",
+ "generado": "2026-10-19 17:48",
  "examen": {
   "fecha": "2026-12-28",
   "lugar": "Centro Pearson VUE, Lima"
@@ -52,7 +52,7 @@ window.CONTENIDO = {
       "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/taller-02.js",
       "id": "m01-l02-taller",
       "titulo": "M1 L2 — Taller: ¿Qué es la computación en la nube?",
-      "n": 7
+      "n": 8
      },
      "evalAntigua": [
       {

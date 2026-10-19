@@ -152,8 +152,13 @@ window.TALLER = {
 - **Mezcla por taller:** 1 de tarjetas (5–8), 1–2 de clasificar, 1 de emparejar, 1 de ordenar, 1 de identificar;
   ~70 % de la lección y un ejercicio de repaso de lecciones anteriores.
 - **Íconos:** `"icono": "ec2"` carga `simulador/iconos/ec2.svg`; si el archivo no existe, se muestra una ficha con el nombre.
-  Desde M2, cada taller con servicios nuevos lleva una ronda de «Identifica el servicio por su ícono». Los íconos son los
-  oficiales de *AWS Architecture Icons*, sin modificar, con nombre de archivo en minúsculas y guiones (`ec2`, `s3`, `lambda`…).
+  Desde M2, cada taller con servicios nuevos lleva una ronda de «Identifica el servicio por su ícono» (y se pueden usar en
+  tarjetas, fichas y parejas). Están los **316 íconos oficiales** de *AWS Architecture Icons* (paquete 31-07-2026, 64 px,
+  sin modificar): las claves están en `simulador/iconos/LEEME.md` (buscar con `grep`, no leerlo entero). Claves cortas:
+  `ec2`, `s3`, `lambda`, `iam`, `vpc`, `rds`, `dynamodb`, `sqs`, `sns`, `elb`, `ebs`, `efs`, `route53`…; los de diagramas
+  empiezan con `grupo-` (`grupo-region`, `grupo-corporate-data-center`, `grupo-cloud`…). Colores de categoría: naranja
+  cómputo, verde almacenamiento, fucsia bases de datos, morado redes, rojo seguridad, rosa gestión e integración, verde
+  azulado IA/ML. Si AWS publica un paquete nuevo, se actualiza con permiso del estudiante.
 
 ---
 

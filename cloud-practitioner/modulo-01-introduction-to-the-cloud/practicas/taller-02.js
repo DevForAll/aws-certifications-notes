@@ -10,8 +10,8 @@ window.TALLER = {
       "titulo": "Calentamiento: las ideas que no pueden faltar",
       "tarjetas": [
         { "frente": "Definición de computación en la nube (según AWS)", "reverso": "Entrega BAJO DEMANDA de recursos de TI a través de INTERNET con precios de PAGO POR USO." },
-        { "frente": "Modelo de implementación «nube»", "reverso": "Todas las partes de la aplicación corren en la nube. Típico de empresas nuevas (cloud-native) o de migrar todo." },
-        { "frente": "Modelo «on-premises»", "reverso": "También se llama NUBE PRIVADA: recursos en el centro de datos propio con virtualización y herramientas de gestión." },
+        { "frente": "Modelo de implementación «nube»", "reverso": "«Implementación basada en la nube»: todas las partes de la aplicación corren en la nube. Típico de empresas nuevas (cloud-native) o de migrar todo.", "icono": "grupo-cloud" },
+        { "frente": "Modelo «on-premises»", "reverso": "«Implementación en las instalaciones», también NUBE PRIVADA: centro de datos propio con virtualización y herramientas de gestión. No ofrece muchos de los beneficios de la nube.", "icono": "grupo-corporate-data-center" },
         { "frente": "Modelo «híbrido»", "reverso": "Infraestructura on-premises CONECTADA con recursos en la nube. Gatillos: legacy, regulación, migración por etapas." },
         { "frente": "CapEx vs. OpEx", "reverso": "CapEx = gasto de capital (gran compra inicial de hardware). OpEx = gasto operativo variable. La nube cambia CapEx por OpEx." },
         { "frente": "IaaS · PaaS · SaaS (de más a menos trabajo tuyo)", "reverso": "IaaS = EC2 (gestionas el SO) · PaaS = Elastic Beanstalk (solo tu código) · SaaS = aplicación lista para usar." },
@@ -118,6 +118,19 @@ window.TALLER = {
         { "icono": "site-to-site-vpn", "pie": "morado = redes y entrega de contenido", "pregunta": "¿Qué servicio es?", "opciones": ["AWS Site-to-Site VPN", "AWS Direct Connect", "AWS Elastic Beanstalk", "AWS Outposts"], "correcta": 0, "porque": "AWS Site-to-Site VPN: túnel cifrado por Internet; la conexión híbrida más rápida y barata de montar." }
       ],
       "explicacion": "Truco de colores: naranja = cómputo, verde = almacenamiento, fucsia = bases de datos, morado = redes, rojo = seguridad, rosa = gestión e integración de aplicaciones, verde azulado = IA y machine learning."
+    },
+    {
+      "tipo": "ordenar",
+      "titulo": "Línea de tiempo: cómo nació AWS",
+      "instruccion": "Ordena del más antiguo al más reciente (lo cuenta el video de la lección).",
+      "pasos": [
+        "Inicios de los 2000: Amazon.com crece y su equipo de TI crea herramientas estandarizadas para escalar",
+        "2003: deciden ofrecer a otras empresas cómputo y almacenamiento bajo demanda",
+        "Nov 2004: primer servicio público, Amazon SQS (colas de mensajes)",
+        "2006: lanzan Amazon S3 (almacenamiento) y Amazon EC2 (cómputo)",
+        "Hoy: más de un millón de clientes, desde startups hasta gobiernos"
+      ],
+      "explicacion": "AWS nació de resolver un problema interno de Amazon: escalar sin invertir por adelantado. Esa idea es la definición misma de la nube."
     }
   ]
 };

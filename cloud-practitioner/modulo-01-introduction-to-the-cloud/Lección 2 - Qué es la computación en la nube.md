@@ -1,6 +1,6 @@
 > **Cómo estudiar esta lección (orden recomendado):** 1) mira la lección en Skill Builder · 2) lee esta nota (10 min) ·
 > 3) haz el **Taller** interactivo del portal (10 min) · 4) da la **práctica tipo examen** (25 preguntas, 35 min).
-> *Nota preparada por adelantado (2026-10-19); se ajusta con tu comprobación de Skill Builder y tus dudas.*
+> *Preparada por adelantado y ajustada el 2026-10-19 con la lección y tu comprobación (1/1).*
 
 ### **Resumen Ejecutivo**
 
@@ -33,6 +33,9 @@ trayecto y no te ocupas del mantenimiento. La **híbrida** es tener tu auto para
 
 #### 2. Los 3 modelos de implementación (High — dominio 3, tarea 3.1)
 
+Nombres **en la lección** (Skill Builder en español): **Implementación basada en la nube**, **Implementación en las
+instalaciones** y **Implementación híbrida**. En el examen también: «nube», «on-premises» / «nube privada», «híbrida».
+
 | Modelo | Dónde corren las aplicaciones | Cuándo se elige | Palabras gatillo |
 |---|---|---|---|
 | **Nube** (*cloud-based*, también «todo en la nube») | 100 % en la nube | Aplicaciones nuevas (*cloud-native*) o migrar todo lo existente | «empresa nueva», «sin centro de datos», «migrar todas las aplicaciones», «construir en la nube» |
@@ -64,6 +67,28 @@ No suele estar en esta lección, pero el examen lo usa (sobre todo junto a la **
 - **CapEx → OpEx:** de gasto de capital (gran compra inicial de hardware) a **gasto variable** según consumo.
 - **Dejar de adivinar la capacidad:** se aprovisiona lo que la demanda pide, ni de más (capacidad ociosa) ni de menos (clientes perdidos).
 - Los **6 beneficios** completos están en la nota de la **Lección 3**.
+
+---
+
+### **Lo que agrega el video (contexto y detalles)**
+
+- **Historia de AWS (Low para el examen, útil para entender):** a inicios de los 2000, Amazon.com crecía y su equipo de TI
+  creó herramientas estandarizadas para escalar. En **2003** pensaron ofrecer ese conocimiento a otras empresas: alquilar
+  cómputo y almacenamiento **bajo demanda**, sin inversión inicial en hardware. **Nov 2004:** primer servicio público,
+  **Amazon SQS** (*Simple Queue Service*, colas de mensajes; en la transcripción sale mal escrito). **2006:** **Amazon S3**
+  (almacenamiento) y **Amazon EC2** (cómputo). Primero lo usaron startups y desarrolladores; luego grandes empresas y gobiernos.
+- **Centro de datos:** edificio o conjunto de edificios que alberga servidores, con energía, refrigeración y seguridad
+  **redundantes** (duplicadas para que una falla no detenga la operación). Antes de la nube había dos opciones: centro de
+  datos **propio** o **colocation** (alquilar espacio en una instalación compartida, pero el hardware sigue siendo tuyo).
+- **Ejemplo de «bajo demanda» del video:** necesitas 2000 TB de almacenamiento → abres una cuenta, subes archivos a
+  **Amazon S3** y listo; si los borras, dejas de pagar de inmediato.
+- **«A través de Internet»:** desde la casa, el trabajo o cualquier país, con conexión a Internet y el navegador
+  (consola de AWS).
+- **«Pago por uso»:** desaprovisionas lo que no usas, **sin contratos y sin llamar a un vendedor**.
+
+> **Comprobación de Skill Builder (2026-10-19): 1/1.** ONG con datos confidenciales que **deben quedarse en su país**
+> (cumplimiento) + necesidad de **escalar en picos estacionales** → datos en las instalaciones + nube para escalar =
+> **Implementación híbrida**. Distractor inventado: «Implementación con cumplimiento de datos» (no existe ese tipo).
 
 ---
 
@@ -123,6 +148,8 @@ No suele estar en esta lección, pero el examen lo usa (sobre todo junto a la **
 | **AWS Elastic Beanstalk** | Sube tu código y AWS arma y gestiona el entorno (PaaS) | «solo subir el código», «sin gestionar infraestructura» | Se confunde con CloudFormation (que es infraestructura como código) |
 | **AWS Direct Connect** | Conexión de red **privada y dedicada** entre tu centro de datos y AWS | «conexión dedicada», «no pasa por Internet público», «latencia constante» | Se confunde con Site-to-Site VPN |
 | **AWS Site-to-Site VPN** | Túnel **cifrado por Internet** entre tu red y AWS | «rápido de configurar», «cifrado sobre Internet», «bajo costo» | Se confunde con Direct Connect |
+| **Amazon SQS** (*Simple Queue Service*) | Colas de mensajes entre componentes; **primer servicio público de AWS (2004)** | «cola», «desacoplar» (Módulo 2) | — |
+| **Amazon S3** (*Simple Storage Service*) | Almacenamiento de objetos (archivos) prácticamente ilimitado | «guardar archivos», «2000 TB», «pagar por GB» | Con EBS (Módulo 6) |
 | **AWS Outposts** | Hardware y servicios de AWS instalados **en tu propio centro de datos** | «ejecutar servicios de AWS on-premises», «latencia ultrabaja local» | Distractor en preguntas de Local Zones / híbrida |
 
 > **Costo:** para conectar on-premises con AWS, la opción **más barata y rápida** de montar es **Site-to-Site VPN**;

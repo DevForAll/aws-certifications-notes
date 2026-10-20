@@ -1,5 +1,5 @@
 window.CONTENIDO = {
- "generado": "2026-10-19 17:48",
+ "generado": "2026-10-19 20:26",
  "examen": {
   "fecha": "2026-12-28",
   "lugar": "Centro Pearson VUE, Lima"
@@ -25,7 +25,12 @@ window.CONTENIDO = {
       "n": 16,
       "resultados": []
      },
-     "taller": null,
+     "taller": {
+      "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/taller-01.js",
+      "id": "m01-l01-taller",
+      "titulo": "M1 L1 — Taller: la cafetería y el modelo cliente-servidor",
+      "n": 4
+     },
      "evalAntigua": [
       {
        "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 1 - EVALUACION.html",
@@ -68,8 +73,20 @@ window.CONTENIDO = {
      "titulo": "Beneficios de la nube de AWS",
      "desc": "Agilidad, elasticidad, alcance global, ahorro de costos",
      "nota": "cloud-practitioner/modulo-01-introduction-to-the-cloud/Lección 3 - Beneficios de la nube de AWS.md",
-     "practica": null,
-     "taller": null,
+     "practica": {
+      "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/leccion-03.js",
+      "id": "m01-l03",
+      "titulo": "M1 L3 — Beneficios de la nube de AWS",
+      "tipo": "leccion",
+      "n": 18,
+      "resultados": []
+     },
+     "taller": {
+      "ruta": "cloud-practitioner/modulo-01-introduction-to-the-cloud/practicas/taller-03.js",
+      "id": "m01-l03-taller",
+      "titulo": "M1 L3 — Taller: los 6 beneficios de la nube de AWS",
+      "n": 5
+     },
      "evalAntigua": [],
      "resultados": []
     },

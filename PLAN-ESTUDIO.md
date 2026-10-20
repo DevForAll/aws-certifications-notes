@@ -15,6 +15,12 @@
   - **M1 L2 preparada por adelantado** (sin ver aún la lección): nota reescrita (definición, 3 modelos de implementación,
     IaaS/PaaS/SaaS, casos reales), `taller-02.js` (8 ejercicios, uno con íconos oficiales de AWS) y `leccion-02.js` (**20 preguntas**, 28 min).
   - Portal con botón morado **«Taller»** por lección.
+- **2026-10-19 (tarde), «terminé M1 L2»:** las capturas eran de **«Beneficios de la nube de AWS» = M1 L3** en este repo
+  (la numeración del repo coincide con Skill Builder: L2 = «¿Qué es la computación en la nube?»). Se procesó como **L3**:
+  comprobación **1/1**; nota de L3 mejorada (tabla de los 6 beneficios con sus nombres alternativos); crudo en
+  `_crudo/leccion-03.md`; `taller-03.js` (5 ejercicios, con íconos de Budgets, Cost Explorer, CUR y EC2 Auto Scaling) y
+  `leccion-03.js` (**18 preguntas**, 26 min). Taller abierto en Chrome. También se creó `taller-01.js` (4 ejercicios).
+  **Pendiente: confirmar con el estudiante si vio la L2 en Skill Builder** (si no, verla antes de su práctica).
 - **Recuperación del sábado (decisión 2026-10-19):** la sesión 1 se hace hoy lunes 19 y el calendario se corre una sesión;
   el **dom 25 oct pasa a ser sesión completa** para recuperarla (regla de §5). Colchón: sigue en ~1–2 sesiones.
 - **Pendientes para el agente al retomar:**
@@ -31,7 +37,8 @@
   2. Skill Builder: *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min).
   3. **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta**; el puntaje va a §8.
   4. Práctica de **M1 L1** (banco ya hecho) → «listo».
-  5. **M1 L2**: ver la lección en Skill Builder → abrir el **Taller** → práctica tipo examen → «listo».
+  5. **M1 L3**: taller (ya abierto) → práctica tipo examen → «listo».
+  6. **M1 L2**: si no se vio en Skill Builder, verla → taller → práctica → «listo».
 - **Historial:** preparación cerrada 2026-10-15 (8 decisiones, herramientas y `CLAUDE.md`); 2026-10-15 (noche) prueba con
   M1 L1 y flujo simplificado; 2026-10-19 taller interactivo, M1 L2 adelantada y recuperación del sábado.
 
@@ -155,7 +162,7 @@ Las notas existentes de M1–M5 se **reutilizan y mejoran**, no se regeneran des
 
 | Módulo | Material previo | Vuelta 2026 |
 |---|---|---|
-| 1 Introducción a la nube | ✅ notas + evaluaciones | 🔄 L1: nota y banco listos, práctica pendiente · L2: nota, taller y banco **adelantados**, lección pendiente |
+| 1 Introducción a la nube | ✅ notas + evaluaciones | 🔄 L1: nota, taller y banco listos, práctica pendiente · L2: nota, taller y banco **adelantados**, ¿lección vista? · L3: lección vista (1/1), nota, taller y banco listos, práctica pendiente |
 | 2 Computación en la nube (EC2, escalado, ELB, colas) | ✅ | ⬜ |
 | 3 Servicios de computación (Lambda, contenedores) | ✅ | ⬜ |
 | 4 Hacia la globalización | ✅ | ⬜ |

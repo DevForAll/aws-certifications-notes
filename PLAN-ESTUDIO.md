@@ -7,43 +7,39 @@
 
 ## Dónde quedamos
 
-- **Fecha:** 2026-10-19 (lun). Examen objetivo: **lun 28 dic 2026**, centro Pearson VUE en Lima.
-- **Estado:** el estudiante **no estudió el sáb 17 ni el dom 18** (sesión 1 perdida). El 19 pidió adelantar y hacer el
-  estudio **más interactivo**. Se hizo:
-  - **Taller interactivo** nuevo (`simulador/taller.html` + `taller.js`): tarjetas, clasificar, unir parejas, ordenar e
-    identificar (con soporte de **íconos de servicios AWS**). Va **antes** de la práctica tipo examen, que no cambia (§5).
-  - **M1 L2 preparada por adelantado** (sin ver aún la lección): nota reescrita (definición, 3 modelos de implementación,
-    IaaS/PaaS/SaaS, casos reales), `taller-02.js` (8 ejercicios, uno con íconos oficiales de AWS) y `leccion-02.js` (**20 preguntas**, 28 min).
-  - Portal con botón morado **«Taller»** por lección.
-- **2026-10-19 (tarde), «terminé M1 L2»:** las capturas eran de **«Beneficios de la nube de AWS» = M1 L3** en este repo
-  (la numeración del repo coincide con Skill Builder: L2 = «¿Qué es la computación en la nube?»). Se procesó como **L3**:
-  comprobación **1/1**; nota de L3 mejorada (tabla de los 6 beneficios con sus nombres alternativos); crudo en
-  `_crudo/leccion-03.md`; `taller-03.js` (5 ejercicios, con íconos de Budgets, Cost Explorer, CUR y EC2 Auto Scaling) y
-  `leccion-03.js` (**18 preguntas**, 26 min). Taller abierto en Chrome. También se creó `taller-01.js` (4 ejercicios).
-  El estudiante confirmó que se equivocó de lección y luego hizo la L2.
-- **2026-10-19 (noche), «terminé M1 L2»:** lección «¿Qué es la computación en la nube?» (definición + 3 tipos de
-  implementación), comprobación **1/1** (híbrida por cumplimiento + picos). Lo adelantado coincidía: la nota se ajustó
-  (nombres oficiales, historia de AWS, centros de datos, colocation), el taller sube a 9 ejercicios (línea de tiempo de
-  AWS) y el banco de 20 no cambió. Crudo en `_crudo/leccion-02.md`. Taller de L2 abierto en Chrome.
-- **Recuperación del sábado (decisión 2026-10-19):** la sesión 1 se hace hoy lunes 19 y el calendario se corre una sesión;
-  el **dom 25 oct pasa a ser sesión completa** para recuperarla (regla de §5). Colchón: sigue en ~1–2 sesiones.
+- **Fecha del cierre:** 2026-10-19 (lun, noche; «cerremos»). Examen objetivo: **lun 28 dic 2026**, Pearson VUE Lima.
+- **Resumen de la sesión del 19:** el sáb 17 y el dom 18 no hubo estudio. El 19 se construyó el **Taller interactivo**
+  (§5) con los **316 íconos oficiales de AWS**, el estudiante **vio en Skill Builder M1 L2 y M1 L3** (comprobaciones 1/1
+  y 1/1) y se verificó el contenido de L1–L3 contra la **guía oficial CLF-C02** (sigue vigente; ver §1 y `CLAUDE.md`).
+  Todo publicado en GitHub Pages. **Aún no se dio ninguna práctica en modo examen** (§8 vacío).
+- **Estado de M1:**
+
+  | Lección | Skill Builder | Nota | Taller | Práctica tipo examen |
+  |---|---|---|---|---|
+  | L1 Introducción | ✅ (15 oct) | ✅ | ✅ 4 ejercicios | ⬜ 16 preg. pendiente |
+  | L2 ¿Qué es la computación en la nube? | ✅ 1/1 | ✅ ajustada con la lección | ✅ 9 ejercicios | ⬜ 20 preg. pendiente |
+  | L3 Beneficios de la nube de AWS | ✅ 1/1 | ✅ mejorada | ✅ 5 ejercicios | ⬜ 18 preg. pendiente |
+  | L4 Infraestructura global | ⬜ | nota antigua (se mejora con «terminé M1 L4») | — | — |
+
+- **Recuperación del sábado (decisión 2026-10-19):** el calendario se corre una sesión y el **dom 25 oct es sesión
+  completa** (regla de §5). Colchón: ~1–2 sesiones.
 - **Pendientes para el agente al retomar:**
-  1. Si hay un `aws-resultado-*-m01-l01.json` o `-m01-l02.json` en Descargas, procesarlo como «listo».
-  2. **Primera descarga automática del resultado** sin verificar en Chrome real: confirmarla en la primera práctica.
-  3. El estudiante debe **explicar en una línea Excelencia operativa vs. Fiabilidad** (segundo fallo del par, regla de §5).
-  4. **Íconos oficiales de AWS: listos** (2026-10-19, con permiso del estudiante): 316 íconos en `simulador/iconos/`
-     (lista en `LEEME.md`). M1 L2 ya tiene la ronda «¿Qué servicio es este ícono?»; desde M2 cada taller lleva una.
-  5. Al hacer M1 L2 en Skill Builder: «terminé M1 L2» ajusta la nota con la comprobación y las dudas (la nota se escribió
-     sin ver la lección; el banco no se regenera salvo que la lección traiga algo que no cubra).
+  1. Revisar Descargas: si hay `aws-resultado-*-m01-l0N.json`, procesarlo como «listo» (puede venir del celular como texto pegado).
+  2. **Primera descarga automática del resultado** aún sin verificar en Chrome real: confirmarla en la primera práctica.
+  3. El estudiante debe **explicar en una línea Excelencia operativa vs. Fiabilidad** (segundo fallo del par, §5).
+  4. Antes de cada banco: revisar la lista oficial de servicios en alcance (regla de vigencia en `CLAUDE.md`);
+     **Bedrock no está en la lista** del CLF-C02.
+  5. Desde M2, cada taller lleva una ronda de íconos (`simulador/iconos/LEEME.md`).
   6. Las descripciones de M6–M13 en `portal.json` son provisionales: ajustarlas al llegar a cada módulo.
-- **Siguiente (sesión 1 de estudio, recuperada: lun 2026-10-19 o la próxima sesión):**
-  1. «retomemos AWS» → calentamiento de 5 (incluir los 3 fallos de la prueba).
+- **Siguiente sesión (próxima sesión completa):**
+  1. «retomemos AWS» → calentamiento de 5 en el chat (Budgets vs. CUR, «Elija 2», Excelencia operativa vs. Fiabilidad,
+     modelos de implementación y beneficios) + la explicación en una línea del punto 3.
   2. Skill Builder: *Exam Prep Plan Overview* (15 min) + *Exam Prep Overview* (20 min).
-  3. **Official Practice Question Set** (20 preguntas, 30 min) como **línea base honesta**; el puntaje va a §8.
-  4. Práctica de **M1 L1** (banco ya hecho) → «listo».
-  5. **M1 L2** (taller abierto) y **M1 L3**: taller → práctica tipo examen → «listo» por cada una.
-- **Historial:** preparación cerrada 2026-10-15 (8 decisiones, herramientas y `CLAUDE.md`); 2026-10-15 (noche) prueba con
-  M1 L1 y flujo simplificado; 2026-10-19 taller interactivo, M1 L2 adelantada y recuperación del sábado.
+  3. **Official Practice Question Set** (20 preguntas, 30 min) como **línea base**; el puntaje va a §8.
+  4. Prácticas de **M1 L1, L2 y L3** (cada una: taller → práctica en modo examen → «listo»).
+  5. Si queda tiempo: **M1 L4** en Skill Builder → «terminé M1 L4».
+- **Historial:** preparación cerrada 2026-10-15; 2026-10-15 (noche) prueba con M1 L1 y flujo simplificado;
+  2026-10-19 taller interactivo + íconos oficiales, M1 L2 y L3 vistas y procesadas, verificación contra la guía oficial.
 
 ---
 
@@ -165,7 +161,7 @@ Las notas existentes de M1–M5 se **reutilizan y mejoran**, no se regeneran des
 
 | Módulo | Material previo | Vuelta 2026 |
 |---|---|---|
-| 1 Introducción a la nube | ✅ notas + evaluaciones | 🔄 L1: nota, taller y banco listos, práctica pendiente · L2: lección vista (1/1), nota ajustada, taller y banco listos, práctica pendiente · L3: lección vista (1/1), nota, taller y banco listos, práctica pendiente |
+| 1 Introducción a la nube | ✅ notas + evaluaciones | 🔄 L1–L3 vistas, con nota, taller y banco; las 3 prácticas en modo examen pendientes · L4 en adelante ⬜ |
 | 2 Computación en la nube (EC2, escalado, ELB, colas) | ✅ | ⬜ |
 | 3 Servicios de computación (Lambda, contenedores) | ✅ | ⬜ |
 | 4 Hacia la globalización | ✅ | ⬜ |

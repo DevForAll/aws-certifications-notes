@@ -56,7 +56,12 @@ pendiente, luego 5–10 preguntas del cuaderno de errores en el chat y le indica
 
 - **Resumen Ejecutivo:** conciso, enfocado en el valor de negocio y en por qué una empresa elegiría la solución.
 - **Conceptos Clave:** definiciones simples pero técnicas, con prioridad (High / Medium / Low) según probabilidad en el examen.
-  Prioridad especial: IA generativa (Bedrock, SageMaker) y Modelo de Responsabilidad Compartida.
+  Prioridad especial: IA generativa y Modelo de Responsabilidad Compartida. Ojo: **Amazon Bedrock no está en la lista
+  oficial de servicios del CLF-C02** (verificado 2026-10-19); en IA la guía nombra Amazon SageMaker AI, Amazon Q, Lex,
+  Comprehend, Rekognition, Polly, Textract, Transcribe y Translate. Bedrock va en notas como contexto, no como respuesta correcta.
+- **Vigencia:** antes de preguntar por un servicio, confirmar que esté en la lista oficial «In-Scope AWS Services» de la
+  guía (https://docs.aws.amazon.com/aws-certification/latest/cloud-practitioner-02/clf-02-in-scope-services.html) y usar
+  su nombre actual. Fuera de alcance (no preguntar): p. ej. AWS Wavelength, CodeDeploy, CloudShell, Personalize, Transfer Family.
 - **Tabla Comparativa Rápida:** si hay servicios parecidos (S3 vs EBS, TCO vs Pricing Calculator…).
 - **Puntos Críticos:** keywords textuales que aparecen en las preguntas.
 - **Trampas de Examen:** diferencias para no confundir servicios de la misma categoría.

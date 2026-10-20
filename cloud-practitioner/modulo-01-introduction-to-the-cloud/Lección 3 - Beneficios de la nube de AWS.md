@@ -35,6 +35,13 @@ Skill Builder, la comprobación y el examen **no usan siempre las mismas palabra
 > necesitará para lanzar una línea de ropa» → **Dejar de hacer conjeturas sobre la capacidad**. Distractores: centros de
 > datos, gastos variables y alcance global. Clave: «predecir capacidad» = beneficio 3, aunque el escenario hable de dinero.
 
+> **Lo que la guía oficial CLF-C02 agrega (tareas 1.1 y 1.4, verificado 2026-10-19):** además de los 6 beneficios,
+> la guía pide entender **alta disponibilidad, elasticidad y agilidad** (abajo, en «Conceptos que suelen confundir»), los
+> **costos fijos vs. variables**, los **costos asociados al on-premises** (energía, refrigeración, espacio, personal,
+> hardware), **BYOL** (*Bring Your Own License*: traer tu propia licencia, p. ej. de Windows Server u Oracle) **vs.
+> licencias incluidas** en el precio de AWS, **rightsizing** (ajustar el tamaño del recurso a lo que realmente se usa para
+> no pagar de más) y los **beneficios de la automatización**. Se profundizan en módulos posteriores (M2, M11).
+
 > **Herramientas que menciona el video:** «herramientas integradas de facturación y presupuesto» para ahorrar cada mes →
 > **AWS Budgets** (alertas cuando el gasto real o previsto supera un umbral) y **AWS Cost Explorer** (analizar tendencias).
 > Se ven a fondo en el Módulo 11.

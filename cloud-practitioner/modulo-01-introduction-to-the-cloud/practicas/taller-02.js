@@ -128,7 +128,7 @@ window.TALLER = {
         "2003: deciden ofrecer a otras empresas cómputo y almacenamiento bajo demanda",
         "Nov 2004: primer servicio público, Amazon SQS (colas de mensajes)",
         "2006: lanzan Amazon S3 (almacenamiento) y Amazon EC2 (cómputo)",
-        "Hoy: más de un millón de clientes, desde startups hasta gobiernos"
+        "Hoy: millones de clientes, desde startups hasta gobiernos"
       ],
       "explicacion": "AWS nació de resolver un problema interno de Amazon: escalar sin invertir por adelantado. Esa idea es la definición misma de la nube."
     }

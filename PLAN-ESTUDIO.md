@@ -117,7 +117,7 @@ el agente. Solo escribes **tres frases** en el chat: «retomemos AWS», «termin
 | Tipos | Opción única (1 de 4) y respuesta múltiple (2+ de 5+) |
 | Costo | 100 USD |
 | Idioma elegido | Español (LATAM) |
-| Versión | CLF-C02 vigente; sin anuncio público de sucesor (búsqueda 2026-10-13) |
+| Versión | CLF-C02 vigente; sin anuncio público de sucesor (verificado en la guía oficial y la página de AWS, 2026-10-19). La guía se actualiza con nombres nuevos (p. ej. «Amazon SageMaker AI», «Amazon Quick Sight») |
 
 | Dominio | Peso |
 |---|---|
